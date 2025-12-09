@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects | Wei Kiat Tan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --pixel-dark: #0d0d1a;
+            --pixel-deep: #1a1a3e;
+            --pixel-purple: #4a3d6b;
+            --pixel-mid: #6b5b8c;
+            --pixel-pink: #e8a4b8;
+            --pixel-sunset: #ffd4b8;
+            --pixel-star: #ffffff;
+            --pixel-lake: #3a5a8c;
+            --pixel-glow: rgba(232, 164, 184, 0.6);
+            
+            --card-bg: rgba(13, 13, 26, 0.85);
+            --card-border: rgba(232, 164, 184, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: #e8a4b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'VT323', monospace;
+            background-color: var(--pixel-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-size: 18px;
+            min-height: 100vh;
+        }
+
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--pixel-dark);
+            border-left: 4px solid var(--pixel-purple);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--pixel-pink);
+            border: 2px solid var(--pixel-dark);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 40vh;
+            width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            padding: 60px 40px;
+        }
+
+        .hero-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("C:\\Users\\Wei Kiat\\Downloads\\StockCake-Pixelated_Mountain_Reflection_-_97_Images_1765260269.jpg");
+            background-size: cover;
+            background-position: 60% 30%;
+            background-repeat: no-repeat;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            z-index: 0;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                180deg,
+                rgba(13, 13, 26, 0.6) 0%,
+                rgba(13, 13, 26, 0.4) 50%,
+                rgba(13, 13, 26, 0.8) 100%
+            );
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 900px;
+        }
+
+        .page-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2.5rem;
+            color: var(--pixel-sunset);
+            margin-bottom: 20px;
+            text-shadow: 
+                4px 4px 0 var(--pixel-purple),
+                0 0 30px var(--pixel-glow);
+            animation: titlePulse 3s infinite ease-in-out;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { text-shadow: 4px 4px 0 var(--pixel-purple), 0 0 20px var(--pixel-glow); }
+            50% { text-shadow: 4px 4px 0 var(--pixel-purple), 0 0 40px var(--pixel-glow); }
+        }
+
+        .page-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+        }
+
+        .project-count {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.6rem;
+            color: var(--pixel-pink);
+            letter-spacing: 2px;
+        }
+
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-pink);
+            color: var(--pixel-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+            clip-path: polygon(
+                0 6px, 6px 6px, 6px 0,
+                calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px,
+                100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px),
+                calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 6px),
+                0 calc(100% - 6px)
+            );
+        }
+
+        .back-button:hover {
+            background: var(--pixel-pink);
+            color: var(--pixel-dark);
+            transform: translateX(-5px);
+        }
+
+        .back-button i {
+            font-size: 0.7rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: linear-gradient(180deg, var(--pixel-dark) 0%, var(--pixel-deep) 50%, var(--pixel-dark) 100%);
+            padding: 60px 80px 100px;
+            min-height: 60vh;
+        }
+
+        /* Controls Bar */
+        .controls-bar {
+            max-width: 1400px;
+            margin: 0 auto 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        /* Filter Tabs */
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 12px 20px;
+            background: transparent;
+            border: 3px solid var(--pixel-mid);
+            color: var(--pixel-mid);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-tab:hover {
+            border-color: var(--pixel-pink);
+            color: var(--pixel-pink);
+        }
+
+        .filter-tab.active {
+            background: var(--pixel-pink);
+            border-color: var(--pixel-pink);
+            color: var(--pixel-dark);
+        }
+
+        /* Projects Per Page Dropdown */
+        .per-page-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .per-page-label {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.45rem;
+            color: var(--pixel-mid);
+        }
+
+        .per-page-select {
+            padding: 10px 15px;
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-pink);
+            color: var(--pixel-sunset);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23e8a4b8' d='M6 8L2 4h8z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 35px;
+        }
+
+        .per-page-select:focus {
+            outline: none;
+            box-shadow: 0 0 15px var(--pixel-glow);
+        }
+
+        .per-page-select option {
+            background: var(--pixel-dark);
+            color: var(--pixel-sunset);
+        }
+
+        /* Projects Grid */
+        .projects-grid {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        /* Project Card */
+        .project-card {
+            background: var(--card-bg);
+            border: 4px solid var(--pixel-mid);
+            padding: 30px;
+            position: relative;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            clip-path: polygon(
+                0 12px, 12px 12px, 12px 0,
+                calc(100% - 12px) 0, calc(100% - 12px) 12px, 100% 12px,
+                100% calc(100% - 12px), calc(100% - 12px) calc(100% - 12px),
+                calc(100% - 12px) 100%, 12px 100%, 12px calc(100% - 12px),
+                0 calc(100% - 12px)
+            );
+            display: flex;
+            flex-direction: column;
+            min-height: 280px;
+        }
+
+        .project-card:hover {
+            border-color: var(--pixel-pink);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 0 var(--pixel-purple), 0 0 30px var(--pixel-glow);
+        }
+
+        .project-card.hidden {
+            display: none;
+        }
+
+        .project-category-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 6px 12px;
+            background: var(--pixel-purple);
+            border: 2px solid var(--pixel-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.35rem;
+            color: var(--pixel-pink);
+            text-transform: uppercase;
+        }
+
+        .project-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            color: var(--pixel-sunset);
+            margin-bottom: 15px;
+            line-height: 1.8;
+            padding-right: 80px;
+        }
+
+        .project-description {
+            font-size: 1.15rem;
+            color: var(--text-primary);
+            line-height: 1.7;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .project-tag {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.38rem;
+            padding: 8px 12px;
+            background: rgba(74, 61, 107, 0.8);
+            border: 2px solid var(--pixel-mid);
+            color: var(--pixel-sunset);
+            transition: all 0.2s ease;
+        }
+
+        .project-tag:hover {
+            background: var(--pixel-pink);
+            color: var(--pixel-dark);
+            border-color: var(--pixel-sunset);
+        }
+
+        .project-links {
+            display: flex;
+            gap: 12px;
+            margin-top: auto;
+        }
+
+        .project-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
+            background: transparent;
+            border: 3px solid var(--pixel-pink);
+            color: var(--pixel-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.4rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .project-link:hover {
+            background: var(--pixel-pink);
+            color: var(--pixel-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 0 var(--pixel-purple);
+        }
+
+        .project-link:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .project-link i {
+            font-size: 0.6rem;
+        }
+
+        .project-link.external {
+            border-color: var(--pixel-sunset);
+            color: var(--pixel-sunset);
+        }
+
+        .project-link.external:hover {
+            background: var(--pixel-sunset);
+            color: var(--pixel-dark);
+        }
+
+        /* Pagination */
+        .pagination-container {
+            max-width: 1400px;
+            margin: 50px auto 0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .pagination-info {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.45rem;
+            color: var(--pixel-mid);
+            margin-right: 10px;
+        }
+
+        .pagination-btn {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 3px solid var(--pixel-mid);
+            color: var(--pixel-pink);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pagination-btn:hover:not(:disabled) {
+            background: var(--pixel-pink);
+            color: var(--pixel-dark);
+            border-color: var(--pixel-pink);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .pagination-numbers {
+            display: flex;
+            gap: 8px;
+        }
+
+        .page-number {
+            width: 40px;
+            height: 40px;
+            background: transparent;
+            border: 3px solid var(--pixel-mid);
+            color: var(--pixel-mid);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .page-number:hover {
+            border-color: var(--pixel-pink);
+            color: var(--pixel-pink);
+        }
+
+        .page-number.active {
+            background: var(--pixel-pink);
+            border-color: var(--pixel-pink);
+            color: var(--pixel-dark);
+        }
+
+        /* No Results Message */
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 40px;
+            background: var(--card-bg);
+            border: 4px solid var(--pixel-mid);
+        }
+
+        .no-results-icon {
+            font-size: 4rem;
+            color: var(--pixel-mid);
+            margin-bottom: 20px;
+        }
+
+        .no-results-text {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            color: var(--pixel-pink);
+            line-height: 2;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--pixel-dark);
+            border-top: 4px solid var(--pixel-pink);
+            padding: 40px;
+            text-align: center;
+        }
+
+        footer p {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            color: var(--pixel-mid);
+            margin-bottom: 15px;
+        }
+
+        footer a {
+            color: var(--pixel-pink);
+            text-decoration: none;
+            margin: 0 15px;
+            transition: color 0.2s ease;
+        }
+
+        footer a:hover {
+            color: var(--pixel-sunset);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-content {
+                padding: 40px 40px 80px;
+            }
+
+            .projects-grid {
+                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 80px 20px 40px;
+                min-height: 35vh;
+            }
+
+            .page-title {
+                font-size: 1.5rem;
+            }
+
+            .back-button {
+                top: 15px;
+                left: 15px;
+                padding: 10px 15px;
+                font-size: 0.4rem;
+            }
+
+            .main-content {
+                padding: 30px 20px 60px;
+            }
+
+            .controls-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .filter-tabs {
+                justify-content: center;
+            }
+
+            .per-page-control {
+                justify-content: center;
+            }
+
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .project-card {
+                min-height: auto;
+            }
+
+            .pagination-container {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .page-title {
+                font-size: 1.2rem;
+            }
+
+            .filter-tab {
+                padding: 10px 14px;
+                font-size: 0.4rem;
+            }
+
+            .project-title {
+                font-size: 0.55rem;
+                padding-right: 60px;
+            }
+
+            .project-category-badge {
+                font-size: 0.3rem;
+                padding: 4px 8px;
+            }
+        }
+
+        /* Fade in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+        .delay-6 { animation-delay: 0.6s; }
+        .delay-7 { animation-delay: 0.7s; }
+    </style>
+</head>
+<body>
+    <!-- Back Button -->
+    <a href="index.html" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to Home</span>
+    </a>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content fade-in">
+            <h1 class="page-title">MY PROJECTS</h1>
+            <p class="page-subtitle">A collection of data analytics, visualization, and programming projects</p>
+            <p class="project-count"><span id="totalProjectCount">4</span> PROJECTS</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Controls Bar -->
+        <div class="controls-bar fade-in delay-1">
+            <!-- Filter Tabs -->
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">All</button>
+                <button class="filter-tab" data-filter="r">R Programming</button>
+                <button class="filter-tab" data-filter="python">Python</button>
+                <button class="filter-tab" data-filter="others">Others</button>
+            </div>
+
+            <!-- Projects Per Page -->
+            <div class="per-page-control">
+                <span class="per-page-label">Show:</span>
+                <select class="per-page-select" id="perPageSelect">
+                    <option value="3" selected>3</option>
+                    <option value="5">5</option>
+                    <option value="7">7</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Projects Grid -->
+        <div class="projects-grid" id="projectsGrid">
+            <!-- Project 1: Tableau - External Link -->
+            <div class="project-card fade-in delay-2" data-category="others">
+                <span class="project-category-badge">Tableau</span>
+                <h3 class="project-title">US Submarines against Japan in WW2</h3>
+                <p class="project-description">
+                    Interactive Tableau dashboard visualizing US submarine operations against Japan during World War 2, 
+                    featuring historical battle data and strategic analysis.
+                </p>
+                <div class="project-tags">
+                    <span class="project-tag">Tableau</span>
+                    <span class="project-tag">Data Viz</span>
+                    <span class="project-tag">Historical</span>
+                </div>
+                <div class="project-links">
+                    <a href="https://public.tableau.com/app/profile/wei.kiat/vizzes" target="_blank" class="project-link external">
+                        <i class="fas fa-external-link-alt"></i>
+                        <span>View on Tableau</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Project 2: R - Internal Link -->
+            <div class="project-card fade-in delay-3" data-category="r">
+                <span class="project-category-badge">R</span>
+                <h3 class="project-title">Relationship of Work and Happiness</h3>
+                <p class="project-description">
+                    Tutor-Marked Assignment for ANL501 using R to analyse what factors affect happiness at work. 
+                    Features scatter plots and animated visualizations using gganimate.
+                </p>
+                <div class="project-tags">
+                    <span class="project-tag">R</span>
+                    <span class="project-tag">Scatter Plot</span>
+                    <span class="project-tag">gganimate</span>
+                </div>
+                <div class="project-links">
+                    <a href="project-work-happiness.html" class="project-link">
+                        <i class="fas fa-book-open"></i>
+                        <span>Read More</span>
+                    </a>
+                    <a href="https://github.com/wei-kiat-tan" target="_blank" class="project-link external">
+                        <i class="fab fa-github"></i>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Project 3: R - Internal Link -->
+            <div class="project-card fade-in delay-4" data-category="r">
+                <span class="project-category-badge">R</span>
+                <h3 class="project-title">The Legacy of Civil War: Landmines, ERWs, and Their Effects on Cambodian Communities</h3>
+                <p class="project-description">
+                    Comprehensive social impact analysis of Cambodian Civil War using R and ggplot2 visualizations 
+                    for ANL501 End of Course Assignment (ECA).
+                </p>
+                <div class="project-tags">
+                    <span class="project-tag">R</span>
+                    <span class="project-tag">ggplot2</span>
+                    <span class="project-tag">tidyverse</span>
+                    <span class="project-tag">dplyr</span>
+                </div>
+                <div class="project-links">
+                    <a href="project-cambodia-landmines.html" class="project-link">
+                        <i class="fas fa-book-open"></i>
+                        <span>Read More</span>
+                    </a>
+                    <a href="https://github.com/wei-kiat-tan" target="_blank" class="project-link external">
+                        <i class="fab fa-github"></i>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Project 4: Python - Internal Link -->
+            <div class="project-card fade-in delay-5" data-category="python">
+                <span class="project-category-badge">Python</span>
+                <h3 class="project-title">Data Analysis & Statistical Modelling with Python</h3>
+                <p class="project-description">
+                    Simple data analysis and statistical modelling project using Python, demonstrating 
+                    fundamental data science techniques and methodologies.
+                </p>
+                <div class="project-tags">
+                    <span class="project-tag">Python</span>
+                    <span class="project-tag">Data Analysis</span>
+                    <span class="project-tag">Statistics</span>
+                </div>
+                <div class="project-links">
+                    <a href="project-python-analysis.html" class="project-link">
+                        <i class="fas fa-book-open"></i>
+                        <span>Read More</span>
+                    </a>
+                    <a href="https://github.com/wei-kiat-tan" target="_blank" class="project-link external">
+                        <i class="fab fa-github"></i>
+                        <span>GitHub</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- No Results Message (hidden by default) -->
+            <div class="no-results" id="noResults" style="display: none;">
+                <div class="no-results-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <p class="no-results-text">No projects found in this category.<br>Try selecting a different filter.</p>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination-container" id="paginationContainer">
+            <span class="pagination-info">Page <span id="currentPage">1</span> of <span id="totalPages">2</span></span>
+            <button class="pagination-btn" id="prevBtn" disabled>
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="pagination-numbers" id="paginationNumbers">
+                <!-- Generated by JavaScript -->
+            </div>
+            <button class="pagination-btn" id="nextBtn">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Wei Kiat Tan | Built with passion for data</p>
+        <p>
+            <a href="https://github.com/wei-kiat-tan" target="_blank">GitHub</a>
+            <a href="https://www.linkedin.com/in/wei-kiat-tan/" target="_blank">LinkedIn</a>
+            <a href="https://public.tableau.com/app/profile/wei.kiat/vizzes/" target="_blank">Tableau</a>
+        </p>
+    </footer>
+
+    <script>
+        // Projects data and state
+        let currentFilter = 'all';
+        let projectsPerPage = 3;
+        let currentPageNum = 1;
+
+        // Get all project cards
+        const allProjectCards = document.querySelectorAll('.project-card');
+        const projectsGrid = document.getElementById('projectsGrid');
+        const noResults = document.getElementById('noResults');
+
+        // Filter tabs
+        const filterTabs = document.querySelectorAll('.filter-tab');
+        filterTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // Update active state
+                filterTabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+                
+                // Set filter and reset to page 1
+                currentFilter = tab.dataset.filter;
+                currentPageNum = 1;
+                updateDisplay();
+            });
+        });
+
+        // Per page selector
+        const perPageSelect = document.getElementById('perPageSelect');
+        perPageSelect.addEventListener('change', (e) => {
+            projectsPerPage = parseInt(e.target.value);
+            currentPageNum = 1;
+            updateDisplay();
+        });
+
+        // Pagination buttons
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentPageNum > 1) {
+                currentPageNum--;
+                updateDisplay();
+            }
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            const filteredCards = getFilteredCards();
+            const totalPages = Math.ceil(filteredCards.length / projectsPerPage);
+            if (currentPageNum < totalPages) {
+                currentPageNum++;
+                updateDisplay();
+            }
+        });
+
+        // Get filtered cards
+        function getFilteredCards() {
+            return Array.from(allProjectCards).filter(card => {
+                if (currentFilter === 'all') return true;
+                return card.dataset.category === currentFilter;
+            });
+        }
+
+        // Update display
+        function updateDisplay() {
+            const filteredCards = getFilteredCards();
+            const totalPages = Math.max(1, Math.ceil(filteredCards.length / projectsPerPage));
+            
+            // Ensure current page is valid
+            if (currentPageNum > totalPages) currentPageNum = totalPages;
+            
+            // Calculate start and end indices
+            const startIndex = (currentPageNum - 1) * projectsPerPage;
+            const endIndex = startIndex + projectsPerPage;
+
+            // Hide all cards first
+            allProjectCards.forEach(card => {
+                card.classList.add('hidden');
+                card.style.display = 'none';
+            });
+
+            // Show filtered cards for current page
+            filteredCards.forEach((card, index) => {
+                if (index >= startIndex && index < endIndex) {
+                    card.classList.remove('hidden');
+                    card.style.display = 'flex';
+                    // Re-trigger animation
+                    card.style.animation = 'none';
+                    card.offsetHeight; // Trigger reflow
+                    card.style.animation = `fadeIn 0.6s ease forwards ${(index - startIndex) * 0.1}s`;
+                }
+            });
+
+            // Show/hide no results message
+            if (filteredCards.length === 0) {
+                noResults.style.display = 'block';
+            } else {
+                noResults.style.display = 'none';
+            }
+
+            // Update pagination
+            updatePagination(filteredCards.length, totalPages);
+
+            // Update project count
+            document.getElementById('totalProjectCount').textContent = filteredCards.length;
+        }
+
+        // Update pagination UI
+        function updatePagination(totalItems, totalPages) {
+            const paginationContainer = document.getElementById('paginationContainer');
+            const paginationNumbers = document.getElementById('paginationNumbers');
+            const currentPageSpan = document.getElementById('currentPage');
+            const totalPagesSpan = document.getElementById('totalPages');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            // Hide pagination if only one page
+            if (totalPages <= 1) {
+                paginationContainer.style.display = 'none';
+                return;
+            }
+            paginationContainer.style.display = 'flex';
+
+            // Update page info
+            currentPageSpan.textContent = currentPageNum;
+            totalPagesSpan.textContent = totalPages;
+
+            // Update prev/next buttons
+            prevBtn.disabled = currentPageNum === 1;
+            nextBtn.disabled = currentPageNum === totalPages;
+
+            // Generate page numbers
+            paginationNumbers.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const pageBtn = document.createElement('button');
+                pageBtn.className = `page-number ${i === currentPageNum ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.addEventListener('click', () => {
+                    currentPageNum = i;
+                    updateDisplay();
+                });
+                paginationNumbers.appendChild(pageBtn);
+            }
+        }
+
+        // Initial display
+        updateDisplay();
+    </script>
+</body>
+</html>
