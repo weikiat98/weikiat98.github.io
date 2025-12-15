@@ -1,3 +1,3 @@
 # Website Overhaul
 
-After many months, I am happy to announce a brand new overhaul of the website using html over the previous Jekyll Minimalist Theme.
+Currently, this repository is a work-in-progress to overhaul the website portfolio from minimalist Jekyll to gaming pixel side
