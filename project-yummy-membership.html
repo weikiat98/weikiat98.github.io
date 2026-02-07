@@ -569,6 +569,7 @@
             display: block;
             min-height: 200px;
             background: var(--pixel-deep);
+            cursor: zoom-in;
         }
 
         .image-grid {
@@ -1213,6 +1214,186 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Lightbox Modal */
+        .image-lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.92);
+            z-index: 10000;
+            cursor: zoom-out;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .image-lightbox.active {
+            display: flex;
+        }
+
+        .image-lightbox img {
+            max-width: 92%;
+            max-height: 92%;
+            object-fit: contain;
+            border: 3px solid var(--pixel-mid);
+        }
+
+        .image-lightbox .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.6rem;
+            color: var(--pixel-pink);
+            cursor: pointer;
+            z-index: 10001;
+            padding: 10px;
+        }
+
+        .image-lightbox .lightbox-close:hover {
+            color: var(--pixel-sunset);
+        }
+
+        /* Data Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+            font-size: 1.05rem;
+            font-family: 'VT323', monospace;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px 15px;
+            text-align: center;
+            border: 2px solid var(--pixel-mid);
+        }
+
+        .data-table th {
+            background: var(--pixel-purple);
+            color: var(--pixel-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.38rem;
+            letter-spacing: 1px;
+        }
+
+        .data-table td {
+            background: var(--card-bg);
+            color: var(--text-secondary);
+        }
+
+        .data-table tbody tr:hover td {
+            border-color: var(--pixel-pink);
+        }
+
+        .data-table td.na-val {
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        /* R Output styled box */
+        .r-output-box {
+            background: rgba(13, 13, 26, 0.95);
+            border: 3px solid var(--pixel-mid);
+            padding: 25px;
+            margin: 10px 0;
+            overflow-x: auto;
+        }
+
+        .r-output-box:hover {
+            border-color: var(--pixel-pink);
+        }
+
+        .r-output-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.4rem;
+            color: var(--pixel-pink);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .r-output-line {
+            font-family: 'VT323', monospace;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin-bottom: 3px;
+        }
+
+        .r-output-line .val {
+            color: var(--accent-green);
+        }
+
+        .r-output-line .sig {
+            color: var(--accent-yellow);
+        }
+
+        .r-output-line .label {
+            color: var(--pixel-pink);
+        }
+
+        .r-output-line .conclusion {
+            color: var(--pixel-sunset);
+        }
+
+        /* Bar chart visualization */
+        .bar-chart-container {
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-mid);
+            padding: 25px;
+            margin: 10px 0;
+        }
+
+        .bar-chart-container:hover {
+            border-color: var(--pixel-pink);
+        }
+
+        .bar-chart-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 15px;
+        }
+
+        .bar-chart-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .bar-chart-label {
+            font-family: 'VT323', monospace;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            min-width: 110px;
+            text-align: right;
+        }
+
+        .bar-chart-track {
+            flex: 1;
+            background: rgba(107, 91, 140, 0.15);
+            height: 32px;
+            position: relative;
+        }
+
+        .bar-chart-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--pixel-pink), var(--pixel-sunset));
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            min-width: 40px;
+        }
+
+        .bar-chart-fill-value {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.4rem;
+            color: var(--pixel-dark);
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -1519,9 +1700,56 @@
 
             <div class="image-grid">
                 <div class="image-grid-item">
-                    <div class="image-frame">
-                        <img src="ANL553-TMA/Screenshot 2026-01-11 180946.png" alt="Figure 8: Table of values for key components of box plot">
-                    </div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Discount</th>
+                                <th>Q1</th>
+                                <th>Median</th>
+                                <th>Q3</th>
+                                <th>IQR</th>
+                                <th>Lowest Obs</th>
+                                <th>Highest Obs</th>
+                                <th>Max Outlier</th>
+                                <th>Num Outliers</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>0</td>
+                                <td>4</td>
+                                <td>7</td>
+                                <td>12</td>
+                                <td>8</td>
+                                <td>1</td>
+                                <td>24</td>
+                                <td>33</td>
+                                <td>4</td>
+                            </tr>
+                            <tr>
+                                <td>1</td>
+                                <td>4</td>
+                                <td>7</td>
+                                <td>13</td>
+                                <td>9</td>
+                                <td>1</td>
+                                <td>26</td>
+                                <td class="na-val">NA</td>
+                                <td>0</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>4</td>
+                                <td>7</td>
+                                <td>12</td>
+                                <td>8</td>
+                                <td>1</td>
+                                <td>24</td>
+                                <td>31</td>
+                                <td>6</td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <p class="image-caption">Figure 8: Box plot statistics table</p>
                 </div>
                 <div class="image-grid-item">
@@ -1628,8 +1856,47 @@
 
             <h3 class="subsection-title">Trend 6: Target $100-$300 Spending Group</h3>
 
-            <div class="image-frame">
-                <img src="ANL553-TMA/Screenshot 2026-01-03 184749.png" alt="Figure 13: Conversions by average dining expense group">
+            <div class="bar-chart-container">
+                <div class="bar-chart-row">
+                    <span class="bar-chart-label">&lt; $100</span>
+                    <div class="bar-chart-track">
+                        <div class="bar-chart-fill" style="width: 27.6%;">
+                            <span class="bar-chart-fill-value">35</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bar-chart-row">
+                    <span class="bar-chart-label">$100 – $199</span>
+                    <div class="bar-chart-track">
+                        <div class="bar-chart-fill" style="width: 100%;">
+                            <span class="bar-chart-fill-value">127</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bar-chart-row">
+                    <span class="bar-chart-label">$200 – $299</span>
+                    <div class="bar-chart-track">
+                        <div class="bar-chart-fill" style="width: 63.8%;">
+                            <span class="bar-chart-fill-value">81</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bar-chart-row">
+                    <span class="bar-chart-label">$300 – $399</span>
+                    <div class="bar-chart-track">
+                        <div class="bar-chart-fill" style="width: 10.2%;">
+                            <span class="bar-chart-fill-value">13</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bar-chart-row">
+                    <span class="bar-chart-label">$400 – $499</span>
+                    <div class="bar-chart-track">
+                        <div class="bar-chart-fill" style="width: 3%;">
+                            <span class="bar-chart-fill-value">1</span>
+                        </div>
+                    </div>
+                </div>
             </div>
             <p class="image-caption">Figure 13: Number of conversions by average dining expense group</p>
 
@@ -1722,13 +1989,51 @@
                     VIF values around 1 indicate no multicollinearity — each predictor provides sufficient unique information.
                 </p>
 
-                <div class="image-frame">
-                    <img src="ANL553-TMA/Screenshot 2026-01-03 184553.png" alt="Figure 15: Results from multiple regression model">
+                <div class="r-output-box">
+                    <div class="r-output-title">Multiple Linear Regression Output</div>
+                    <p class="r-output-line"><span class="label">Call:</span> lm(binary_membership_converted ~ average_dining_expenses + reservations + discount)</p>
+                    <br>
+                    <p class="r-output-line"><span class="label">Residuals:</span></p>
+                    <table class="data-table" style="margin-bottom: 15px;">
+                        <thead>
+                            <tr><th>Min</th><th>1Q</th><th>Median</th><th>3Q</th><th>Max</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>-0.83354</td><td>-0.24489</td><td>-0.06552</td><td>0.17372</td><td>1.09361</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="r-output-line"><span class="label">Coefficients:</span></p>
+                    <table class="data-table" style="margin-bottom: 15px;">
+                        <thead>
+                            <tr><th>Variable</th><th>Estimate</th><th>Std. Error</th><th>t value</th><th>Pr(&gt;|t|)</th><th>Sig.</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>(Intercept)</td><td>-0.4203884</td><td>0.0322328</td><td>-13.042</td><td>&lt;2e-16</td><td style="color: var(--accent-yellow);">***</td></tr>
+                            <tr><td>average_dining_expenses</td><td>0.0028433</td><td>0.0001715</td><td>16.579</td><td>&lt;2e-16</td><td style="color: var(--accent-yellow);">***</td></tr>
+                            <tr><td>reservations</td><td>0.0226983</td><td>0.0019080</td><td>11.896</td><td>&lt;2e-16</td><td style="color: var(--accent-yellow);">***</td></tr>
+                            <tr><td>discount</td><td>0.1167195</td><td>0.0137693</td><td>8.477</td><td>&lt;2e-16</td><td style="color: var(--accent-yellow);">***</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="r-output-line" style="font-size: 0.95rem; color: var(--text-muted);">Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</p>
+                    <br>
+                    <p class="r-output-line">Residual standard error: <span class="val">0.3561</span> on 996 degrees of freedom</p>
+                    <p class="r-output-line">Multiple R-squared: <span class="val">0.3385</span> &nbsp; Adjusted R-squared: <span class="val">0.3365</span></p>
+                    <p class="r-output-line">F-statistic: <span class="val">169.9</span> on 3 and 996 DF, p-value: <span class="val">&lt; 2.2e-16</span></p>
                 </div>
                 <p class="image-caption">Figure 15: Multiple regression model summary</p>
 
-                <div class="image-frame">
-                    <img src="ANL553-TMA/Screenshot 2026-01-03 184639.png" alt="Figure 16: p-value from multiple regression model">
+                <div class="r-output-box">
+                    <div class="r-output-title">P-Values</div>
+                    <table class="data-table" style="margin-bottom: 15px;">
+                        <thead>
+                            <tr><th>(Intercept)</th><th>average_dining_expenses</th><th>reservations</th><th>discount</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>5.21e-36</td><td>1.07e-54</td><td>1.31e-30</td><td>8.26e-17</td></tr>
+                        </tbody>
+                    </table>
+                    <p class="r-output-line"><span class="conclusion">&#10003; Reject H₀:</span> Average dining expense, reservation and discount level have an impact on membership conversion at <span class="val">5% significance level</span>.</p>
+                    <p class="r-output-line"><span class="conclusion">&#10003; Reject H₀:</span> Average dining expense, reservation and discount level have an impact on membership conversion at <span class="val">1% significance level</span>.</p>
                 </div>
                 <p class="image-caption">Figure 16: P-values from multiple regression</p>
 
@@ -1792,8 +2097,14 @@
                         <p class="image-caption">Figure 17: Chi-squared contingency table</p>
                     </div>
                     <div class="image-grid-item">
-                        <div class="image-frame">
-                            <img src="ANL553-TMA/Screenshot 2026-01-03 184707.png" alt="Figure 18: Chi-squared test result">
+                        <div class="r-output-box">
+                            <div class="r-output-title">Pearson's Chi-squared Test</div>
+                            <p class="r-output-line"><span class="label">Data:</span> conversion_table</p>
+                            <br>
+                            <p class="r-output-line">X-squared = <span class="val">46.823</span>, df = <span class="val">2</span>, p-value = <span class="val">6.8e-11</span></p>
+                            <br>
+                            <p class="r-output-line"><span class="conclusion">&#10003; Reject H₀:</span> Significant relationship between discount and conversion rate at <span class="val">5%</span> significance level.</p>
+                            <p class="r-output-line"><span class="conclusion">&#10003; Reject H₀:</span> Significant relationship between discount and conversion rate at <span class="val">1%</span> significance level.</p>
                         </div>
                         <p class="image-caption">Figure 18: Chi-squared test result</p>
                     </div>
@@ -1827,27 +2138,32 @@
                 <div class="image-grid">
                     <div class="image-grid-item">
                         <div class="image-frame">
-                            <img src="ANL553-TMA/Picture3.png" alt="Figure 20: Create new variable to filter discount groups">
+                            <img src="ANL553-TMA/Picture3.png" alt="Figure 19: Create new variable to filter discount groups">
                         </div>
-                        <p class="image-caption">Figure 20: Filtering discount groups</p>
+                        <p class="image-caption">Figure 19: Filtering discount groups</p>
                     </div>
                     <div class="image-grid-item">
                         <div class="image-frame">
-                            <img src="ANL553-TMA/Picture6.png" alt="Figure 21: Summary of conversion rates for two discount groups">
+                            <img src="ANL553-TMA/Picture6.png" alt="Figure 20: Summary of conversion rates for two discount groups">
                         </div>
-                        <p class="image-caption">Figure 21: Conversion rate summary</p>
+                        <p class="image-caption">Figure 20: Conversion rate summary</p>
                     </div>
                 </div>
 
                 <div class="image-frame">
-                    <img src="ANL553-TMA/Picture4.png" alt="Figure 22: Calculating Z-value and p-value from two-proportion Z-test">
+                    <img src="ANL553-TMA/Picture4.png" alt="Figure 21: Calculating Z-value and p-value from two-proportion Z-test">
                 </div>
-                <p class="image-caption">Figure 22: Z-test calculations</p>
+                <p class="image-caption">Figure 21: Z-test calculations</p>
 
-                <div class="image-frame">
-                    <img src="ANL553-TMA/Screenshot 2026-01-03 184729.png" alt="Figure 23: Discount group membership conversion rate table, Z-value and p-value">
+                <div class="r-output-box">
+                    <div class="r-output-title">Two-Proportion Z-Test Results</div>
+                    <p class="r-output-line">Z-Statistic: <span class="val">2.278271</span></p>
+                    <p class="r-output-line">P-Value: <span class="val">0.01135521</span></p>
+                    <br>
+                    <p class="r-output-line"><span class="conclusion">&#10003; Reject H₀:</span> Conversion rate for the 10% discount group is equal to the conversion rate for the 20% discount group at <span class="val">5% significance level</span>.</p>
+                    <p class="r-output-line"><span style="color: var(--accent-red);">&#10007; Fail to reject H₀:</span> Conversion rate for the 10% discount group is equal to the conversion rate for the 20% discount group at <span class="val">1% significance level</span>.</p>
                 </div>
-                <p class="image-caption">Figure 23: Z-test results summary</p>
+                <p class="image-caption">Figure 22: Z-test results summary</p>
 
                 <div class="stats-grid">
                     <div class="stat-card blue">
@@ -2062,24 +2378,55 @@
             </div>
 
             <div class="image-frame">
-                <img src="ANL553-TMA/Picture5.png" alt="Figure 24: Multicollinearity results">
+                <img src="ANL553-TMA/Picture5.png" alt="Figure 23: Multicollinearity results">
             </div>
-            <p class="image-caption">Figure 24: Multicollinearity check (VIF) for experiment model</p>
+            <p class="image-caption">Figure 23: Multicollinearity check (VIF) for experiment model</p>
 
             <p class="text-content">
-                From Figure 24, multicollinearity results are all <span class="highlight">less than 2</span> (threshold = 5), 
+                From Figure 23, multicollinearity results are all <span class="highlight">less than 2</span> (threshold = 5), 
                 suggesting low multicollinearity and the linear regression model is acceptable.
             </p>
 
             <h3 class="subsection-title">Experiment Results</h3>
 
-            <div class="image-frame">
-                <img src="ANL553-TMA/Screenshot 2026-01-03 184814.png" alt="Figure 25: Summary result of linear regression model">
+            <div class="r-output-box">
+                <div class="r-output-title">Experiment Linear Regression Output</div>
+                <p class="r-output-line"><span class="label">VIF Values:</span> discount_10 = <span class="val">1.3627</span>, discount_20 = <span class="val">1.3606</span>, average_dining_expenses = <span class="val">1.0047</span>, reservations = <span class="val">1.0050</span></p>
+                <br>
+                <p class="r-output-line"><span class="label">Call:</span> lm(convert ~ discount_10 + discount_20 + average_dining_expenses + reservations)</p>
+                <br>
+                <p class="r-output-line"><span class="label">Residuals:</span></p>
+                <table class="data-table" style="margin-bottom: 15px;">
+                    <thead>
+                        <tr><th>Min</th><th>1Q</th><th>Median</th><th>3Q</th><th>Max</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>-0.83072</td><td>-0.24665</td><td>-0.06901</td><td>0.17432</td><td>1.09623</td></tr>
+                    </tbody>
+                </table>
+                <p class="r-output-line"><span class="label">Coefficients:</span></p>
+                <table class="data-table" style="margin-bottom: 15px;">
+                    <thead>
+                        <tr><th>Variable</th><th>Estimate</th><th>Std. Error</th><th>t value</th><th>Pr(&gt;|t|)</th><th>Sig.</th></tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>(Intercept)</td><td>-0.4227256</td><td>0.0330015</td><td>-12.809</td><td>&lt; 2e-16</td><td style="color: var(--accent-yellow);">***</td></tr>
+                        <tr><td>discount_10</td><td>0.1258953</td><td>0.0280057</td><td>4.495</td><td>7.76e-06</td><td style="color: var(--accent-yellow);">***</td></tr>
+                        <tr><td>discount_20</td><td>0.2336840</td><td>0.0275673</td><td>8.477</td><td>&lt; 2e-16</td><td style="color: var(--accent-yellow);">***</td></tr>
+                        <tr><td>average_dining_expenses</td><td>0.0028416</td><td>0.0001717</td><td>16.549</td><td>&lt; 2e-16</td><td style="color: var(--accent-yellow);">***</td></tr>
+                        <tr><td>reservations</td><td>0.0226607</td><td>0.0019108</td><td>11.859</td><td>&lt; 2e-16</td><td style="color: var(--accent-yellow);">***</td></tr>
+                    </tbody>
+                </table>
+                <p class="r-output-line" style="font-size: 0.95rem; color: var(--text-muted);">Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</p>
+                <br>
+                <p class="r-output-line">Residual standard error: <span class="val">0.3564</span> on 994 degrees of freedom</p>
+                <p class="r-output-line">Multiple R-squared: <span class="val">0.3387</span> &nbsp; Adjusted R-squared: <span class="val">0.3360</span></p>
+                <p class="r-output-line">F-statistic: <span class="val">127.3</span> on 4 and 994 DF, p-value: <span class="val">&lt; 2.2e-16</span></p>
             </div>
-            <p class="image-caption">Figure 25: Linear regression results from experiment</p>
+            <p class="image-caption">Figure 24: Linear regression results from experiment</p>
 
             <p class="text-content">
-                The experiment used 999 randomly selected rows using set.seed function. Results from Figure 25:
+                The experiment used 999 randomly selected rows using set.seed function. Results from Figure 24:
             </p>
 
             <div class="stats-grid">
@@ -2236,6 +2583,12 @@
         </p>
     </footer>
 
+    <!-- Lightbox Modal -->
+    <div class="image-lightbox" id="imageLightbox">
+        <span class="lightbox-close">✕ CLOSE</span>
+        <img src="" alt="Full size image">
+    </div>
+
     <!-- ==================== JAVASCRIPT ==================== -->
     <script>
         // Progress Bar
@@ -2296,6 +2649,31 @@
         }, { threshold: 0.1 });
 
         fadeElements.forEach(el => fadeObserver.observe(el));
+
+        // Lightbox for clickable images
+        const lightbox = document.getElementById('imageLightbox');
+        const lightboxImg = lightbox.querySelector('img');
+        const lightboxClose = lightbox.querySelector('.lightbox-close');
+
+        document.querySelectorAll('.image-frame img').forEach(img => {
+            img.addEventListener('click', () => {
+                lightboxImg.src = img.src;
+                lightboxImg.alt = img.alt;
+                lightbox.classList.add('active');
+            });
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target !== lightboxImg) {
+                lightbox.classList.remove('active');
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                lightbox.classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>
