@@ -4,36 +4,32 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Wrangling with MySQL | Wei Kiat Tan</title>
-    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=JetBrains+Mono:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        /* ============================================
-           CSS VARIABLES & RESET
-           ============================================ */
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #12121a;
-            --bg-card: #1a1a2e;
-            --bg-card-hover: #1e1e35;
-            --bg-code: #0d1117;
-            --text-primary: #e8e8f0;
-            --text-secondary: #8888a8;
-            --text-muted: #5a5a7a;
-            --accent-cyan: #00f5d4;
-            --accent-purple: #9b5de5;
-            --accent-pink: #f15bb5;
-            --accent-yellow: #fee440;
-            --accent-orange: #ff6b35;
-            --accent-blue: #00bbf9;
-            --border-color: #2a2a40;
-            --border-glow: rgba(0, 245, 212, 0.15);
-            --font-pixel: 'Press Start 2P', monospace;
-            --font-mono: 'JetBrains Mono', monospace;
-            --font-body: 'Space Grotesk', sans-serif;
-            --max-width: 900px;
-            --section-gap: 120px;
+            --pixel-dark: #0d0d1a;
+            --pixel-deep: #1a1a3e;
+            --pixel-purple: #4a3d6b;
+            --pixel-mid: #6b5b8c;
+            --pixel-pink: #e8a4b8;
+            --pixel-sunset: #ffd4b8;
+            --pixel-star: #ffffff;
+            --pixel-glow: rgba(232, 164, 184, 0.6);
+
+            --card-bg: rgba(13, 13, 26, 0.85);
+            --text-primary: #ffffff;
+            --text-secondary: #e8a4b8;
+
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --accent-blue: #60a5fa;
+            --accent-yellow: #fbbf24;
         }
 
-        *, *::before, *::after {
+        * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -41,427 +37,441 @@
 
         html {
             scroll-behavior: smooth;
-            scrollbar-width: thin;
-            scrollbar-color: var(--accent-cyan) var(--bg-secondary);
         }
 
         body {
-            background: var(--bg-primary);
+            font-family: 'VT323', monospace;
+            background-color: var(--pixel-dark);
             color: var(--text-primary);
-            font-family: var(--font-body);
-            line-height: 1.75;
-            font-size: 16px;
+            line-height: 1.6;
             overflow-x: hidden;
+            font-size: 18px;
         }
 
-        /* ============================================
-           BACKGROUND GRID
-           ============================================ */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-image:
-                linear-gradient(rgba(0, 245, 212, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 245, 212, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            z-index: 0;
-            pointer-events: none;
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--pixel-dark);
+            border-left: 4px solid var(--pixel-purple);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--pixel-pink);
+            border: 2px solid var(--pixel-dark);
         }
 
-        /* ============================================
-           NAVIGATION
-           ============================================ */
-        .nav {
+        /* Back Button */
+        .back-button {
             position: fixed;
-            top: 0; left: 0;
-            width: 100%;
+            top: 30px;
+            left: 30px;
             z-index: 1000;
-            background: rgba(10, 10, 15, 0.85);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-pink);
+            color: var(--pixel-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+            clip-path: polygon(
+                0 6px, 6px 6px, 6px 0,
+                calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px,
+                100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px),
+                calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 6px),
+                0 calc(100% - 6px)
+            );
+        }
+
+        .back-button:hover {
+            background: var(--pixel-pink);
+            color: var(--pixel-dark);
+            transform: translateX(-5px);
+        }
+
+        /* Reading Progress Bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--pixel-pink), var(--pixel-sunset));
+            z-index: 9999;
+            transition: width 0.1s ease;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar-nav {
+            position: fixed;
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 900;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 15px;
+            background: var(--card-bg);
+            border: 2px solid var(--pixel-mid);
+            color: var(--pixel-mid);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.35rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            backdrop-filter: blur(10px);
+        }
+
+        .sidebar-nav-item:hover {
+            border-color: var(--pixel-pink);
+            color: var(--pixel-pink);
+            transform: translateX(5px);
+        }
+
+        .sidebar-nav-item.active {
+            border-color: var(--pixel-pink);
+            background: var(--pixel-pink);
+            color: var(--pixel-dark);
+        }
+
+        .sidebar-nav-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--pixel-mid);
+            flex-shrink: 0;
+        }
+
+        .sidebar-nav-item:hover .sidebar-nav-dot,
+        .sidebar-nav-item.active .sidebar-nav-dot {
+            background: currentColor;
+        }
+
+        .sidebar-nav-label {
+            opacity: 0;
+            max-width: 0;
+            overflow: hidden;
             transition: all 0.3s ease;
         }
 
-        .nav-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            height: 60px;
+        .sidebar-nav:hover .sidebar-nav-label {
+            opacity: 1;
+            max-width: 200px;
         }
 
-        .nav-back {
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            color: var(--accent-cyan);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: all 0.3s;
+        .sidebar-nav-item.active .sidebar-nav-label {
+            opacity: 1;
+            max-width: 200px;
         }
 
-        .nav-back:hover {
-            color: var(--accent-yellow);
-            transform: translateX(-4px);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 1.5rem;
-            list-style: none;
-        }
-
-        .nav-links a {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            transition: color 0.3s;
-        }
-
-        .nav-links a:hover {
-            color: var(--accent-cyan);
-        }
-
-        /* ============================================
-           HERO SECTION
-           ============================================ */
+        /* Hero Section */
         .hero {
-            position: relative;
-            min-height: 100vh;
+            min-height: 70vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            text-align: center;
-            padding: 120px 2rem 80px;
+            padding: 100px 40px 80px;
+            background: linear-gradient(135deg, var(--pixel-dark) 0%, var(--pixel-deep) 50%, var(--pixel-purple) 100%);
+            position: relative;
             overflow: hidden;
         }
 
         .hero::before {
             content: '';
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             background:
-                radial-gradient(ellipse at 20% 50%, rgba(155, 93, 229, 0.08) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 50%, rgba(0, 245, 212, 0.06) 0%, transparent 60%);
-            z-index: 0;
+                radial-gradient(circle at 20% 30%, rgba(232, 164, 184, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(255, 212, 184, 0.15) 0%, transparent 40%);
+            z-index: 1;
         }
 
         .hero-content {
             position: relative;
-            z-index: 1;
-            max-width: 800px;
+            z-index: 10;
+            text-align: center;
+            max-width: 900px;
         }
 
-        .hero-tag {
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: var(--accent-purple);
+        .project-category {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--pixel-purple);
+            border: 2px solid var(--pixel-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.45rem;
+            color: var(--pixel-pink);
             text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 1.5rem;
-            opacity: 0;
-            animation: fadeUp 0.8s ease 0.2s forwards;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
         }
 
         .hero-title {
-            font-family: var(--font-pixel);
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            color: var(--text-primary);
-            line-height: 2;
-            margin-bottom: 1.5rem;
-            opacity: 0;
-            animation: fadeUp 0.8s ease 0.4s forwards;
-        }
-
-        .hero-title .highlight {
-            color: var(--accent-cyan);
-            text-shadow: 0 0 30px rgba(0, 245, 212, 0.3);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2.2rem;
+            color: var(--pixel-sunset);
+            margin-bottom: 30px;
+            line-height: 1.5;
+            text-shadow: 4px 4px 0 var(--pixel-purple), 0 0 30px var(--pixel-glow);
         }
 
         .hero-subtitle {
-            font-family: var(--font-body);
-            font-size: 1.15rem;
-            color: var(--text-secondary);
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin-bottom: 40px;
+            max-width: 750px;
             line-height: 1.8;
-            max-width: 650px;
-            margin: 0 auto 2.5rem;
-            opacity: 0;
-            animation: fadeUp 0.8s ease 0.6s forwards;
         }
 
-        .hero-meta {
+        /* Stats Row */
+        .stats-row {
             display: flex;
             justify-content: center;
-            gap: 2.5rem;
+            gap: 40px;
             flex-wrap: wrap;
-            opacity: 0;
-            animation: fadeUp 0.8s ease 0.8s forwards;
+            margin-top: 20px;
         }
 
-        .hero-stat {
+        .stat-item {
             text-align: center;
+            padding: 20px 30px;
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-mid);
+            min-width: 140px;
         }
 
-        .hero-stat-value {
-            font-family: var(--font-pixel);
-            font-size: 1.5rem;
-            color: var(--accent-cyan);
+        .stat-number {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2rem;
+            color: var(--pixel-pink);
             display: block;
-            margin-bottom: 0.3rem;
+            margin-bottom: 8px;
         }
 
-        .hero-stat-label {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--text-muted);
+        .stat-label {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.4rem;
+            color: var(--pixel-mid);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        .pixel-decoration {
-            font-family: var(--font-pixel);
-            font-size: 2rem;
-            color: var(--accent-cyan);
-            opacity: 0.15;
-            position: absolute;
-            user-select: none;
-        }
-
-        .pixel-decoration.top-left {
-            top: 15%;
-            left: 8%;
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .pixel-decoration.bottom-right {
-            bottom: 15%;
-            right: 8%;
-            animation: float 6s ease-in-out infinite 3s;
-        }
-
-        .scroll-indicator {
-            position: absolute;
-            bottom: 2rem;
-            left: 50%;
-            transform: translateX(-50%);
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            opacity: 0;
-            animation: fadeUp 0.8s ease 1s forwards;
-        }
-
-        .scroll-indicator::after {
-            content: '';
-            display: block;
-            width: 1px;
-            height: 30px;
-            background: linear-gradient(to bottom, var(--accent-cyan), transparent);
-            margin: 0.5rem auto 0;
-            animation: scrollPulse 2s ease-in-out infinite;
-        }
-
-        /* ============================================
-           SECTION STYLING
-           ============================================ */
-        .section {
-            position: relative;
-            z-index: 1;
-            max-width: var(--max-width);
+        /* Main Content */
+        .main-content {
+            max-width: 900px;
             margin: 0 auto;
-            padding: 0 2rem;
-            margin-bottom: var(--section-gap);
+            padding: 80px 40px;
         }
 
-        .section-label {
-            font-family: var(--font-pixel);
+        /* Section Styling */
+        .section {
+            margin-bottom: 100px;
+        }
+
+        .section-header {
+            margin-bottom: 40px;
+        }
+
+        .section-number {
+            font-family: 'Press Start 2P', cursive;
             font-size: 0.6rem;
-            color: var(--accent-purple);
+            color: var(--pixel-mid);
             text-transform: uppercase;
             letter-spacing: 3px;
-            margin-bottom: 0.75rem;
+            margin-bottom: 15px;
+            display: block;
         }
 
         .section-title {
-            font-family: var(--font-body);
-            font-size: clamp(1.6rem, 3.5vw, 2.2rem);
-            font-weight: 700;
-            color: var(--text-primary);
-            margin-bottom: 1.5rem;
-            line-height: 1.3;
-        }
-
-        .section-intro {
-            font-size: 1.05rem;
-            color: var(--text-secondary);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.1rem;
+            color: var(--pixel-sunset);
             line-height: 1.8;
-            margin-bottom: 2rem;
+            text-shadow: 2px 2px 0 var(--pixel-purple);
         }
 
-        /* ============================================
-           QUESTION CARDS
-           ============================================ */
+        /* Content Card */
+        .content-card {
+            background: var(--card-bg);
+            border: 4px solid var(--pixel-pink);
+            padding: 50px;
+            margin-bottom: 40px;
+            clip-path: polygon(
+                0 12px, 12px 12px, 12px 0,
+                calc(100% - 12px) 0, calc(100% - 12px) 12px, 100% 12px,
+                100% calc(100% - 12px), calc(100% - 12px) calc(100% - 12px),
+                calc(100% - 12px) 100%, 12px 100%, 12px calc(100% - 12px),
+                0 calc(100% - 12px)
+            );
+        }
+
+        .content-text {
+            font-size: 1.25rem;
+            line-height: 1.9;
+            color: var(--text-primary);
+            margin-bottom: 25px;
+        }
+
+        .content-text:last-child {
+            margin-bottom: 0;
+        }
+
+        .highlight {
+            color: var(--pixel-sunset);
+            font-weight: bold;
+        }
+
+        /* Question Header */
         .question-header {
-            background: linear-gradient(135deg, var(--bg-card), var(--bg-card-hover));
-            border: 1px solid var(--border-color);
-            border-left: 4px solid var(--accent-cyan);
-            border-radius: 8px;
-            padding: 1.5rem 2rem;
-            margin-bottom: 2rem;
-            font-family: var(--font-body);
-            font-size: 0.95rem;
-            color: var(--text-secondary);
+            background: linear-gradient(135deg, var(--pixel-purple) 0%, var(--pixel-deep) 100%);
+            border: 3px solid var(--pixel-mid);
+            border-left: 6px solid var(--pixel-pink);
+            padding: 30px 35px;
+            margin-bottom: 40px;
+            font-size: 1.2rem;
+            color: var(--text-primary);
             line-height: 1.8;
         }
 
         .question-header .q-label {
-            font-family: var(--font-pixel);
-            font-size: 0.6rem;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
             color: var(--accent-yellow);
             display: block;
-            margin-bottom: 0.75rem;
+            margin-bottom: 12px;
             letter-spacing: 2px;
+            text-transform: uppercase;
         }
 
-        /* ============================================
-           STEP BLOCKS
-           ============================================ */
+        .question-header code {
+            background: rgba(232, 164, 184, 0.2);
+            border: 1px solid var(--pixel-mid);
+            padding: 2px 8px;
+            color: var(--pixel-pink);
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+        }
+
+        /* Step Blocks */
         .step-block {
-            margin-bottom: 2.5rem;
+            margin-bottom: 50px;
         }
 
         .step-number {
-            font-family: var(--font-pixel);
-            font-size: 0.55rem;
-            color: var(--accent-cyan);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            color: var(--pixel-pink);
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 0.5rem;
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
-            gap: 0.75rem;
+            gap: 15px;
         }
 
         .step-number::after {
             content: '';
             flex: 1;
-            height: 1px;
-            background: linear-gradient(to right, var(--border-color), transparent);
-        }
-
-        .step-title {
-            font-family: var(--font-body);
-            font-size: 1.25rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 1rem;
+            height: 3px;
+            background: linear-gradient(to right, var(--pixel-mid), transparent);
         }
 
         .step-text {
-            font-size: 1rem;
-            color: var(--text-secondary);
+            font-size: 1.2rem;
+            color: var(--text-primary);
             line-height: 1.8;
-            margin-bottom: 1.25rem;
+            margin-bottom: 20px;
         }
 
-        /* ============================================
-           FIGURE PLACEHOLDERS
-           ============================================ */
+        .step-text code {
+            background: rgba(232, 164, 184, 0.2);
+            border: 1px solid var(--pixel-mid);
+            padding: 2px 8px;
+            color: var(--pixel-pink);
+            font-family: 'VT323', monospace;
+            font-size: 1.2rem;
+        }
+
+        /* Figure Containers */
         .figure-container {
-            background: var(--bg-code);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-mid);
             overflow: hidden;
-            margin: 1.5rem 0;
+            margin: 25px 0;
         }
 
         .figure-placeholder {
             width: 100%;
-            min-height: 220px;
+            min-height: 200px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background:
-                repeating-linear-gradient(
-                    0deg,
-                    transparent,
-                    transparent 19px,
-                    rgba(0, 245, 212, 0.03) 19px,
-                    rgba(0, 245, 212, 0.03) 20px
-                ),
-                repeating-linear-gradient(
-                    90deg,
-                    transparent,
-                    transparent 19px,
-                    rgba(0, 245, 212, 0.03) 19px,
-                    rgba(0, 245, 212, 0.03) 20px
-                );
-            padding: 2rem;
+            background: linear-gradient(135deg, var(--pixel-deep), var(--pixel-dark));
+            padding: 30px;
             text-align: center;
         }
 
         .figure-placeholder .icon {
             font-size: 2rem;
-            margin-bottom: 0.75rem;
+            margin-bottom: 10px;
             opacity: 0.5;
         }
 
         .figure-placeholder .label {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-muted);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.4rem;
+            color: var(--pixel-mid);
             letter-spacing: 1px;
         }
 
         .figure-caption {
-            padding: 0.75rem 1.25rem;
-            border-top: 1px solid var(--border-color);
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-muted);
+            padding: 12px 20px;
+            border-top: 3px solid var(--pixel-mid);
+            font-size: 1rem;
+            color: var(--pixel-mid);
         }
 
         .figure-caption strong {
-            color: var(--accent-cyan);
+            color: var(--pixel-pink);
         }
 
-        /* ============================================
-           CODE BLOCKS
-           ============================================ */
+        /* Code Blocks */
         .code-block {
-            background: var(--bg-code);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            background: var(--pixel-dark);
+            border: 3px solid var(--pixel-mid);
             overflow: hidden;
-            margin: 1.5rem 0;
+            margin: 25px 0;
+            position: relative;
         }
 
         .code-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0.75rem 1.25rem;
-            border-bottom: 1px solid var(--border-color);
-            background: rgba(0, 245, 212, 0.03);
+            padding: 12px 20px;
+            border-bottom: 3px solid var(--pixel-mid);
+            background: var(--pixel-deep);
         }
 
         .code-header .lang {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--accent-cyan);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.4rem;
+            color: var(--pixel-pink);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -472,294 +482,325 @@
         }
 
         .code-header .dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--border-color);
+            width: 10px;
+            height: 10px;
+            border: 2px solid;
         }
 
-        .code-header .dot:nth-child(1) { background: #ff5f57; }
-        .code-header .dot:nth-child(2) { background: #febc2e; }
-        .code-header .dot:nth-child(3) { background: #28c840; }
+        .code-header .dot:nth-child(1) { border-color: var(--accent-red); background: var(--accent-red); }
+        .code-header .dot:nth-child(2) { border-color: var(--accent-yellow); background: var(--accent-yellow); }
+        .code-header .dot:nth-child(3) { border-color: var(--accent-green); background: var(--accent-green); }
 
         .code-body {
-            padding: 1.25rem;
+            padding: 20px;
             overflow-x: auto;
         }
 
         .code-body pre {
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
+            font-family: 'VT323', monospace;
+            font-size: 1.1rem;
             line-height: 1.7;
-            color: var(--text-secondary);
+            color: var(--text-primary);
             white-space: pre;
             tab-size: 2;
         }
 
-        .code-body .keyword { color: var(--accent-purple); }
-        .code-body .function { color: var(--accent-cyan); }
-        .code-body .string { color: var(--accent-yellow); }
-        .code-body .comment { color: var(--text-muted); font-style: italic; }
-        .code-body .number { color: var(--accent-orange); }
+        .code-body .keyword { color: var(--pixel-pink); }
+        .code-body .function { color: var(--pixel-sunset); }
+        .code-body .string { color: var(--accent-green); }
+        .code-body .comment { color: var(--pixel-mid); font-style: italic; }
+        .code-body .number { color: var(--accent-yellow); }
 
-        /* ============================================
-           INSIGHT CALLOUTS
-           ============================================ */
-        .callout {
-            background: linear-gradient(135deg, rgba(155, 93, 229, 0.08), rgba(0, 245, 212, 0.05));
-            border: 1px solid rgba(155, 93, 229, 0.2);
-            border-radius: 8px;
-            padding: 1.5rem 2rem;
-            margin: 2rem 0;
+        /* Copy Button */
+        .copy-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 8px 16px;
+            background: var(--pixel-purple);
+            border: 2px solid var(--pixel-mid);
+            color: var(--pixel-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.35rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .callout-label {
-            font-family: var(--font-pixel);
-            font-size: 0.55rem;
-            color: var(--accent-purple);
+        .copy-btn:hover {
+            background: var(--pixel-pink);
+            color: var(--pixel-dark);
+            border-color: var(--pixel-pink);
+        }
+
+        .copy-btn.copied {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+            color: var(--pixel-dark);
+        }
+
+        /* Insight Boxes (Callouts) */
+        .insight-box {
+            background: rgba(74, 222, 128, 0.1);
+            border: 3px solid var(--accent-green);
+            padding: 25px 30px;
+            margin: 30px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .insight-box.warning {
+            background: rgba(248, 113, 113, 0.1);
+            border-color: var(--accent-red);
+        }
+
+        .insight-box.info {
+            background: rgba(96, 165, 250, 0.1);
+            border-color: var(--accent-blue);
+        }
+
+        .insight-icon {
+            font-size: 1.5rem;
+            color: var(--accent-green);
+            flex-shrink: 0;
+        }
+
+        .insight-box.warning .insight-icon {
+            color: var(--accent-red);
+        }
+
+        .insight-box.info .insight-icon {
+            color: var(--accent-blue);
+        }
+
+        .insight-content {
+            flex: 1;
+        }
+
+        .insight-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            color: var(--accent-green);
+            margin-bottom: 10px;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            margin-bottom: 0.75rem;
         }
 
-        .callout p {
-            font-size: 0.95rem;
-            color: var(--text-secondary);
-            line-height: 1.8;
+        .insight-box.warning .insight-title {
+            color: var(--accent-red);
         }
 
-        .callout strong {
+        .insight-box.info .insight-title {
+            color: var(--accent-blue);
+        }
+
+        .insight-text {
+            font-size: 1.15rem;
             color: var(--text-primary);
+            line-height: 1.7;
         }
 
-        .callout.warning {
-            background: linear-gradient(135deg, rgba(255, 107, 53, 0.08), rgba(254, 228, 64, 0.05));
-            border-color: rgba(255, 107, 53, 0.2);
-        }
-
-        .callout.warning .callout-label {
-            color: var(--accent-orange);
-        }
-
-        /* ============================================
-           DATA STATS ROW
-           ============================================ */
-        .stats-row {
+        /* Data Stats Row */
+        .data-stats-row {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
+            gap: 15px;
+            margin: 30px 0;
         }
 
-        .stat-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.25rem;
+        .data-stat-card {
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-mid);
+            padding: 20px;
             text-align: center;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
-        .stat-card:hover {
-            border-color: var(--accent-cyan);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0, 245, 212, 0.1);
+        .data-stat-card:hover {
+            border-color: var(--pixel-pink);
+            transform: translateY(-3px);
         }
 
-        .stat-card .value {
-            font-family: var(--font-pixel);
-            font-size: 1.1rem;
-            color: var(--accent-cyan);
+        .data-stat-card .value {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            color: var(--pixel-pink);
             display: block;
-            margin-bottom: 0.3rem;
+            margin-bottom: 8px;
         }
 
-        .stat-card .label {
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
-            color: var(--text-muted);
+        .data-stat-card .label {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.35rem;
+            color: var(--pixel-mid);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
 
-        /* ============================================
-           PROCESS FLOW
-           ============================================ */
+        /* Process Flow */
         .process-flow {
             display: flex;
             flex-wrap: wrap;
-            gap: 1rem;
-            margin: 2rem 0;
+            gap: 15px;
+            margin: 30px 0;
             justify-content: center;
         }
 
         .process-step {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1rem 1.5rem;
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-mid);
+            padding: 20px 25px;
             text-align: center;
             flex: 1;
             min-width: 140px;
-            position: relative;
+        }
+
+        .process-step:hover {
+            border-color: var(--pixel-pink);
         }
 
         .process-step .step-icon {
             font-size: 1.5rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 8px;
         }
 
         .process-step .step-name {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-primary);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.45rem;
+            color: var(--pixel-sunset);
             font-weight: 600;
         }
 
         .process-step .step-desc {
-            font-family: var(--font-mono);
-            font-size: 0.65rem;
-            color: var(--text-muted);
-            margin-top: 0.25rem;
+            font-size: 1rem;
+            color: var(--pixel-mid);
+            margin-top: 5px;
         }
 
         .process-arrow {
             display: flex;
             align-items: center;
-            color: var(--accent-cyan);
-            font-size: 1.2rem;
-            opacity: 0.5;
+            color: var(--pixel-pink);
+            font-size: 1.5rem;
         }
 
-        /* ============================================
-           SQL APPENDIX
-           ============================================ */
-        .sql-appendix {
-            background: var(--bg-secondary);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 2rem;
-            margin-top: 3rem;
+        /* SQL Appendix */
+        .collapsible {
+            margin: 25px 0;
         }
 
-        .sql-appendix summary {
-            font-family: var(--font-mono);
-            font-size: 0.85rem;
-            color: var(--accent-cyan);
+        .collapsible-header {
+            background: var(--pixel-purple);
+            border: 3px solid var(--pixel-mid);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             cursor: pointer;
-            padding: 0.5rem 0;
-            user-select: none;
-            list-style: none;
+            transition: all 0.2s ease;
         }
 
-        .sql-appendix summary::-webkit-details-marker {
-            display: none;
+        .collapsible-header:hover {
+            border-color: var(--pixel-pink);
         }
 
-        .sql-appendix summary::before {
-            content: '▸ ';
-            color: var(--accent-purple);
+        .collapsible-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            color: var(--pixel-sunset);
         }
 
-        .sql-appendix[open] summary::before {
-            content: '▾ ';
+        .collapsible-icon {
+            color: var(--pixel-pink);
+            font-size: 1rem;
+            transition: transform 0.3s ease;
         }
 
-        /* ============================================
-           REFERENCES
-           ============================================ */
+        .collapsible.open .collapsible-icon {
+            transform: rotate(180deg);
+        }
+
+        .collapsible-content {
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-mid);
+            border-top: none;
+            padding: 0 30px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .collapsible.open .collapsible-content {
+            padding: 30px;
+            max-height: 5000px;
+        }
+
+        /* References */
         .references {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem 2rem;
-            margin-top: 2rem;
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-mid);
+            padding: 30px 35px;
+            margin-top: 40px;
         }
 
         .references-title {
-            font-family: var(--font-pixel);
-            font-size: 0.55rem;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
             color: var(--accent-yellow);
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin-bottom: 1rem;
+            margin-bottom: 20px;
         }
 
         .ref-item {
-            font-family: var(--font-mono);
-            font-size: 0.75rem;
-            color: var(--text-muted);
+            font-size: 1.1rem;
+            color: var(--pixel-mid);
             line-height: 1.8;
-            padding-left: 1.5rem;
+            padding-left: 25px;
             position: relative;
-            margin-bottom: 0.75rem;
+            margin-bottom: 12px;
         }
 
         .ref-item::before {
-            content: '→';
+            content: '>';
             position: absolute;
             left: 0;
-            color: var(--accent-purple);
+            color: var(--pixel-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            top: 5px;
         }
 
-        /* ============================================
-           FOOTER
-           ============================================ */
-        .footer {
-            position: relative;
-            z-index: 1;
-            border-top: 1px solid var(--border-color);
-            padding: 3rem 2rem;
-            text-align: center;
+        .ref-item code {
+            background: rgba(232, 164, 184, 0.2);
+            border: 1px solid var(--pixel-mid);
+            padding: 2px 8px;
+            color: var(--pixel-pink);
+            font-family: 'VT323', monospace;
         }
 
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .footer-links a {
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--accent-cyan);
-        }
-
-        .footer-copy {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-        }
-
-        /* ============================================
-           METHODOLOGY CARDS
-           ============================================ */
+        /* Methodology Cards */
         .method-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
+            gap: 15px;
+            margin: 30px 0;
         }
 
         .method-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.25rem;
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-mid);
+            padding: 25px;
         }
 
         .method-card h4 {
-            font-family: var(--font-mono);
-            font-size: 0.8rem;
-            color: var(--accent-cyan);
-            margin-bottom: 0.5rem;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            color: var(--pixel-pink);
+            margin-bottom: 15px;
         }
 
         .method-card ul {
@@ -768,54 +809,75 @@
         }
 
         .method-card li {
-            font-family: var(--font-mono);
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            padding: 0.2rem 0;
-            padding-left: 1rem;
+            font-size: 1.1rem;
+            color: var(--pixel-mid);
+            padding: 3px 0;
+            padding-left: 20px;
             position: relative;
         }
 
         .method-card li::before {
-            content: '•';
+            content: '>';
             position: absolute;
             left: 0;
-            color: var(--accent-purple);
+            color: var(--pixel-sunset);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.4rem;
+            top: 5px;
         }
 
-        /* ============================================
-           SECTION DIVIDER
-           ============================================ */
+        /* Divider */
         .divider {
-            max-width: var(--max-width);
+            max-width: 900px;
             margin: 0 auto;
-            padding: 0 2rem;
-            margin-bottom: var(--section-gap);
+            padding: 0 40px;
+            margin-bottom: 80px;
         }
 
         .divider-line {
-            height: 1px;
-            background: linear-gradient(to right, transparent, var(--border-color), transparent);
+            height: 3px;
+            background: linear-gradient(to right, transparent, var(--pixel-mid), transparent);
         }
 
-        /* ============================================
-           ANIMATIONS
-           ============================================ */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* Footer */
+        .footer {
+            border-top: 3px solid var(--pixel-mid);
+            padding: 50px 40px;
+            text-align: center;
+            background: var(--pixel-deep);
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-12px); }
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
-        @keyframes scrollPulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 1; }
+        .footer-links a {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            color: var(--pixel-mid);
+            text-decoration: none;
+            transition: color 0.2s;
+            padding: 8px 15px;
+            border: 2px solid var(--pixel-mid);
         }
 
+        .footer-links a:hover {
+            color: var(--pixel-pink);
+            border-color: var(--pixel-pink);
+        }
+
+        .footer-copy {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.4rem;
+            color: var(--pixel-mid);
+            margin-top: 15px;
+        }
+
+        /* Fade In Animation */
         .fade-in {
             opacity: 0;
             transform: translateY(20px);
@@ -827,208 +889,305 @@
             transform: translateY(0);
         }
 
-        /* ============================================
-           RESPONSIVE
-           ============================================ */
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .sidebar-nav {
+                display: none;
+            }
+        }
+
         @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .hero { padding: 100px 1.5rem 60px; }
-            .hero-meta { gap: 1.5rem; }
-            .section { padding: 0 1.5rem; }
-            .stats-row { grid-template-columns: repeat(2, 1fr); }
-            .process-arrow { display: none; }
-            .process-flow { flex-direction: column; }
-            :root { --section-gap: 80px; }
+            .back-button {
+                top: 15px;
+                left: 15px;
+                padding: 8px 14px;
+                font-size: 0.4rem;
+            }
+
+            .hero {
+                padding: 80px 20px 60px;
+            }
+
+            .hero-title {
+                font-size: 1.4rem;
+            }
+
+            .stats-row {
+                gap: 15px;
+            }
+
+            .stat-item {
+                min-width: 100px;
+                padding: 15px;
+            }
+
+            .stat-number {
+                font-size: 1rem;
+            }
+
+            .main-content {
+                padding: 40px 20px;
+            }
+
+            .content-card {
+                padding: 25px;
+                clip-path: none;
+                border: 3px solid var(--pixel-pink);
+            }
+
+            .question-header {
+                padding: 20px;
+            }
+
+            .code-body {
+                padding: 15px;
+            }
+
+            .code-body pre {
+                font-size: 0.95rem;
+            }
+
+            .process-arrow {
+                display: none;
+            }
+
+            .process-flow {
+                flex-direction: column;
+            }
+
+            .data-stats-row {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .method-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                align-items: center;
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- NAVIGATION -->
-    <nav class="nav">
-        <div class="nav-inner">
-            <a href="works.html" class="nav-back">← Back to All Works</a>
-            <ul class="nav-links">
-                <li><a href="#hero">Introduction</a></li>
-                <li><a href="#overview">Overview</a></li>
-                <li><a href="#q1a">Q1(a)</a></li>
-                <li><a href="#q1b">Q1(b)</a></li>
-                <li><a href="#q1c">Q1(c)</a></li>
-                <li><a href="#q1d">Q1(d)</a></li>
-                <li><a href="#appendix">SQL Code</a></li>
-            </ul>
-        </div>
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Back Button -->
+    <a href="works.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Works
+    </a>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar-nav" id="sidebarNav">
+        <a href="#hero" class="sidebar-nav-item active" data-section="hero">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Introduction</span>
+        </a>
+        <a href="#overview" class="sidebar-nav-item" data-section="overview">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Overview</span>
+        </a>
+        <a href="#q1a" class="sidebar-nav-item" data-section="q1a">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Q1(a): Data Types</span>
+        </a>
+        <a href="#q1b" class="sidebar-nav-item" data-section="q1b">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Q1(b): Recompute</span>
+        </a>
+        <a href="#q1c" class="sidebar-nav-item" data-section="q1c">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Q1(c): Fig1 Table</span>
+        </a>
+        <a href="#q1d" class="sidebar-nav-item" data-section="q1d">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Q1(d): easy_data</span>
+        </a>
+        <a href="#appendix" class="sidebar-nav-item" data-section="appendix">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">SQL Code</span>
+        </a>
     </nav>
 
     <!-- HERO -->
     <section class="hero" id="hero">
-        <span class="pixel-decoration top-left">👾</span>
-        <span class="pixel-decoration bottom-right">👾</span>
-
         <div class="hero-content">
-            <div class="hero-tag">ANL503 • Tutor-Marked Assignment</div>
-            <h1 class="hero-title">
-                <span class="highlight">Data Wrangling</span><br>with MySQL
-            </h1>
+            <div class="project-category">ANL503 &bull; Tutor-Marked Assignment</div>
+            <h1 class="hero-title">Data Wrangling<br>with MySQL</h1>
             <p class="hero-subtitle">
                 Importing, cleaning, transforming, and restructuring recruitment data across
                 Singapore, Hong Kong, and Tokyo offices using SQL on TablePlus.
             </p>
 
-            <div class="hero-meta">
-                <div class="hero-stat">
-                    <span class="hero-stat-value">12</span>
-                    <span class="hero-stat-label">Data Rows</span>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-number">12</span>
+                    <span class="stat-label">Data Rows</span>
                 </div>
-                <div class="hero-stat">
-                    <span class="hero-stat-value">11→35</span>
-                    <span class="hero-stat-label">Columns Expanded</span>
+                <div class="stat-item">
+                    <span class="stat-number">11>35</span>
+                    <span class="stat-label">Columns</span>
                 </div>
-                <div class="hero-stat">
-                    <span class="hero-stat-value">3</span>
-                    <span class="hero-stat-label">Offices</span>
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Offices</span>
                 </div>
-                <div class="hero-stat">
-                    <span class="hero-stat-value">3</span>
-                    <span class="hero-stat-label">Recruitment Firms</span>
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Firms</span>
                 </div>
-            </div>
-        </div>
-
-        <div class="scroll-indicator">Scroll to explore</div>
-    </section>
-
-    <!-- OVERVIEW -->
-    <section class="section" id="overview">
-        <div class="section-label">The Data</div>
-        <h2 class="section-title">Understanding the Dataset</h2>
-        <p class="section-intro">
-            The dataset (<code>TMA_data.sql</code>) contains recruitment offer and acceptance data for 3 office locations
-            across 3 recruitment firms. Each data entry follows a <code>total|senior|inclusive</code> format,
-            requiring significant wrangling to become analysis-ready.
-        </p>
-
-        <div class="process-flow">
-            <div class="process-step">
-                <div class="step-icon">📥</div>
-                <div class="step-name">Import</div>
-                <div class="step-desc">TMA_data.sql → TablePlus</div>
-            </div>
-            <div class="process-arrow">→</div>
-            <div class="process-step">
-                <div class="step-icon">🔍</div>
-                <div class="step-name">Inspect</div>
-                <div class="step-desc">11 columns, all text</div>
-            </div>
-            <div class="process-arrow">→</div>
-            <div class="process-step">
-                <div class="step-icon">🔧</div>
-                <div class="step-name">Transform</div>
-                <div class="step-desc">Split & recompute</div>
-            </div>
-            <div class="process-arrow">→</div>
-            <div class="process-step">
-                <div class="step-icon">📊</div>
-                <div class="step-name">Restructure</div>
-                <div class="step-desc">Analysis-ready tables</div>
-            </div>
-        </div>
-
-        <div class="stats-row">
-            <div class="stat-card">
-                <span class="value">11</span>
-                <span class="label">Original Columns</span>
-            </div>
-            <div class="stat-card">
-                <span class="value">TEXT</span>
-                <span class="label">All Data Types</span>
-            </div>
-            <div class="stat-card">
-                <span class="value">12</span>
-                <span class="label">Rows of Data</span>
-            </div>
-            <div class="stat-card">
-                <span class="value">xx|yy|zz</span>
-                <span class="label">Data Format</span>
             </div>
         </div>
     </section>
 
-    <div class="divider"><div class="divider-line"></div></div>
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
 
-    <!-- QUESTION 1(a) -->
-    <section class="section fade-in" id="q1a">
-        <div class="section-label">Question 1(a)</div>
-        <h2 class="section-title">Evaluating & Altering Data Types</h2>
-
-        <div class="question-header">
-            <span class="q-label">Task</span>
-            Import the dataset into MySQL server. Check the resulting table and evaluate the suitability
-            of the data type for each field. Use the ALTER TABLE command to change the data type(s)
-            where you think it is necessary.
-        </div>
-
-        <!-- Step 1: Import -->
-        <div class="step-block">
-            <div class="step-number">Step 01 — Import Dataset</div>
-            <p class="step-text">
-                The dataset file <code>TMA_data.sql</code> is imported into MySQL server on TablePlus by navigating
-                to the menu, hovering over File, then selecting Import → SQL Dump.
-            </p>
-
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 1</div>
-                </div>
-                <div class="figure-caption"><strong>Figure 1:</strong> Successful importing of tma_data file into TablePlus</div>
-            </div>
-        </div>
-
-        <!-- Step 2: Inspect -->
-        <div class="step-block">
-            <div class="step-number">Step 02 — Inspect Structure</div>
-            <p class="step-text">
-                Upon importing, the structure of the dataset is inspected. There are 11 columns in the tma_data file
-                and the data type is <strong>text</strong> for all 11 columns. The file has 12 rows of data.
-            </p>
-
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 2</div>
-                </div>
-                <div class="figure-caption"><strong>Figure 2:</strong> Quick examination of the data types and structure of tma_data SQL file</div>
+        <!-- OVERVIEW -->
+        <section class="section fade-in" id="overview">
+            <div class="section-header">
+                <span class="section-number">The Data</span>
+                <h2 class="section-title">Understanding the Dataset</h2>
             </div>
 
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 3</div>
-                </div>
-                <div class="figure-caption"><strong>Figure 3:</strong> View of tma_data</div>
+            <div class="content-card">
+                <p class="content-text">
+                    The dataset (<code>TMA_data.sql</code>) contains recruitment offer and acceptance data for 3 office locations
+                    across 3 recruitment firms. Each data entry follows a <code>total|senior|inclusive</code> format,
+                    requiring significant wrangling to become analysis-ready.
+                </p>
             </div>
 
-            <p class="step-text">
-                Due to the presence of special symbols (the pipe <code>|</code> character) from data entries in columns 4 to 11,
-                the data type is stored as text. The headcount column is also text even though the data entries are whole numbers.
-            </p>
-        </div>
-
-        <!-- Step 3: Alter Table -->
-        <div class="step-block">
-            <div class="step-number">Step 03 — Alter Table</div>
-            <p class="step-text">
-                The first step is to create a duplicate copy of the original data table <code>tma_data</code> called
-                <code>tma_data2</code>. This preserves the original data as a backup in case of errors during transformation.
-            </p>
-
-            <div class="code-block">
-                <div class="code-header">
-                    <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-                    <span class="lang">MySQL</span>
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="step-icon">📥</div>
+                    <div class="step-name">Import</div>
+                    <div class="step-desc">TMA_data.sql → TablePlus</div>
                 </div>
-                <div class="code-body">
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="step-icon">🔍</div>
+                    <div class="step-name">Inspect</div>
+                    <div class="step-desc">11 columns, all text</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="step-icon">🔧</div>
+                    <div class="step-name">Transform</div>
+                    <div class="step-desc">Split & recompute</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="step-icon">📊</div>
+                    <div class="step-name">Restructure</div>
+                    <div class="step-desc">Analysis-ready tables</div>
+                </div>
+            </div>
+
+            <div class="data-stats-row">
+                <div class="data-stat-card">
+                    <span class="value">11</span>
+                    <span class="label">Original Columns</span>
+                </div>
+                <div class="data-stat-card">
+                    <span class="value">TEXT</span>
+                    <span class="label">All Data Types</span>
+                </div>
+                <div class="data-stat-card">
+                    <span class="value">12</span>
+                    <span class="label">Rows of Data</span>
+                </div>
+                <div class="data-stat-card">
+                    <span class="value">xx|yy|zz</span>
+                    <span class="label">Data Format</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div></div>
+
+        <!-- QUESTION 1(a) -->
+        <section class="section fade-in" id="q1a">
+            <div class="section-header">
+                <span class="section-number">Question 1(a)</span>
+                <h2 class="section-title">Evaluating & Altering Data Types</h2>
+            </div>
+
+            <div class="question-header">
+                <span class="q-label">Task</span>
+                Import the dataset into MySQL server. Check the resulting table and evaluate the suitability
+                of the data type for each field. Use the ALTER TABLE command to change the data type(s)
+                where you think it is necessary.
+            </div>
+
+            <!-- Step 1: Import -->
+            <div class="step-block">
+                <div class="step-number">Step 01 — Import Dataset</div>
+                <p class="step-text">
+                    The dataset file <code>TMA_data.sql</code> is imported into MySQL server on TablePlus by navigating
+                    to the menu, hovering over File, then selecting Import → SQL Dump.
+                </p>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 1</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 1:</strong> Successful importing of tma_data file into TablePlus</div>
+                </div>
+            </div>
+
+            <!-- Step 2: Inspect -->
+            <div class="step-block">
+                <div class="step-number">Step 02 — Inspect Structure</div>
+                <p class="step-text">
+                    Upon importing, the structure of the dataset is inspected. There are 11 columns in the tma_data file
+                    and the data type is <strong>text</strong> for all 11 columns. The file has 12 rows of data.
+                </p>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 2</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 2:</strong> Quick examination of the data types and structure of tma_data SQL file</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 3</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 3:</strong> View of tma_data</div>
+                </div>
+
+                <p class="step-text">
+                    Due to the presence of special symbols (the pipe <code>|</code> character) from data entries in columns 4 to 11,
+                    the data type is stored as text. The headcount column is also text even though the data entries are whole numbers.
+                </p>
+            </div>
+
+            <!-- Step 3: Alter Table -->
+            <div class="step-block">
+                <div class="step-number">Step 03 — Alter Table</div>
+                <p class="step-text">
+                    The first step is to create a duplicate copy of the original data table <code>tma_data</code> called
+                    <code>tma_data2</code>. This preserves the original data as a backup in case of errors during transformation.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                        <span class="lang">MySQL</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <div class="code-body">
 <pre><span class="comment">-- Create duplicate tma_data</span>
 <span class="keyword">CREATE TABLE</span> tma_data2 <span class="keyword">AS</span>
 <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> tma_data;
@@ -1046,77 +1205,85 @@
 <span class="keyword">UPDATE</span> tma_data2
 <span class="keyword">SET</span> office = <span class="function">TRIM</span>(office),
     department = <span class="function">TRIM</span>(department);</pre>
+                    </div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 4</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 4:</strong> SQL code to alter table</div>
+                </div>
+
+                <p class="step-text">
+                    Column names <code>Office</code> and <code>Department</code> are renamed to lowercase to standardise
+                    letter case across all column names. The headcount data type is changed to integer since the entries
+                    are all whole numbers. Whitespace is trimmed from office and department columns to prevent matching errors.
+                </p>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 4.1</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 4.1:</strong> Data types in the tma_data2 data set</div>
                 </div>
             </div>
 
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 4</div>
+            <!-- Design Decision -->
+            <div class="insight-box info">
+                <i class="fas fa-lightbulb insight-icon"></i>
+                <div class="insight-content">
+                    <p class="insight-title">Design Decision</p>
+                    <p class="insight-text">
+                        Only headcount was changed to integer since the column is entirely whole numbers. With only 12 rows,
+                        the dataset is small enough that keeping other columns as <strong>text</strong> has negligible storage impact.
+                        The <code>xx|yy|zz</code> format in columns 4–11 requires text to preserve the pipe-delimited structure
+                        until the values are properly split in Question 1(b).
+                    </p>
                 </div>
-                <div class="figure-caption"><strong>Figure 4:</strong> SQL code to alter table</div>
+            </div>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div></div>
+
+        <!-- QUESTION 1(b) -->
+        <section class="section fade-in" id="q1b">
+            <div class="section-header">
+                <span class="section-number">Question 1(b)</span>
+                <h2 class="section-title">Recomputing All Totals</h2>
             </div>
 
-            <p class="step-text">
-                Column names <code>Office</code> and <code>Department</code> are renamed to lowercase to standardise
-                letter case across all column names. The headcount data type is changed to integer since the entries
-                are all whole numbers. Whitespace is trimmed from office and department columns to prevent matching errors.
-            </p>
-
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 4.1</div>
-                </div>
-                <div class="figure-caption"><strong>Figure 4.1:</strong> Data types in the tma_data2 data set</div>
+            <div class="question-header">
+                <span class="q-label">Task</span>
+                Using appropriate MySQL statements, recompute all the totals columns in the TMA_data table,
+                and update the table with these recomputed values.
             </div>
-        </div>
 
-        <!-- Design Decisions -->
-        <div class="callout">
-            <div class="callout-label">Design Decision</div>
-            <p>
-                Only headcount was changed to integer since the column is entirely whole numbers. With only 12 rows,
-                the dataset is small enough that keeping other columns as <strong>text</strong> has negligible storage impact.
-                The <code>xx|yy|zz</code> format in columns 4–11 requires text to preserve the pipe-delimited structure
-                until the values are properly split in Question 1(b).
-            </p>
-        </div>
-    </section>
+            <!-- Step 1: Add New Columns -->
+            <div class="step-block">
+                <div class="step-number">Step 01 — Create New Columns</div>
+                <p class="step-text">
+                    Entries with the pattern <code>xx|yy|zz</code> are split into individual columns.
+                    <code>xx</code> refers to total number of offers made or accepted, <code>yy</code> to senior positions,
+                    and <code>zz</code> to inclusive positions.
+                </p>
+                <p class="step-text">
+                    For each recruitment firm, new columns are created following a clear naming convention:
+                    <code>offers_recruitment_firm1_total</code>, <code>offers_recruitment_firm1_senior</code>,
+                    and <code>offers_recruitment_firm1_inclusive</code>.
+                </p>
 
-    <div class="divider"><div class="divider-line"></div></div>
-
-    <!-- QUESTION 1(b) -->
-    <section class="section fade-in" id="q1b">
-        <div class="section-label">Question 1(b)</div>
-        <h2 class="section-title">Recomputing All Totals</h2>
-
-        <div class="question-header">
-            <span class="q-label">Task</span>
-            Using appropriate MySQL statements, recompute all the totals columns in the TMA_data table,
-            and update the table with these recomputed values.
-        </div>
-
-        <!-- Step 1: Add New Columns -->
-        <div class="step-block">
-            <div class="step-number">Step 01 — Create New Columns</div>
-            <p class="step-text">
-                Entries with the pattern <code>xx|yy|zz</code> are split into individual columns.
-                <code>xx</code> refers to total number of offers made or accepted, <code>yy</code> to senior positions,
-                and <code>zz</code> to inclusive positions.
-            </p>
-            <p class="step-text">
-                For each recruitment firm, new columns are created following a clear naming convention:
-                <code>offers_recruitment_firm1_total</code>, <code>offers_recruitment_firm1_senior</code>,
-                and <code>offers_recruitment_firm1_inclusive</code>.
-            </p>
-
-            <div class="code-block">
-                <div class="code-header">
-                    <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-                    <span class="lang">MySQL</span>
-                </div>
-                <div class="code-body">
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                        <span class="lang">MySQL</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <div class="code-body">
 <pre><span class="comment">-- Add new columns for offers and acceptances</span>
 <span class="keyword">ALTER TABLE</span> TMA_data2
   <span class="keyword">ADD COLUMN</span> offers_recruitment_firm1_total <span class="keyword">INT</span>,
@@ -1126,32 +1293,35 @@
   <span class="keyword">ADD COLUMN</span> acceptance_total_total <span class="keyword">INT</span>,
   <span class="keyword">ADD COLUMN</span> acceptance_total_senior <span class="keyword">INT</span>,
   <span class="keyword">ADD COLUMN</span> acceptance_total_inclusive <span class="keyword">INT</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 5</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 5:</strong> Creating new columns as part of splitting the data from column 4 to 11</div>
                 </div>
             </div>
 
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 5</div>
-                </div>
-                <div class="figure-caption"><strong>Figure 5:</strong> Creating new columns as part of splitting the data from column 4 to 11</div>
-            </div>
-        </div>
+            <!-- Step 2: Populate Columns -->
+            <div class="step-block">
+                <div class="step-number">Step 02 — Populate with Split Values</div>
+                <p class="step-text">
+                    Using <code>SUBSTRING_INDEX</code> to extract each value from the pipe-delimited format,
+                    and <code>CONVERT</code> with <code>UNSIGNED INTEGER</code> to cast the extracted text into integers.
+                </p>
 
-        <!-- Step 2: Populate Columns -->
-        <div class="step-block">
-            <div class="step-number">Step 02 — Populate with Split Values</div>
-            <p class="step-text">
-                Using <code>SUBSTRING_INDEX</code> to extract each value from the pipe-delimited format,
-                and <code>CONVERT</code> with <code>UNSIGNED INTEGER</code> to cast the extracted text into integers.
-            </p>
-
-            <div class="code-block">
-                <div class="code-header">
-                    <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-                    <span class="lang">MySQL</span>
-                </div>
-                <div class="code-body">
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                        <span class="lang">MySQL</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <div class="code-body">
 <pre><span class="comment">-- Populate new columns with split values</span>
 <span class="keyword">UPDATE</span> tma_data2
 <span class="keyword">SET</span>
@@ -1162,104 +1332,109 @@
   offers_recruitment_firm1_inclusive =
     <span class="function">CONVERT</span>(<span class="function">SUBSTRING_INDEX</span>(offers_recruitment_firm1, <span class="string">'|'</span>, <span class="number">-1</span>), <span class="keyword">UNSIGNED INTEGER</span>),
   <span class="comment">-- ... repeated for all firms and acceptance columns</span></pre>
+                    </div>
                 </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 6</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 6:</strong> Populating the new columns with the respective numbers for number of offers made</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 7</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 7:</strong> Populating new columns with the respective numbers for number of offers accepted</div>
+                </div>
+            </div>
+
+            <!-- Step 3: Final Result -->
+            <div class="step-block">
+                <div class="step-number">Step 03 — Final Result</div>
+                <p class="step-text">
+                    The final result is <strong>35 columns</strong>, including the 11 original columns plus 24 new integer columns.
+                    All new column data types are integers. The table expanded from the original pipe-delimited format into
+                    cleanly separated, individually queryable columns.
+                </p>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 8</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 8:</strong> Final result of the tma_table after recomputing totals and updating tma_data2 table</div>
+                </div>
+            </div>
+
+            <div class="data-stats-row">
+                <div class="data-stat-card">
+                    <span class="value">24</span>
+                    <span class="label">New Columns Added</span>
+                </div>
+                <div class="data-stat-card">
+                    <span class="value">35</span>
+                    <span class="label">Total Columns</span>
+                </div>
+                <div class="data-stat-card">
+                    <span class="value">INT</span>
+                    <span class="label">New Column Type</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div></div>
+
+        <!-- QUESTION 1(c) -->
+        <section class="section fade-in" id="q1c">
+            <div class="section-header">
+                <span class="section-number">Question 1(c)</span>
+                <h2 class="section-title">Recreating Fig1 Table</h2>
+            </div>
+
+            <div class="question-header">
+                <span class="q-label">Task</span>
+                Using appropriate MySQL statements, recreate Figure 1 as a MySQL table named <code>fig1</code>
+                by using the updated TMA_data table from Q1(b).
             </div>
 
             <div class="figure-container">
                 <div class="figure-placeholder">
                     <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 6</div>
+                    <div class="label">Image placeholder — Figure 10</div>
                 </div>
-                <div class="figure-caption"><strong>Figure 6:</strong> Populating the new columns with the respective numbers for number of offers made</div>
+                <div class="figure-caption"><strong>Figure 10:</strong> Table to construct with SQL statements, named Diagram 1</div>
             </div>
 
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 7</div>
+            <!-- Step 1: Insert Total Rows -->
+            <div class="step-block">
+                <div class="step-number">Step 01 — Insert Total Rows</div>
+                <p class="step-text">
+                    Three new "Total" rows are inserted for Singapore, Hong Kong, and Tokyo. Each total row aggregates
+                    the values across all departments for that office location using <code>SUM()</code> functions,
+                    while original pipe-delimited columns are set to <code>NULL</code>.
+                </p>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 11</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 11:</strong> Inserting the row and the contents the row should have</div>
                 </div>
-                <div class="figure-caption"><strong>Figure 7:</strong> Populating new columns with the respective numbers for number of offers accepted</div>
-            </div>
-        </div>
 
-        <!-- Step 3: Final Result -->
-        <div class="step-block">
-            <div class="step-number">Step 03 — Final Result</div>
-            <p class="step-text">
-                The final result is <strong>35 columns</strong>, including the 11 original columns plus 24 new integer columns.
-                All new column data types are integers. The table expanded from the original pipe-delimited format into
-                cleanly separated, individually queryable columns.
-            </p>
-
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 8</div>
-                </div>
-                <div class="figure-caption"><strong>Figure 8:</strong> Final result of the tma_table after recomputing totals and updating tma_data2 table</div>
-            </div>
-        </div>
-
-        <div class="stats-row">
-            <div class="stat-card">
-                <span class="value">24</span>
-                <span class="label">New Columns Added</span>
-            </div>
-            <div class="stat-card">
-                <span class="value">35</span>
-                <span class="label">Total Columns</span>
-            </div>
-            <div class="stat-card">
-                <span class="value">INT</span>
-                <span class="label">New Column Type</span>
-            </div>
-        </div>
-    </section>
-
-    <div class="divider"><div class="divider-line"></div></div>
-
-    <!-- QUESTION 1(c) -->
-    <section class="section fade-in" id="q1c">
-        <div class="section-label">Question 1(c)</div>
-        <h2 class="section-title">Recreating Fig1 Table</h2>
-
-        <div class="question-header">
-            <span class="q-label">Task</span>
-            Using appropriate MySQL statements, recreate Figure 1 as a MySQL table named <code>fig1</code>
-            by using the updated TMA_data table from Q1(b).
-        </div>
-
-        <div class="figure-container">
-            <div class="figure-placeholder">
-                <div class="icon">📸</div>
-                <div class="label">Image placeholder — Figure 10</div>
-            </div>
-            <div class="figure-caption"><strong>Figure 10:</strong> Table to construct with SQL statements, named Diagram 1</div>
-        </div>
-
-        <!-- Step 1: Insert Total Rows -->
-        <div class="step-block">
-            <div class="step-number">Step 01 — Insert Total Rows</div>
-            <p class="step-text">
-                Three new "Total" rows are inserted for Singapore, Hong Kong, and Tokyo. Each total row aggregates
-                the values across all departments for that office location using <code>SUM()</code> functions,
-                while original pipe-delimited columns are set to <code>NULL</code>.
-            </p>
-
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 11</div>
-                </div>
-                <div class="figure-caption"><strong>Figure 11:</strong> Inserting the row and the contents the row should have</div>
-            </div>
-
-            <div class="code-block">
-                <div class="code-header">
-                    <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-                    <span class="lang">MySQL</span>
-                </div>
-                <div class="code-body">
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                        <span class="lang">MySQL</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <div class="code-body">
 <pre><span class="comment">-- Insert total row for Singapore</span>
 <span class="keyword">INSERT INTO</span> tma_data2 (office, department, headcount, ...)
 <span class="keyword">SELECT</span>
@@ -1272,61 +1447,64 @@
   <span class="comment">-- ... aggregated for all columns</span>
 <span class="keyword">FROM</span> tma_data2
 <span class="keyword">WHERE</span> office = <span class="string">'Singapore'</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 12</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 12:</strong> MySQL commands to insert total row for Singapore</div>
+                </div>
+
+                <p class="step-text">
+                    The same process is repeated for Hong Kong and Tokyo offices.
+                </p>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 13</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 13:</strong> MySQL commands to insert total row for Hong Kong</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 14</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 14:</strong> MySQL commands to insert total row for Tokyo</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 15</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 15:</strong> A snapshot of the final output from MySQL queries with 3 new additional rows</div>
                 </div>
             </div>
 
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 12</div>
-                </div>
-                <div class="figure-caption"><strong>Figure 12:</strong> MySQL commands to insert total row for Singapore</div>
-            </div>
+            <!-- Step 2: Create fig1 Table -->
+            <div class="step-block">
+                <div class="step-number">Step 02 — Create fig1 Table</div>
+                <p class="step-text">
+                    The <code>CREATE TABLE</code> command is used with <code>CONCAT</code> to join the individual
+                    total, senior, and inclusive values back together with the <code>|</code> character.
+                    <code>IFNULL</code> ensures that NULL values are replaced with 0.
+                </p>
 
-            <p class="step-text">
-                The same process is repeated for Hong Kong and Tokyo offices.
-            </p>
-
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 13</div>
-                </div>
-                <div class="figure-caption"><strong>Figure 13:</strong> MySQL commands to insert total row for Hong Kong</div>
-            </div>
-
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 14</div>
-                </div>
-                <div class="figure-caption"><strong>Figure 14:</strong> MySQL commands to insert total row for Tokyo</div>
-            </div>
-
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 15</div>
-                </div>
-                <div class="figure-caption"><strong>Figure 15:</strong> A snapshot of the final output from MySQL queries with 3 new additional rows</div>
-            </div>
-        </div>
-
-        <!-- Step 2: Create fig1 Table -->
-        <div class="step-block">
-            <div class="step-number">Step 02 — Create fig1 Table</div>
-            <p class="step-text">
-                The <code>CREATE TABLE</code> command is used with <code>CONCAT</code> to join the individual
-                total, senior, and inclusive values back together with the <code>|</code> character.
-                <code>IFNULL</code> ensures that NULL values are replaced with 0.
-            </p>
-
-            <div class="code-block">
-                <div class="code-header">
-                    <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-                    <span class="lang">MySQL</span>
-                </div>
-                <div class="code-body">
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                        <span class="lang">MySQL</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyCode(this)">
+                        <i class="fas fa-copy"></i> Copy
+                    </button>
+                    <div class="code-body">
 <pre><span class="keyword">CREATE TABLE</span> fig1 <span class="keyword">AS</span>
 <span class="keyword">SELECT</span>
   office, department, headcount,
@@ -1340,73 +1518,81 @@
          <span class="function">FIELD</span>(department, <span class="string">'IT Systems'</span>, <span class="string">'Corporate Services'</span>,
                <span class="string">'Customer Service'</span>, <span class="string">'Operations'</span>,
                <span class="string">'Customer Support'</span>, <span class="string">'Total'</span>);</pre>
+                    </div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 16</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 16:</strong> First part of MySQL code to create fig1 table</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 17</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 17:</strong> Second part of MySQL code to create fig1 table</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 18</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 18:</strong> Final part of MySQL code to create fig1 table</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 19</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 19:</strong> Final result of fig1</div>
                 </div>
             </div>
 
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 16</div>
+            <div class="insight-box warning">
+                <i class="fas fa-exclamation-triangle insight-icon"></i>
+                <div class="insight-content">
+                    <p class="insight-title">Discrepancy Note</p>
+                    <p class="insight-text">
+                        In the original Diagram 1, the Singapore total for senior and inclusive positions offered is displayed as
+                        <strong>889 | 20 | 22</strong>. However, upon manual verification, the sum of offers for recruitment firms 1, 2, and 3
+                        yields different totals — indicating that the original dataset may have contained pre-existing calculation errors
+                        that were corrected through this recomputation process.
+                    </p>
                 </div>
-                <div class="figure-caption"><strong>Figure 16:</strong> First part of MySQL code to create fig1 table</div>
+            </div>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div></div>
+
+        <!-- QUESTION 1(d) -->
+        <section class="section fade-in" id="q1d">
+            <div class="section-header">
+                <span class="section-number">Question 1(d)</span>
+                <h2 class="section-title">Creating the easy_data Table</h2>
             </div>
 
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 17</div>
+            <div class="question-header">
+                <span class="q-label">Task</span>
+                Create a new MySQL table named <code>easy_data</code> based on the updated TMA_data table from Q1(b).
+                This new table should contain all the information available in the updated table, excluding
+                the totals column for a table that is easy for further analysis and visualisation.
+            </div>
+
+            <div class="code-block">
+                <div class="code-header">
+                    <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                    <span class="lang">MySQL</span>
                 </div>
-                <div class="figure-caption"><strong>Figure 17:</strong> Second part of MySQL code to create fig1 table</div>
-            </div>
-
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 18</div>
-                </div>
-                <div class="figure-caption"><strong>Figure 18:</strong> Final part of MySQL code to create fig1 table</div>
-            </div>
-
-            <div class="figure-container">
-                <div class="figure-placeholder">
-                    <div class="icon">📸</div>
-                    <div class="label">Image placeholder — Figure 19</div>
-                </div>
-                <div class="figure-caption"><strong>Figure 19:</strong> Final result of fig1</div>
-            </div>
-        </div>
-
-        <div class="callout warning">
-            <div class="callout-label">Discrepancy Note</div>
-            <p>
-                In the original Diagram 1, the Singapore total for senior and inclusive positions offered is displayed as
-                <strong>889 | 20 | 22</strong>. However, upon manual verification, the sum of offers for recruitment firms 1, 2, and 3
-                yields different totals — indicating that the original dataset may have contained pre-existing calculation errors
-                that were corrected through this recomputation process.
-            </p>
-        </div>
-    </section>
-
-    <div class="divider"><div class="divider-line"></div></div>
-
-    <!-- QUESTION 1(d) -->
-    <section class="section fade-in" id="q1d">
-        <div class="section-label">Question 1(d)</div>
-        <h2 class="section-title">Creating the easy_data Table</h2>
-
-        <div class="question-header">
-            <span class="q-label">Task</span>
-            Create a new MySQL table named <code>easy_data</code> based on the updated TMA_data table from Q1(b).
-            This new table should contain all the information available in the updated table, excluding
-            the totals column for a table that is easy for further analysis and visualisation.
-        </div>
-
-        <div class="code-block">
-            <div class="code-header">
-                <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-                <span class="lang">MySQL</span>
-            </div>
-            <div class="code-body">
+                <button class="copy-btn" onclick="copyCode(this)">
+                    <i class="fas fa-copy"></i> Copy
+                </button>
+                <div class="code-body">
 <pre><span class="comment">-- Create easy_data excluding 'Total' rows</span>
 <span class="keyword">CREATE TABLE</span> easy_data <span class="keyword">AS</span>
 <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (
@@ -1421,53 +1607,65 @@
     <span class="keyword">FROM</span> tma_data2
     <span class="keyword">WHERE</span> department != <span class="string">'Total'</span>
 ) <span class="keyword">AS</span> filtered_data;</pre>
+                </div>
             </div>
-        </div>
 
-        <div class="figure-container">
-            <div class="figure-placeholder">
-                <div class="icon">📸</div>
-                <div class="label">Image placeholder — Figure 20</div>
+            <div class="figure-container">
+                <div class="figure-placeholder">
+                    <div class="icon">📸</div>
+                    <div class="label">Image placeholder — Figure 20</div>
+                </div>
+                <div class="figure-caption"><strong>Figure 20:</strong> Code to create easy_table that is easy for further analysis and visualisation</div>
             </div>
-            <div class="figure-caption"><strong>Figure 20:</strong> Code to create easy_table that is easy for further analysis and visualisation</div>
-        </div>
 
-        <div class="figure-container">
-            <div class="figure-placeholder">
-                <div class="icon">📸</div>
-                <div class="label">Image placeholder — Figure 21</div>
+            <div class="figure-container">
+                <div class="figure-placeholder">
+                    <div class="icon">📸</div>
+                    <div class="label">Image placeholder — Figure 21</div>
+                </div>
+                <div class="figure-caption"><strong>Figure 21:</strong> 21 columns in easy_data — the final output with 2 text type columns and 18 integer type columns</div>
             </div>
-            <div class="figure-caption"><strong>Figure 21:</strong> 21 columns in easy_data — the final output with 2 text type columns and 18 integer type columns</div>
-        </div>
 
-        <p class="step-text" style="margin-top: 1.5rem;">
-            The <code>easy_data</code> table is structured this way for three key reasons:
-        </p>
-
-        <div class="callout">
-            <div class="callout-label">Rationale</div>
-            <p>
-                <strong>1. Separated columns enable analysis:</strong> Splitting the <code>xx|yy|zz</code> format into individual columns
-                allows for comparing offers made across the 3 firms, comparing acceptance rates, and performing aggregate calculations.<br><br>
-                <strong>2. Removed total aggregation columns:</strong> The totals for total offers made or accepted across the 3 firms
-                are excluded to remove unnecessary columns, allowing for faster queries to the database.<br><br>
-                <strong>3. Integer data types:</strong> Column 4 onwards are changed to integers since the values are all whole numbers
-                after separation. This allows for proper numerical analysis of continuous data.
+            <p class="step-text" style="margin-top: 25px;">
+                The <code>easy_data</code> table is structured this way for three key reasons:
             </p>
-        </div>
-    </section>
 
-    <div class="divider"><div class="divider-line"></div></div>
+            <div class="insight-box info">
+                <i class="fas fa-lightbulb insight-icon"></i>
+                <div class="insight-content">
+                    <p class="insight-title">Rationale</p>
+                    <p class="insight-text">
+                        <strong>1. Separated columns enable analysis:</strong> Splitting the <code>xx|yy|zz</code> format into individual columns
+                        allows for comparing offers made across the 3 firms, comparing acceptance rates, and performing aggregate calculations.<br><br>
+                        <strong>2. Removed total aggregation columns:</strong> The totals for total offers made or accepted across the 3 firms
+                        are excluded to remove unnecessary columns, allowing for faster queries to the database.<br><br>
+                        <strong>3. Integer data types:</strong> Column 4 onwards are changed to integers since the values are all whole numbers
+                        after separation. This allows for proper numerical analysis of continuous data.
+                    </p>
+                </div>
+            </div>
+        </section>
 
-    <!-- SQL APPENDIX -->
-    <section class="section fade-in" id="appendix">
-        <div class="section-label">Appendix</div>
-        <h2 class="section-title">Complete SQL Code</h2>
+        <div class="divider"><div class="divider-line"></div></div>
 
-        <details class="sql-appendix">
-            <summary>View Question (a) — Duplicate, Rename & Alter</summary>
-            <div class="code-block" style="margin-top: 1rem; border: none;">
-                <div class="code-body">
+        <!-- SQL APPENDIX -->
+        <section class="section fade-in" id="appendix">
+            <div class="section-header">
+                <span class="section-number">Appendix</span>
+                <h2 class="section-title">Complete SQL Code</h2>
+            </div>
+
+            <div class="collapsible" id="collapsible-a">
+                <div class="collapsible-header" onclick="toggleCollapsible('collapsible-a')">
+                    <span class="collapsible-title">Question (a) — Duplicate, Rename & Alter</span>
+                    <i class="fas fa-chevron-down collapsible-icon"></i>
+                </div>
+                <div class="collapsible-content">
+                    <div class="code-block" style="border: none; margin: 0;">
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                        <div class="code-body">
 <pre><span class="comment">-- Create duplicate tma_data</span>
 <span class="keyword">CREATE TABLE</span> tma_data2 <span class="keyword">AS</span>
 <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> tma_data;
@@ -1485,14 +1683,22 @@
 <span class="keyword">UPDATE</span> tma_data2
 <span class="keyword">SET</span> office = <span class="function">TRIM</span>(office),
     department = <span class="function">TRIM</span>(department);</pre>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </details>
 
-        <details class="sql-appendix" style="margin-top: 1rem;">
-            <summary>View Question (b) — Add Columns & Populate</summary>
-            <div class="code-block" style="margin-top: 1rem; border: none;">
-                <div class="code-body">
+            <div class="collapsible" id="collapsible-b">
+                <div class="collapsible-header" onclick="toggleCollapsible('collapsible-b')">
+                    <span class="collapsible-title">Question (b) — Add Columns & Populate</span>
+                    <i class="fas fa-chevron-down collapsible-icon"></i>
+                </div>
+                <div class="collapsible-content">
+                    <div class="code-block" style="border: none; margin: 0;">
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                        <div class="code-body">
 <pre><span class="comment">-- Add new columns for offers and acceptances</span>
 <span class="keyword">ALTER TABLE</span> TMA_data2
   <span class="keyword">ADD COLUMN</span> offers_recruitment_firm1_total <span class="keyword">INT</span>,
@@ -1528,14 +1734,22 @@
   offers_recruitment_firm1_inclusive = <span class="function">CONVERT</span>(<span class="function">SUBSTRING_INDEX</span>(offers_recruitment_firm1, <span class="string">'|'</span>, <span class="number">-1</span>), <span class="keyword">UNSIGNED INTEGER</span>),
   <span class="comment">-- ... repeated for all firms and acceptance columns</span>
   acceptance_total_inclusive = <span class="function">CONVERT</span>(<span class="function">SUBSTRING_INDEX</span>(acceptance_total, <span class="string">'|'</span>, <span class="number">-1</span>), <span class="keyword">UNSIGNED INTEGER</span>);</pre>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </details>
 
-        <details class="sql-appendix" style="margin-top: 1rem;">
-            <summary>View Question (c) — Create fig1 Table</summary>
-            <div class="code-block" style="margin-top: 1rem; border: none;">
-                <div class="code-body">
+            <div class="collapsible" id="collapsible-c">
+                <div class="collapsible-header" onclick="toggleCollapsible('collapsible-c')">
+                    <span class="collapsible-title">Question (c) — Create fig1 Table</span>
+                    <i class="fas fa-chevron-down collapsible-icon"></i>
+                </div>
+                <div class="collapsible-content">
+                    <div class="code-block" style="border: none; margin: 0;">
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                        <div class="code-body">
 <pre><span class="comment">-- Create the fig1 table</span>
 <span class="keyword">CREATE TABLE</span> fig1 <span class="keyword">AS</span>
 <span class="keyword">SELECT</span>
@@ -1549,14 +1763,22 @@
          <span class="function">FIELD</span>(department, <span class="string">'IT Systems'</span>, <span class="string">'Corporate Services'</span>,
                <span class="string">'Customer Service'</span>, <span class="string">'Operations'</span>,
                <span class="string">'Customer Support'</span>, <span class="string">'Total'</span>);</pre>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </details>
 
-        <details class="sql-appendix" style="margin-top: 1rem;">
-            <summary>View Question (d) — Create easy_data</summary>
-            <div class="code-block" style="margin-top: 1rem; border: none;">
-                <div class="code-body">
+            <div class="collapsible" id="collapsible-d">
+                <div class="collapsible-header" onclick="toggleCollapsible('collapsible-d')">
+                    <span class="collapsible-title">Question (d) — Create easy_data</span>
+                    <i class="fas fa-chevron-down collapsible-icon"></i>
+                </div>
+                <div class="collapsible-content">
+                    <div class="code-block" style="border: none; margin: 0;">
+                        <button class="copy-btn" onclick="copyCode(this)">
+                            <i class="fas fa-copy"></i> Copy
+                        </button>
+                        <div class="code-body">
 <pre><span class="keyword">CREATE TABLE</span> easy_data <span class="keyword">AS</span>
 <span class="keyword">SELECT</span> * <span class="keyword">FROM</span> (
     <span class="keyword">SELECT</span>
@@ -1568,65 +1790,68 @@
     <span class="keyword">FROM</span> tma_data2
     <span class="keyword">WHERE</span> department != <span class="string">'Total'</span>
 ) <span class="keyword">AS</span> filtered_data;</pre>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </details>
 
-        <!-- References -->
-        <div class="references" style="margin-top: 3rem;">
-            <div class="references-title">References & AI Assistance</div>
-            <div class="ref-item">
-                Used ChatGPT for adding columns to existing table with specific naming convention
-                (e.g., <code>offers_recruitment_firm1_total</code>).
+            <!-- References -->
+            <div class="references" style="margin-top: 50px;">
+                <div class="references-title">References & AI Assistance</div>
+                <div class="ref-item">
+                    Used ChatGPT for adding columns to existing table with specific naming convention
+                    (e.g., <code>offers_recruitment_firm1_total</code>).
+                </div>
+                <div class="ref-item">
+                    Used ChatGPT for separating integers from pipe-delimited format and populating new columns
+                    using <code>SUBSTRING_INDEX</code> and <code>CONVERT</code>.
+                </div>
+                <div class="ref-item">
+                    Used ChatGPT for inserting total rows with aggregated values while setting original columns to NULL.
+                </div>
+                <div class="ref-item">
+                    Used ChatGPT for concatenating values with <code>CONCAT</code> and <code>IFNULL</code> for NULL handling.
+                </div>
+                <div class="ref-item">
+                    Used ChatGPT for custom sort ordering using <code>FIELD()</code> function to match the target table layout.
+                </div>
             </div>
-            <div class="ref-item">
-                Used ChatGPT for separating integers from pipe-delimited format and populating new columns
-                using <code>SUBSTRING_INDEX</code> and <code>CONVERT</code>.
-            </div>
-            <div class="ref-item">
-                Used ChatGPT for inserting total rows with aggregated values while setting original columns to NULL.
-            </div>
-            <div class="ref-item">
-                Used ChatGPT for concatenating values with <code>CONCAT</code> and <code>IFNULL</code> for NULL handling.
-            </div>
-            <div class="ref-item">
-                Used ChatGPT for custom sort ordering using <code>FIELD()</code> function to match the target table layout.
-            </div>
-        </div>
 
-        <!-- Methodology -->
-        <div class="method-grid" style="margin-top: 2rem;">
-            <div class="method-card">
-                <h4>SQL Techniques</h4>
-                <ul>
-                    <li>CREATE TABLE AS</li>
-                    <li>ALTER TABLE / MODIFY</li>
-                    <li>SUBSTRING_INDEX</li>
-                    <li>CONVERT / UNSIGNED</li>
-                    <li>CONCAT / IFNULL</li>
-                    <li>FIELD() ordering</li>
-                </ul>
+            <!-- Methodology -->
+            <div class="method-grid" style="margin-top: 40px;">
+                <div class="method-card">
+                    <h4>SQL Techniques</h4>
+                    <ul>
+                        <li>CREATE TABLE AS</li>
+                        <li>ALTER TABLE / MODIFY</li>
+                        <li>SUBSTRING_INDEX</li>
+                        <li>CONVERT / UNSIGNED</li>
+                        <li>CONCAT / IFNULL</li>
+                        <li>FIELD() ordering</li>
+                    </ul>
+                </div>
+                <div class="method-card">
+                    <h4>Tools Used</h4>
+                    <ul>
+                        <li>MySQL</li>
+                        <li>TablePlus</li>
+                        <li>ChatGPT (assistance)</li>
+                    </ul>
+                </div>
+                <div class="method-card">
+                    <h4>Key Concepts</h4>
+                    <ul>
+                        <li>Data type evaluation</li>
+                        <li>String splitting</li>
+                        <li>Aggregation with SUM</li>
+                        <li>Table restructuring</li>
+                        <li>NULL handling</li>
+                    </ul>
+                </div>
             </div>
-            <div class="method-card">
-                <h4>Tools Used</h4>
-                <ul>
-                    <li>MySQL</li>
-                    <li>TablePlus</li>
-                    <li>ChatGPT (assistance)</li>
-                </ul>
-            </div>
-            <div class="method-card">
-                <h4>Key Concepts</h4>
-                <ul>
-                    <li>Data type evaluation</li>
-                    <li>String splitting</li>
-                    <li>Aggregation with SUM</li>
-                    <li>Table restructuring</li>
-                    <li>NULL handling</li>
-                </ul>
-            </div>
-        </div>
-    </section>
+        </section>
+
+    </div>
 
     <!-- FOOTER -->
     <footer class="footer">
@@ -1639,8 +1864,8 @@
         <div class="footer-copy">&copy; 2026 Wei Kiat Tan</div>
     </footer>
 
-    <!-- SCROLL ANIMATIONS -->
     <script>
+        // Scroll animations
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1651,15 +1876,75 @@
 
         document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-        // Smooth nav background on scroll
-        const nav = document.querySelector('.nav');
+        // Progress bar
         window.addEventListener('scroll', () => {
-            if (window.scrollY > 100) {
-                nav.style.background = 'rgba(10, 10, 15, 0.95)';
-            } else {
-                nav.style.background = 'rgba(10, 10, 15, 0.85)';
-            }
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const progress = (scrollTop / scrollHeight) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            updateSidebarActive();
         });
+
+        // Sidebar active state
+        function updateSidebarActive() {
+            const sections = document.querySelectorAll('section[id]');
+            const navItems = document.querySelectorAll('.sidebar-nav-item');
+
+            let currentSection = 'hero';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 200;
+                const sectionHeight = section.offsetHeight;
+                const scrollPosition = window.scrollY;
+
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-section') === currentSection) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // Smooth scroll for sidebar links
+        document.querySelectorAll('.sidebar-nav-item').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetSection = document.getElementById(targetId);
+                if (targetSection) {
+                    targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Copy code to clipboard
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const pre = codeBlock.querySelector('pre');
+            const text = pre.textContent;
+
+            navigator.clipboard.writeText(text).then(() => {
+                button.classList.add('copied');
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+
+                setTimeout(() => {
+                    button.classList.remove('copied');
+                    button.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                }, 2000);
+            });
+        }
+
+        // Collapsible sections
+        function toggleCollapsible(id) {
+            const collapsible = document.getElementById(id);
+            collapsible.classList.toggle('open');
+        }
     </script>
 </body>
 </html>
