@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopper Profile Wrangling | Wei Kiat Tan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --pixel-dark: #0d0d1a;
+            --pixel-deep: #1a1a3e;
+            --pixel-purple: #4a3d6b;
+            --pixel-mid: #6b5b8c;
+            --pixel-pink: #e8a4b8;
+            --pixel-sunset: #ffd4b8;
+            --pixel-star: #ffffff;
+            --pixel-glow: rgba(232, 164, 184, 0.6);
+
+            --card-bg: rgba(13, 13, 26, 0.85);
+            --text-primary: #ffffff;
+            --text-secondary: #e8a4b8;
+
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --accent-blue: #60a5fa;
+            --accent-yellow: #fbbf24;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'VT323', monospace;
+            background-color: var(--pixel-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-size: 18px;
+        }
+
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: var(--pixel-dark); border-left: 4px solid var(--pixel-purple); }
+        ::-webkit-scrollbar-thumb { background: var(--pixel-pink); border: 2px solid var(--pixel-dark); }
+
+        /* Back Button */
+        .back-button {
+            position: fixed; top: 30px; left: 30px; z-index: 1000;
+            display: flex; align-items: center; gap: 10px;
+            padding: 12px 20px; background: var(--card-bg);
+            border: 3px solid var(--pixel-pink); color: var(--pixel-pink);
+            font-family: 'Press Start 2P', cursive; font-size: 0.5rem;
+            text-decoration: none; backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+            clip-path: polygon(0 6px,6px 6px,6px 0,calc(100% - 6px) 0,calc(100% - 6px) 6px,100% 6px,100% calc(100% - 6px),calc(100% - 6px) calc(100% - 6px),calc(100% - 6px) 100%,6px 100%,6px calc(100% - 6px),0 calc(100% - 6px));
+        }
+        .back-button:hover { background: var(--pixel-pink); color: var(--pixel-dark); transform: translateX(-5px); }
+
+        /* Progress Bar */
+        .progress-bar { position: fixed; top: 0; left: 0; width: 0%; height: 4px; background: linear-gradient(90deg, var(--pixel-pink), var(--pixel-sunset)); z-index: 9999; transition: width 0.1s ease; }
+
+        /* Sidebar Navigation */
+        .sidebar-nav { position: fixed; left: 30px; top: 50%; transform: translateY(-50%); z-index: 900; display: flex; flex-direction: column; gap: 8px; }
+        .sidebar-nav-item {
+            display: flex; align-items: center; gap: 12px; padding: 10px 15px;
+            background: var(--card-bg); border: 2px solid var(--pixel-mid);
+            color: var(--pixel-mid); font-family: 'Press Start 2P', cursive;
+            font-size: 0.35rem; text-decoration: none; transition: all 0.2s ease;
+            white-space: nowrap; backdrop-filter: blur(10px);
+        }
+        .sidebar-nav-item:hover { border-color: var(--pixel-pink); color: var(--pixel-pink); transform: translateX(5px); }
+        .sidebar-nav-item.active { border-color: var(--pixel-pink); background: var(--pixel-pink); color: var(--pixel-dark); }
+        .sidebar-nav-dot { width: 8px; height: 8px; background: var(--pixel-mid); flex-shrink: 0; }
+        .sidebar-nav-item:hover .sidebar-nav-dot, .sidebar-nav-item.active .sidebar-nav-dot { background: currentColor; }
+        .sidebar-nav-label { opacity: 0; max-width: 0; overflow: hidden; transition: all 0.3s ease; }
+        .sidebar-nav:hover .sidebar-nav-label { opacity: 1; max-width: 200px; }
+        .sidebar-nav-item.active .sidebar-nav-label { opacity: 1; max-width: 200px; }
+
+        /* Hero */
+        .hero {
+            min-height: 70vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; padding: 100px 40px 80px;
+            background: linear-gradient(135deg, var(--pixel-dark) 0%, var(--pixel-deep) 50%, var(--pixel-purple) 100%);
+            position: relative; overflow: hidden;
+        }
+        .hero::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 20% 30%, rgba(232,164,184,0.15) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(255,212,184,0.15) 0%, transparent 40%);
+            z-index: 1;
+        }
+        .hero-content { position: relative; z-index: 10; text-align: center; max-width: 900px; }
+        .project-category {
+            display: inline-block; padding: 10px 20px; background: var(--pixel-purple);
+            border: 2px solid var(--pixel-pink); font-family: 'Press Start 2P', cursive;
+            font-size: 0.45rem; color: var(--pixel-pink); text-transform: uppercase;
+            margin-bottom: 25px; letter-spacing: 2px;
+        }
+        .hero-title {
+            font-family: 'Press Start 2P', cursive; font-size: 2.2rem;
+            color: var(--pixel-sunset); margin-bottom: 30px; line-height: 1.5;
+            text-shadow: 4px 4px 0 var(--pixel-purple), 0 0 30px var(--pixel-glow);
+        }
+        .hero-subtitle { font-size: 1.4rem; color: var(--text-primary); margin-bottom: 40px; max-width: 750px; line-height: 1.8; }
+
+        /* Stats Row */
+        .stats-row { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 20px; }
+        .stat-item { text-align: center; padding: 20px 30px; background: var(--card-bg); border: 3px solid var(--pixel-mid); min-width: 140px; }
+        .stat-number { font-family: 'Press Start 2P', cursive; font-size: 1.2rem; color: var(--pixel-pink); display: block; margin-bottom: 8px; }
+        .stat-label { font-family: 'Press Start 2P', cursive; font-size: 0.4rem; color: var(--pixel-mid); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Main Content */
+        .main-content { max-width: 900px; margin: 0 auto; padding: 80px 40px; }
+
+        /* Section */
+        .section { margin-bottom: 100px; }
+        .section-header { margin-bottom: 40px; }
+        .section-number { font-family: 'Press Start 2P', cursive; font-size: 0.6rem; color: var(--pixel-mid); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 15px; display: block; }
+        .section-title { font-family: 'Press Start 2P', cursive; font-size: 1.1rem; color: var(--pixel-sunset); line-height: 1.8; text-shadow: 2px 2px 0 var(--pixel-purple); }
+
+        /* Content Card */
+        .content-card {
+            background: var(--card-bg); border: 4px solid var(--pixel-pink); padding: 50px; margin-bottom: 40px;
+            clip-path: polygon(0 12px,12px 12px,12px 0,calc(100% - 12px) 0,calc(100% - 12px) 12px,100% 12px,100% calc(100% - 12px),calc(100% - 12px) calc(100% - 12px),calc(100% - 12px) 100%,12px 100%,12px calc(100% - 12px),0 calc(100% - 12px));
+        }
+        .content-text { font-size: 1.25rem; line-height: 1.9; color: var(--text-primary); margin-bottom: 25px; }
+        .content-text:last-child { margin-bottom: 0; }
+
+        /* Question Header */
+        .question-header {
+            background: linear-gradient(135deg, var(--pixel-purple) 0%, var(--pixel-deep) 100%);
+            border: 3px solid var(--pixel-mid); border-left: 6px solid var(--pixel-pink);
+            padding: 30px 35px; margin-bottom: 40px; font-size: 1.2rem;
+            color: var(--text-primary); line-height: 1.8;
+        }
+        .question-header .q-label { font-family: 'Press Start 2P', cursive; font-size: 0.5rem; color: var(--accent-yellow); display: block; margin-bottom: 12px; letter-spacing: 2px; text-transform: uppercase; }
+        .question-header code { background: rgba(232,164,184,0.2); border: 1px solid var(--pixel-mid); padding: 2px 8px; color: var(--pixel-pink); font-family: 'VT323', monospace; font-size: 1.2rem; }
+
+        /* Step Blocks */
+        .step-block { margin-bottom: 50px; }
+        .step-number { font-family: 'Press Start 2P', cursive; font-size: 0.5rem; color: var(--pixel-pink); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; display: flex; align-items: center; gap: 15px; }
+        .step-number::after { content: ''; flex: 1; height: 3px; background: linear-gradient(to right, var(--pixel-mid), transparent); }
+        .step-text { font-size: 1.2rem; color: var(--text-primary); line-height: 1.8; margin-bottom: 20px; }
+        .step-text code { background: rgba(232,164,184,0.2); border: 1px solid var(--pixel-mid); padding: 2px 8px; color: var(--pixel-pink); font-family: 'VT323', monospace; font-size: 1.2rem; }
+
+        /* Figure Containers */
+        .figure-container { background: var(--card-bg); border: 3px solid var(--pixel-mid); overflow: hidden; margin: 25px 0; }
+        .figure-placeholder { width: 100%; min-height: 200px; display: flex; flex-direction: column; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--pixel-deep), var(--pixel-dark)); padding: 30px; text-align: center; }
+        .figure-placeholder .icon { font-size: 2rem; margin-bottom: 10px; opacity: 0.5; }
+        .figure-placeholder .label { font-family: 'Press Start 2P', cursive; font-size: 0.4rem; color: var(--pixel-mid); letter-spacing: 1px; }
+        .figure-caption { padding: 12px 20px; border-top: 3px solid var(--pixel-mid); font-size: 1rem; color: var(--pixel-mid); }
+        .figure-caption strong { color: var(--pixel-pink); }
+
+        /* Code Blocks */
+        .code-block { background: var(--pixel-dark); border: 3px solid var(--pixel-mid); overflow: hidden; margin: 25px 0; position: relative; }
+        .code-header { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; border-bottom: 3px solid var(--pixel-mid); background: var(--pixel-deep); }
+        .code-header .lang { font-family: 'Press Start 2P', cursive; font-size: 0.4rem; color: var(--pixel-pink); text-transform: uppercase; letter-spacing: 1px; }
+        .code-header .dots { display: flex; gap: 6px; }
+        .code-header .dot { width: 10px; height: 10px; border: 2px solid; }
+        .code-header .dot:nth-child(1) { border-color: var(--accent-red); background: var(--accent-red); }
+        .code-header .dot:nth-child(2) { border-color: var(--accent-yellow); background: var(--accent-yellow); }
+        .code-header .dot:nth-child(3) { border-color: var(--accent-green); background: var(--accent-green); }
+        .code-body { padding: 20px; overflow-x: auto; }
+        .code-body pre { font-family: 'VT323', monospace; font-size: 1.1rem; line-height: 1.7; color: var(--text-primary); white-space: pre; tab-size: 2; }
+        .code-body .keyword { color: var(--pixel-pink); }
+        .code-body .function { color: var(--pixel-sunset); }
+        .code-body .string { color: var(--accent-green); }
+        .code-body .comment { color: var(--pixel-mid); font-style: italic; }
+        .code-body .number { color: var(--accent-yellow); }
+
+        .copy-btn { position: absolute; top: 10px; right: 10px; padding: 8px 16px; background: var(--pixel-purple); border: 2px solid var(--pixel-mid); color: var(--pixel-pink); font-family: 'Press Start 2P', cursive; font-size: 0.35rem; cursor: pointer; transition: all 0.2s ease; z-index: 10; display: flex; align-items: center; gap: 6px; }
+        .copy-btn:hover { background: var(--pixel-pink); color: var(--pixel-dark); border-color: var(--pixel-pink); }
+        .copy-btn.copied { background: var(--accent-green); border-color: var(--accent-green); color: var(--pixel-dark); }
+
+        /* Insight Boxes */
+        .insight-box { background: rgba(74,222,128,0.1); border: 3px solid var(--accent-green); padding: 25px 30px; margin: 30px 0; display: flex; align-items: flex-start; gap: 20px; }
+        .insight-box.warning { background: rgba(248,113,113,0.1); border-color: var(--accent-red); }
+        .insight-box.info { background: rgba(96,165,250,0.1); border-color: var(--accent-blue); }
+        .insight-icon { font-size: 1.5rem; flex-shrink: 0; }
+        .insight-box .insight-icon { color: var(--accent-green); }
+        .insight-box.warning .insight-icon { color: var(--accent-red); }
+        .insight-box.info .insight-icon { color: var(--accent-blue); }
+        .insight-content { flex: 1; }
+        .insight-title { font-family: 'Press Start 2P', cursive; font-size: 0.5rem; margin-bottom: 10px; text-transform: uppercase; }
+        .insight-box .insight-title { color: var(--accent-green); }
+        .insight-box.warning .insight-title { color: var(--accent-red); }
+        .insight-box.info .insight-title { color: var(--accent-blue); }
+        .insight-text { font-size: 1.15rem; color: var(--text-primary); line-height: 1.7; }
+
+        /* Data Stats Row */
+        .data-stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin: 30px 0; }
+        .data-stat-card { background: var(--card-bg); border: 3px solid var(--pixel-mid); padding: 20px; text-align: center; transition: all 0.2s ease; }
+        .data-stat-card:hover { border-color: var(--pixel-pink); transform: translateY(-3px); }
+        .data-stat-card .value { font-family: 'Press Start 2P', cursive; font-size: 1rem; color: var(--pixel-pink); display: block; margin-bottom: 8px; }
+        .data-stat-card .label { font-family: 'Press Start 2P', cursive; font-size: 0.35rem; color: var(--pixel-mid); text-transform: uppercase; letter-spacing: 1px; }
+
+        /* Process Flow */
+        .process-flow { display: flex; flex-wrap: wrap; gap: 15px; margin: 30px 0; justify-content: center; }
+        .process-step { background: var(--card-bg); border: 3px solid var(--pixel-mid); padding: 20px 25px; text-align: center; flex: 1; min-width: 140px; }
+        .process-step:hover { border-color: var(--pixel-pink); }
+        .process-step .step-icon { font-size: 1.5rem; margin-bottom: 8px; }
+        .process-step .step-name { font-family: 'Press Start 2P', cursive; font-size: 0.45rem; color: var(--pixel-sunset); }
+        .process-step .step-desc { font-size: 1rem; color: var(--pixel-mid); margin-top: 5px; }
+        .process-arrow { display: flex; align-items: center; color: var(--pixel-pink); font-size: 1.5rem; }
+
+        /* Collapsible */
+        .collapsible { margin: 25px 0; }
+        .collapsible-header { background: var(--pixel-purple); border: 3px solid var(--pixel-mid); padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s ease; }
+        .collapsible-header:hover { border-color: var(--pixel-pink); }
+        .collapsible-title { font-family: 'Press Start 2P', cursive; font-size: 0.5rem; color: var(--pixel-sunset); }
+        .collapsible-icon { color: var(--pixel-pink); font-size: 1rem; transition: transform 0.3s ease; }
+        .collapsible.open .collapsible-icon { transform: rotate(180deg); }
+        .collapsible-content { background: var(--card-bg); border: 3px solid var(--pixel-mid); border-top: none; padding: 0 30px; max-height: 0; overflow: hidden; transition: all 0.3s ease; }
+        .collapsible.open .collapsible-content { padding: 30px; max-height: 8000px; }
+
+        /* References */
+        .references { background: var(--card-bg); border: 3px solid var(--pixel-mid); padding: 30px 35px; margin-top: 40px; }
+        .references-title { font-family: 'Press Start 2P', cursive; font-size: 0.5rem; color: var(--accent-yellow); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 20px; }
+        .ref-item { font-size: 1.1rem; color: var(--pixel-mid); line-height: 1.8; padding-left: 25px; position: relative; margin-bottom: 12px; }
+        .ref-item::before { content: '>'; position: absolute; left: 0; color: var(--pixel-pink); font-family: 'Press Start 2P', cursive; font-size: 0.5rem; top: 5px; }
+        .ref-item code { background: rgba(232,164,184,0.2); border: 1px solid var(--pixel-mid); padding: 2px 8px; color: var(--pixel-pink); font-family: 'VT323', monospace; }
+
+        /* Methodology Cards */
+        .method-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin: 30px 0; }
+        .method-card { background: var(--card-bg); border: 3px solid var(--pixel-mid); padding: 25px; }
+        .method-card h4 { font-family: 'Press Start 2P', cursive; font-size: 0.5rem; color: var(--pixel-pink); margin-bottom: 15px; }
+        .method-card ul { list-style: none; padding: 0; }
+        .method-card li { font-size: 1.1rem; color: var(--pixel-mid); padding: 3px 0; padding-left: 20px; position: relative; }
+        .method-card li::before { content: '>'; position: absolute; left: 0; color: var(--pixel-sunset); font-family: 'Press Start 2P', cursive; font-size: 0.4rem; top: 5px; }
+
+        /* Divider */
+        .divider { max-width: 900px; margin: 0 auto; padding: 0 40px; margin-bottom: 80px; }
+        .divider-line { height: 3px; background: linear-gradient(to right, transparent, var(--pixel-mid), transparent); }
+
+        /* Footer */
+        .footer { border-top: 3px solid var(--pixel-mid); padding: 50px 40px; text-align: center; background: var(--pixel-deep); }
+        .footer-links { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; flex-wrap: wrap; }
+        .footer-links a { font-family: 'Press Start 2P', cursive; font-size: 0.5rem; color: var(--pixel-mid); text-decoration: none; transition: color 0.2s; padding: 8px 15px; border: 2px solid var(--pixel-mid); }
+        .footer-links a:hover { color: var(--pixel-pink); border-color: var(--pixel-pink); }
+        .footer-copy { font-family: 'Press Start 2P', cursive; font-size: 0.4rem; color: var(--pixel-mid); margin-top: 15px; }
+
+        /* Analysis findings section */
+        .finding-block { margin-bottom: 30px; }
+        .finding-label { font-family: 'Press Start 2P', cursive; font-size: 0.45rem; color: var(--pixel-sunset); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+
+        /* Fade In */
+        .fade-in { opacity: 0; transform: translateY(20px); transition: all 0.6s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* Responsive */
+        @media (max-width: 1200px) { .sidebar-nav { display: none; } }
+        @media (max-width: 768px) {
+            .back-button { top: 15px; left: 15px; padding: 8px 14px; font-size: 0.4rem; }
+            .hero { padding: 80px 20px 60px; }
+            .hero-title { font-size: 1.4rem; }
+            .stats-row { gap: 15px; }
+            .stat-item { min-width: 100px; padding: 15px; }
+            .stat-number { font-size: 1rem; }
+            .main-content { padding: 40px 20px; }
+            .content-card { padding: 25px; clip-path: none; border: 3px solid var(--pixel-pink); }
+            .question-header { padding: 20px; }
+            .code-body { padding: 15px; }
+            .code-body pre { font-size: 0.95rem; }
+            .process-arrow { display: none; }
+            .process-flow { flex-direction: column; }
+            .data-stats-row { grid-template-columns: repeat(2, 1fr); }
+            .method-grid { grid-template-columns: 1fr; }
+            .footer-links { flex-direction: column; align-items: center; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="progress-bar" id="progressBar"></div>
+
+    <a href="works.html" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Works
+    </a>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar-nav" id="sidebarNav">
+        <a href="#hero" class="sidebar-nav-item active" data-section="hero">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Introduction</span>
+        </a>
+        <a href="#overview" class="sidebar-nav-item" data-section="overview">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Overview</span>
+        </a>
+        <a href="#q1a" class="sidebar-nav-item" data-section="q1a">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Q1(a): Python → MySQL</span>
+        </a>
+        <a href="#q1b" class="sidebar-nav-item" data-section="q1b">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Q1(b): Anomalies</span>
+        </a>
+        <a href="#q1c" class="sidebar-nav-item" data-section="q1c">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Q1(c): Data Types</span>
+        </a>
+        <a href="#q1d" class="sidebar-nav-item" data-section="q1d">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Q1(d): R Visualisation</span>
+        </a>
+        <a href="#appendix" class="sidebar-nav-item" data-section="appendix">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Code Appendix</span>
+        </a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="project-category">ANL503 &bull; End-of-Course Assessment</div>
+            <h1 class="hero-title">Shopper Profile<br>Data Wrangling</h1>
+            <p class="hero-subtitle">
+                Building a full data pipeline — from Excel to MySQL to R — to wrangle, clean,
+                and visualise shopper demographics across 6 Singapore shopping malls.
+            </p>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-number">5,838</span>
+                    <span class="stat-label">Rows</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">6</span>
+                    <span class="stat-label">Columns</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">6</span>
+                    <span class="stat-label">Malls</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">3</span>
+                    <span class="stat-label">Languages</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+        <!-- OVERVIEW -->
+        <section class="section fade-in" id="overview">
+            <div class="section-header">
+                <span class="section-number">The Pipeline</span>
+                <h2 class="section-title">End-to-End Data Wrangling</h2>
+            </div>
+
+            <div class="content-card">
+                <p class="content-text">
+                    The <code>shopper_profile</code> dataset contains demographic information about shoppers across 6 Singapore
+                    shopping malls, including age, gender, race, citizenship, and store visited.
+                    The assessment spans the full data pipeline — ingestion with Python, cleaning with SQL, and visualisation with R.
+                </p>
+            </div>
+
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="step-icon">🐍</div>
+                    <div class="step-name">Python</div>
+                    <div class="step-desc">Excel → MySQL</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="step-icon">🗄️</div>
+                    <div class="step-name">SQL</div>
+                    <div class="step-desc">Clean & Optimise</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="step-icon">📊</div>
+                    <div class="step-name">R</div>
+                    <div class="step-desc">Visualise with ggplot2</div>
+                </div>
+                <div class="process-arrow">→</div>
+                <div class="process-step">
+                    <div class="step-icon">🔍</div>
+                    <div class="step-name">Insights</div>
+                    <div class="step-desc">Profile comparison</div>
+                </div>
+            </div>
+
+            <div class="data-stats-row">
+                <div class="data-stat-card">
+                    <span class="value">5,838</span>
+                    <span class="label">Shopper Records</span>
+                </div>
+                <div class="data-stat-card">
+                    <span class="value">14</span>
+                    <span class="label">Unique Stores</span>
+                </div>
+                <div class="data-stat-card">
+                    <span class="value">6</span>
+                    <span class="label">Shopping Malls</span>
+                </div>
+                <div class="data-stat-card">
+                    <span class="value">4</span>
+                    <span class="label">Visualisations</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div></div>
+
+        <!-- QUESTION 1(a) -->
+        <section class="section fade-in" id="q1a">
+            <div class="section-header">
+                <span class="section-number">Question 1(a)</span>
+                <h2 class="section-title">Python: Excel to MySQL</h2>
+            </div>
+
+            <div class="question-header">
+                <span class="q-label">Task</span>
+                Create a Python program to access the Excel workbook and store the spreadsheet as a MySQL table
+                named <code>shopper_profile</code> in your MySQL database.
+            </div>
+
+            <div class="step-block">
+                <div class="step-number">Step 01 — Import Libraries & Load Data</div>
+                <p class="step-text">
+                    Three libraries are required: <code>pandas</code> for reading the Excel file into a DataFrame,
+                    <code>sqlalchemy</code> and <code>create_engine</code> for establishing the MySQL connection.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                        <span class="lang">Python</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                    <div class="code-body">
+<pre><span class="comment"># Import necessary libraries</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">from</span> sqlalchemy <span class="keyword">import</span> create_engine
+
+<span class="comment"># Load data from the Excel file</span>
+file_path = <span class="string">"C:/Users/weiki/ECA_data.xlsx/ECA_data.xlsx"</span>
+df = pd.<span class="function">read_excel</span>(file_path)
+
+<span class="comment"># Connect to MySQL database</span>
+engine = <span class="function">create_engine</span>(<span class="string">"mysql+pymysql://root:password@localhost:3306/anl503"</span>)
+
+<span class="comment"># Store the data in MySQL as "shopper_profile" table</span>
+df.<span class="function">to_sql</span>(<span class="string">"shopper_profile"</span>, con=engine, if_exists=<span class="string">"replace"</span>, index=<span class="keyword">False</span>)
+
+<span class="function">print</span>(<span class="string">"Data successfully stored in MySQL as table 'shopper_profile'"</span>)</pre>
+                    </div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 1</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 1:</strong> Importing relevant libraries</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 2</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 2:</strong> Creating the file path to load data from Excel file</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 3</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 3:</strong> Create connection to MySQL database</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 4</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 4:</strong> Store data into MySQL under the name shopper_profile</div>
+                </div>
+
+                <p class="step-text">
+                    Figures 1 to 4 show the Python programming codes done on VS Code. Each tick in the figure corresponds to
+                    a successful execution of that code cell.
+                </p>
+            </div>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div></div>
+
+        <!-- QUESTION 1(b) -->
+        <section class="section fade-in" id="q1b">
+            <div class="section-header">
+                <span class="section-number">Question 1(b)</span>
+                <h2 class="section-title">Rectifying Data Anomalies</h2>
+            </div>
+
+            <div class="question-header">
+                <span class="q-label">Task</span>
+                Execute the MySQL statement to count stores, analyse the result table, and compose a single MySQL query
+                to update the <code>shopper_profile</code> table to rectify any anomalies observed.
+            </div>
+
+            <div class="step-block">
+                <div class="step-number">Step 01 — Execute & Analyse</div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                        <span class="lang">MySQL</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                    <div class="code-body">
+<pre><span class="keyword">SELECT</span> store <span class="function">COLLATE</span> utf8mb4_bin <span class="keyword">AS</span> store,
+<span class="function">COUNT</span>(*) <span class="keyword">AS</span> n <span class="keyword">FROM</span> shopper_profile <span class="keyword">GROUP BY</span> <span class="number">1</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 5</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 5:</strong> Results from executing MySQL statement</div>
+                </div>
+
+                <p class="step-text">
+                    The result is a table containing 2 columns with <strong>15 rows</strong>. The <code>store</code> column contains
+                    types of stores, and <code>n</code> contains the count. The anomaly identified: "Osim" appears as a separate
+                    entry from "OSIM" due to case sensitivity — they should be the same store.
+                </p>
+            </div>
+
+            <div class="step-block">
+                <div class="step-number">Step 02 — Rectify Anomaly</div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                        <span class="lang">MySQL</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                    <div class="code-body">
+<pre><span class="keyword">UPDATE</span> shopper_profile
+<span class="keyword">SET</span> store = <span class="string">'OSIM'</span>
+<span class="keyword">WHERE</span> store = <span class="string">'Osim'</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 6</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 6:</strong> SQL query to rename Osim to OSIM</div>
+                </div>
+
+                <p class="step-text">
+                    After rectification, the number of rows decreased from <strong>15 to 14</strong>, confirming the two entries
+                    have been merged. The total count for OSIM now correctly reflects the combined total.
+                </p>
+            </div>
+
+            <div class="insight-box warning">
+                <i class="fas fa-exclamation-triangle insight-icon"></i>
+                <div class="insight-content">
+                    <p class="insight-title">Anomaly Found</p>
+                    <p class="insight-text">
+                        The <code>COLLATE utf8mb4_bin</code> clause enables case-sensitive comparison, revealing that "Osim" and "OSIM"
+                        were counted as separate stores. A simple <code>UPDATE</code> statement standardises the casing.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div></div>
+
+        <!-- QUESTION 1(c) -->
+        <section class="section fade-in" id="q1c">
+            <div class="section-header">
+                <span class="section-number">Question 1(c)</span>
+                <h2 class="section-title">Optimising Data Types</h2>
+            </div>
+
+            <div class="question-header">
+                <span class="q-label">Task</span>
+                Assess the data types used in the <code>shopper_profile</code> table, and use the <code>ALTER TABLE</code>
+                command to change them where appropriate to save storage space while not losing any information.
+            </div>
+
+            <div class="step-block">
+                <div class="step-number">Step 01 — Inspect Current Structure</div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 9</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 9:</strong> shopper_profile table initial data structure</div>
+                </div>
+
+                <p class="step-text">
+                    The initial data structure shows 6 columns with 5,838 rows. All text columns use the generic <code>TEXT</code> type,
+                    and age is stored as <code>BIGINT</code>. Distinct value checks are performed to understand the data:
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                        <span class="lang">MySQL</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                    <div class="code-body">
+<pre><span class="keyword">SELECT</span> <span class="function">MAX</span>(age) <span class="keyword">AS</span> largest_age <span class="keyword">FROM</span> shopper_profile;
+<span class="keyword">SELECT DISTINCT</span> store <span class="keyword">FROM</span> shopper_profile;
+<span class="keyword">SELECT DISTINCT</span> mall <span class="keyword">FROM</span> shopper_profile;
+<span class="keyword">SELECT DISTINCT</span> citizenship <span class="keyword">FROM</span> shopper_profile;
+<span class="keyword">SELECT DISTINCT</span> gender <span class="keyword">FROM</span> shopper_profile;
+<span class="keyword">SELECT DISTINCT</span> race <span class="keyword">FROM</span> shopper_profile;</pre>
+                    </div>
+                </div>
+
+                <div class="data-stats-row">
+                    <div class="data-stat-card">
+                        <span class="value">76</span>
+                        <span class="label">Max Age</span>
+                    </div>
+                    <div class="data-stat-card">
+                        <span class="value">2</span>
+                        <span class="label">Genders</span>
+                    </div>
+                    <div class="data-stat-card">
+                        <span class="value">3</span>
+                        <span class="label">Citizenship Types</span>
+                    </div>
+                    <div class="data-stat-card">
+                        <span class="value">14</span>
+                        <span class="label">Unique Stores</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="step-block">
+                <div class="step-number">Step 02 — Alter Data Types</div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                        <span class="lang">MySQL</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                    <div class="code-body">
+<pre><span class="keyword">ALTER TABLE</span> shopper_profile
+    <span class="function">MODIFY COLUMN</span> mall <span class="keyword">VARCHAR</span>(<span class="number">50</span>),
+    <span class="function">MODIFY COLUMN</span> store <span class="keyword">VARCHAR</span>(<span class="number">50</span>),
+    <span class="function">MODIFY COLUMN</span> citizenship <span class="keyword">VARCHAR</span>(<span class="number">25</span>),
+    <span class="function">MODIFY COLUMN</span> gender <span class="keyword">ENUM</span>(<span class="string">'Male'</span>, <span class="string">'Female'</span>) <span class="keyword">NOT NULL</span>,
+    <span class="function">MODIFY COLUMN</span> race <span class="keyword">VARCHAR</span>(<span class="number">25</span>),
+    <span class="function">MODIFY COLUMN</span> age <span class="keyword">TINYINT</span>;</pre>
+                    </div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 12</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 12:</strong> Altering table by changing the data type for columns</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 13</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 13:</strong> Comparison of initial table data structure (top) and after changing data types (bottom)</div>
+                </div>
+            </div>
+
+            <div class="insight-box info">
+                <i class="fas fa-lightbulb insight-icon"></i>
+                <div class="insight-content">
+                    <p class="insight-title">Design Rationale</p>
+                    <p class="insight-text">
+                        <strong>mall & store → VARCHAR(50):</strong> Text type is excessive; VARCHAR with a 50-character limit saves space
+                        while allowing flexibility for longer store/mall names.<br><br>
+                        <strong>gender → ENUM('Male', 'Female'):</strong> Only 2 distinct values exist. ENUM stores each value as a 1–2 byte
+                        integer internally, which is far more efficient than text.<br><br>
+                        <strong>race & citizenship → VARCHAR(25):</strong> Shorter text values than mall/store names. 25 characters provides
+                        sufficient flexibility.<br><br>
+                        <strong>age → TINYINT:</strong> Maximum age is 76. TINYINT supports 0–255, using only 1 byte versus 8 bytes for BIGINT.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div></div>
+
+        <!-- QUESTION 1(d) -->
+        <section class="section fade-in" id="q1d">
+            <div class="section-header">
+                <span class="section-number">Question 1(d)</span>
+                <h2 class="section-title">R: Visualising Shopper Profiles</h2>
+            </div>
+
+            <div class="question-header">
+                <span class="q-label">Task</span>
+                Create an R program to read in the <code>shopper_profile</code> MySQL table, store it as an R data.frame,
+                and create a single visual (containing multiple plots) that shows the similarities and differences
+                of shopper profiles across the different shopping malls.
+            </div>
+
+            <div class="step-block">
+                <div class="step-number">Step 01 — Connect R to MySQL</div>
+                <p class="step-text">
+                    Using <code>DBI</code> and <code>RMySQL</code> libraries to establish a connection to the MySQL database
+                    and read the <code>shopper_profile</code> table into an R data frame.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                        <span class="lang">R</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                    <div class="code-body">
+<pre><span class="keyword">library</span>(DBI)
+<span class="keyword">library</span>(RMySQL)
+<span class="keyword">library</span>(dplyr)
+<span class="keyword">library</span>(ggplot2)
+<span class="keyword">library</span>(patchwork)
+
+con <- <span class="function">dbConnect</span>(RMySQL::MySQL(),
+                 dbname = <span class="string">"anl503"</span>,
+                 host = <span class="string">"localhost"</span>,
+                 user = <span class="string">"root"</span>,
+                 password = <span class="string">"password"</span>)
+
+shopper_profile <- <span class="function">dbReadTable</span>(con, <span class="string">"shopper_profile"</span>)</pre>
+                    </div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 14</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 14:</strong> Code to write the R program to read shopper_profile from MySQL table</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 15</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 15:</strong> Proof that connection to the database using R program is successful</div>
+                </div>
+            </div>
+
+            <div class="step-block">
+                <div class="step-number">Step 02 — Create 4 Plots</div>
+                <p class="step-text">
+                    Four visualisations are created using <code>ggplot2</code> with <code>theme_economist()</code> styling,
+                    then combined into a single visual using the <code>patchwork</code> library.
+                </p>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 16</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 16:</strong> R code to create histogram showing distribution of ages across malls</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 17</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 17:</strong> R code to create side-by-side bar chart showing gender distribution</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 18</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 18:</strong> R code to create side-by-side bar chart showing citizenship status distribution</div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 19</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 19:</strong> R code to create bar chart of race distribution across malls</div>
+                </div>
+            </div>
+
+            <div class="step-block">
+                <div class="step-number">Step 03 — Combine into Single Visual</div>
+
+                <div class="code-block">
+                    <div class="code-header">
+                        <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                        <span class="lang">R</span>
+                    </div>
+                    <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                    <div class="code-body">
+<pre><span class="comment"># Combine all plots into a single visual</span>
+combined_plot <- (age_dist_plot | gender_dist_plot) /
+                 (race_dist_plot | citizenship_dist_plot) +
+                 <span class="function">plot_layout</span>(guides = <span class="string">'collect'</span>) &
+                 <span class="function">theme</span>(legend.position = <span class="string">"bottom"</span>)
+
+<span class="function">print</span>(combined_plot)
+<span class="function">dbDisconnect</span>(con)</pre>
+                    </div>
+                </div>
+
+                <div class="figure-container">
+                    <div class="figure-placeholder">
+                        <div class="icon">📸</div>
+                        <div class="label">Image placeholder — Figure 20</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 20:</strong> Combining all plots into 1 visual</div>
+                </div>
+
+                <div class="figure-container" style="margin-top: 30px;">
+                    <div class="figure-placeholder" style="min-height: 300px;">
+                        <div class="icon">📊</div>
+                        <div class="label">Image placeholder — Figure 21 (Combined Visual)</div>
+                    </div>
+                    <div class="figure-caption"><strong>Figure 21:</strong> Final result of combined plot containing 4 visualisations</div>
+                </div>
+            </div>
+
+            <div class="step-block">
+                <div class="step-number">Key Findings — Analysis</div>
+
+                <div class="insight-box">
+                    <i class="fas fa-chart-bar insight-icon"></i>
+                    <div class="insight-content">
+                        <p class="insight-title">Age Distribution</p>
+                        <p class="insight-text">
+                            Universally right-skewed across all 6 malls — majority of shoppers are aged 20–40.
+                            <strong>313@Somerset</strong> and <strong>Jurong Point</strong> have a larger proportion of younger shoppers (20–30),
+                            while <strong>Raffles City</strong> and <strong>VivoCity</strong> show a slightly broader age spread.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="insight-box">
+                    <i class="fas fa-venus-mars insight-icon"></i>
+                    <div class="insight-content">
+                        <p class="insight-title">Gender Distribution</p>
+                        <p class="insight-text">
+                            <strong>Jurong Point</strong> has the highest proportion of female shoppers.
+                            <strong>Centrepoint</strong> is the most balanced.
+                            Hougang Mall, 313@Somerset, and VivoCity lean towards a female majority.
+                            <strong>Raffles City</strong> shows the most balanced gender distribution overall.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="insight-box">
+                    <i class="fas fa-users insight-icon"></i>
+                    <div class="insight-content">
+                        <p class="insight-title">Race Distribution</p>
+                        <p class="insight-text">
+                            Universally dominated by Chinese shoppers across all malls.
+                            <strong>Jurong Point</strong> and <strong>VivoCity</strong> have slightly better demographic diversity with
+                            more Indian and Malay shoppers, though still representing a smaller portion.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="insight-box">
+                    <i class="fas fa-passport insight-icon"></i>
+                    <div class="insight-content">
+                        <p class="insight-title">Citizenship Status</p>
+                        <p class="insight-text">
+                            Singapore Citizens make up the majority across all malls. SG PR and Student Pass holders are
+                            the minority. <strong>Jurong Point</strong> and <strong>VivoCity</strong> attract the most local shoppers.
+                            Student Pass holders have similar small proportions across all malls.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="divider"><div class="divider-line"></div></div>
+
+        <!-- APPENDIX -->
+        <section class="section fade-in" id="appendix">
+            <div class="section-header">
+                <span class="section-number">Appendix</span>
+                <h2 class="section-title">Complete Code</h2>
+            </div>
+
+            <div class="collapsible" id="collapsible-python">
+                <div class="collapsible-header" onclick="toggleCollapsible('collapsible-python')">
+                    <span class="collapsible-title">Python — Excel to MySQL (Q1a)</span>
+                    <i class="fas fa-chevron-down collapsible-icon"></i>
+                </div>
+                <div class="collapsible-content">
+                    <div class="code-block" style="border: none; margin: 0;">
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                        <div class="code-body">
+<pre><span class="comment"># Import necessary libraries</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">from</span> sqlalchemy <span class="keyword">import</span> create_engine
+
+<span class="comment"># Load data from the Excel file</span>
+file_path = <span class="string">"C:/Users/weiki/ECA_data.xlsx/ECA_data.xlsx"</span>
+df = pd.<span class="function">read_excel</span>(file_path)
+
+<span class="comment"># Connect to MySQL database</span>
+engine = <span class="function">create_engine</span>(<span class="string">"mysql+pymysql://root:Anl503datawrangling!@localhost:3306/anl503"</span>)
+
+<span class="comment"># Store the data in MySQL as "shopper_profile" table</span>
+df.<span class="function">to_sql</span>(<span class="string">"shopper_profile"</span>, con=engine, if_exists=<span class="string">"replace"</span>, index=<span class="keyword">False</span>)
+
+<span class="function">print</span>(<span class="string">"Data successfully stored in MySQL as table 'shopper_profile'"</span>)</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapsible" id="collapsible-sql">
+                <div class="collapsible-header" onclick="toggleCollapsible('collapsible-sql')">
+                    <span class="collapsible-title">SQL — Anomaly Fix & Data Types (Q1b & Q1c)</span>
+                    <i class="fas fa-chevron-down collapsible-icon"></i>
+                </div>
+                <div class="collapsible-content">
+                    <div class="code-block" style="border: none; margin: 0;">
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                        <div class="code-body">
+<pre><span class="comment">-- Q1b: Fix Osim anomaly</span>
+<span class="keyword">UPDATE</span> shopper_profile
+<span class="keyword">SET</span> store = <span class="string">'OSIM'</span>
+<span class="keyword">WHERE</span> store = <span class="string">'Osim'</span>;
+
+<span class="comment">-- Q1c: Check distinct values</span>
+<span class="keyword">SELECT</span> <span class="function">MAX</span>(age) <span class="keyword">AS</span> largest_age <span class="keyword">FROM</span> shopper_profile;
+<span class="keyword">SELECT DISTINCT</span> store <span class="keyword">FROM</span> shopper_profile;
+<span class="keyword">SELECT DISTINCT</span> mall <span class="keyword">FROM</span> shopper_profile;
+<span class="keyword">SELECT DISTINCT</span> citizenship <span class="keyword">FROM</span> shopper_profile;
+<span class="keyword">SELECT DISTINCT</span> gender <span class="keyword">FROM</span> shopper_profile;
+<span class="keyword">SELECT DISTINCT</span> race <span class="keyword">FROM</span> shopper_profile;
+
+<span class="comment">-- Q1c: Optimise data types</span>
+<span class="keyword">ALTER TABLE</span> shopper_profile
+    <span class="function">MODIFY COLUMN</span> mall <span class="keyword">VARCHAR</span>(<span class="number">50</span>),
+    <span class="function">MODIFY COLUMN</span> store <span class="keyword">VARCHAR</span>(<span class="number">50</span>),
+    <span class="function">MODIFY COLUMN</span> citizenship <span class="keyword">VARCHAR</span>(<span class="number">25</span>),
+    <span class="function">MODIFY COLUMN</span> gender <span class="keyword">ENUM</span>(<span class="string">'Male'</span>, <span class="string">'Female'</span>) <span class="keyword">NOT NULL</span>,
+    <span class="function">MODIFY COLUMN</span> race <span class="keyword">VARCHAR</span>(<span class="number">25</span>),
+    <span class="function">MODIFY COLUMN</span> age <span class="keyword">TINYINT</span>;</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="collapsible" id="collapsible-r">
+                <div class="collapsible-header" onclick="toggleCollapsible('collapsible-r')">
+                    <span class="collapsible-title">R — Visualisation (Q1d)</span>
+                    <i class="fas fa-chevron-down collapsible-icon"></i>
+                </div>
+                <div class="collapsible-content">
+                    <div class="code-block" style="border: none; margin: 0;">
+                        <button class="copy-btn" onclick="copyCode(this)"><i class="fas fa-copy"></i> Copy</button>
+                        <div class="code-body">
+<pre><span class="keyword">library</span>(DBI)
+<span class="keyword">library</span>(RMySQL)
+<span class="keyword">library</span>(dplyr)
+<span class="keyword">library</span>(ggplot2)
+<span class="keyword">library</span>(patchwork)
+
+con <- <span class="function">dbConnect</span>(RMySQL::MySQL(),
+                 dbname = <span class="string">"anl503"</span>, host = <span class="string">"localhost"</span>,
+                 user = <span class="string">"root"</span>, password = <span class="string">"Anl503datawrangling!"</span>)
+
+shopper_profile <- <span class="function">dbReadTable</span>(con, <span class="string">"shopper_profile"</span>)
+
+<span class="comment"># Age Distribution by Mall</span>
+age_dist_plot <- <span class="function">ggplot</span>(shopper_profile, <span class="function">aes</span>(x = age)) +
+  <span class="function">geom_histogram</span>(bins = <span class="number">15</span>, fill = <span class="string">"salmon"</span>, color = <span class="string">"white"</span>) +
+  <span class="function">labs</span>(title = <span class="string">"Age Distribution per Mall by Count"</span>, x = <span class="string">"Age"</span>, y = <span class="string">""</span>) +
+  <span class="function">facet_wrap</span>(~ mall, ncol = <span class="number">3</span>) +
+  <span class="function">theme_economist</span>() +
+  <span class="function">guides</span>(fill = <span class="string">"none"</span>, color = <span class="string">"none"</span>) +
+  <span class="function">stat_bin</span>(bins = <span class="number">15</span>, geom = <span class="string">"text"</span>,
+           <span class="function">aes</span>(label = ..count..), vjust = <span class="number">-0.5</span>,
+           color = <span class="string">"black"</span>, size = <span class="number">3</span>) +
+  <span class="function">scale_y_continuous</span>(limits = <span class="function">c</span>(<span class="number">0</span>, <span class="number">250</span>))
+
+<span class="comment"># Gender Distribution by Mall (percentage)</span>
+gender_distribution_pct <- shopper_profile %>%
+  <span class="function">group_by</span>(mall, gender) %>%
+  <span class="function">summarise</span>(count = <span class="function">n</span>()) %>%
+  <span class="function">mutate</span>(percentage = count / <span class="function">sum</span>(count))
+
+gender_dist_plot <- <span class="function">ggplot</span>(gender_distribution_pct,
+                           <span class="function">aes</span>(x = mall, y = percentage, fill = gender)) +
+  <span class="function">geom_bar</span>(stat = <span class="string">"identity"</span>, position = <span class="function">position_dodge</span>(width = <span class="number">0.8</span>)) +
+  <span class="function">geom_text</span>(<span class="function">aes</span>(label = scales::<span class="function">percent</span>(percentage)),
+            position = <span class="function">position_dodge</span>(width = <span class="number">0.8</span>), vjust = <span class="number">-0.5</span>, size = <span class="number">3</span>) +
+  <span class="function">scale_y_continuous</span>(labels = scales::<span class="function">percent_format</span>()) +
+  <span class="function">labs</span>(title = <span class="string">"Percentage of Gender Distribution by Mall"</span>,
+       x = <span class="string">"Mall"</span>, y = <span class="string">""</span>, fill = <span class="string">"Gender"</span>) +
+  <span class="function">theme_economist</span>() +
+  <span class="function">scale_fill_manual</span>(values = <span class="function">c</span>(<span class="string">"Female"</span> = <span class="string">"#CD6090"</span>, <span class="string">"Male"</span> = <span class="string">"steelblue"</span>))
+
+<span class="comment"># Citizenship Distribution by Mall</span>
+citizenship_dist_plot <- <span class="function">ggplot</span>(shopper_profile,
+                                <span class="function">aes</span>(x = mall, fill = citizenship)) +
+  <span class="function">geom_bar</span>(stat = <span class="string">"count"</span>, position = <span class="function">position_dodge</span>(width = <span class="number">0.8</span>)) +
+  <span class="function">geom_text</span>(<span class="function">aes</span>(label = ..count..), stat = <span class="string">"count"</span>,
+            position = <span class="function">position_dodge</span>(width = <span class="number">0.8</span>), vjust = <span class="number">-0.5</span>, size = <span class="number">3</span>) +
+  <span class="function">labs</span>(title = <span class="string">"Citizenship Status Distribution by Mall"</span>,
+       x = <span class="string">"Mall"</span>, y = <span class="string">""</span>, fill = <span class="string">"Citizenship"</span>) +
+  <span class="function">theme_economist</span>() +
+  <span class="function">scale_fill_manual</span>(values = <span class="function">c</span>(<span class="string">"SG Citizen"</span> = <span class="string">"pink3"</span>,
+                               <span class="string">"SG PR"</span> = <span class="string">"#1f78b4"</span>,
+                               <span class="string">"Student Pass"</span> = <span class="string">"#4DAF4A"</span>))
+
+<span class="comment"># Race Distribution by Mall</span>
+race_dist_plot <- <span class="function">ggplot</span>(shopper_profile, <span class="function">aes</span>(x = race, fill = race)) +
+  <span class="function">geom_bar</span>() +
+  <span class="function">labs</span>(title = <span class="string">"Race Distribution Numbers by Mall"</span>, x = <span class="string">"Race"</span>, y = <span class="string">""</span>) +
+  <span class="function">facet_wrap</span>(~ mall, ncol = <span class="number">3</span>) +
+  <span class="function">theme_economist</span>() +
+  <span class="function">scale_fill_manual</span>(values = <span class="function">c</span>(<span class="string">"Chinese"</span> = <span class="string">"firebrick1"</span>,
+                               <span class="string">"Eurasian"</span> = <span class="string">"#1f78b4"</span>,
+                               <span class="string">"Indian"</span> = <span class="string">"purple"</span>,
+                               <span class="string">"Malay"</span> = <span class="string">"darkgreen"</span>,
+                               <span class="string">"Others"</span> = <span class="string">"yellow3"</span>)) +
+  <span class="function">guides</span>(fill = <span class="string">"none"</span>) +
+  <span class="function">geom_text</span>(stat = <span class="string">"count"</span>, <span class="function">aes</span>(label = ..count..),
+            vjust = <span class="number">-0.5</span>, color = <span class="string">"black"</span>, size = <span class="number">3</span>) +
+  <span class="function">scale_y_continuous</span>(limits = <span class="function">c</span>(<span class="number">0</span>, <span class="number">1250</span>))
+
+<span class="comment"># Combine all plots</span>
+combined_plot <- (age_dist_plot | gender_dist_plot) /
+                 (race_dist_plot | citizenship_dist_plot) +
+                 <span class="function">plot_layout</span>(guides = <span class="string">'collect'</span>) &
+                 <span class="function">theme</span>(legend.position = <span class="string">"bottom"</span>)
+
+<span class="function">print</span>(combined_plot)
+<span class="function">dbDisconnect</span>(con)</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- References -->
+            <div class="references" style="margin-top: 50px;">
+                <div class="references-title">References & AI Assistance</div>
+                <div class="ref-item">
+                    Used ChatGPT to construct the Python program template to read an Excel file and store it
+                    in a MySQL table as <code>shopper_profile</code> using <code>pandas</code> and <code>sqlalchemy</code>.
+                </div>
+                <div class="ref-item">
+                    Used ChatGPT to enquire how to combine different plots into one visual using the
+                    <code>patchwork</code> library in R.
+                </div>
+            </div>
+
+            <!-- Methodology -->
+            <div class="method-grid" style="margin-top: 40px;">
+                <div class="method-card">
+                    <h4>Languages</h4>
+                    <ul>
+                        <li>Python (pandas, sqlalchemy)</li>
+                        <li>MySQL (DDL, DML)</li>
+                        <li>R (ggplot2, patchwork)</li>
+                    </ul>
+                </div>
+                <div class="method-card">
+                    <h4>Tools Used</h4>
+                    <ul>
+                        <li>VS Code</li>
+                        <li>TablePlus</li>
+                        <li>RStudio</li>
+                        <li>ChatGPT (assistance)</li>
+                    </ul>
+                </div>
+                <div class="method-card">
+                    <h4>Key Concepts</h4>
+                    <ul>
+                        <li>ETL Pipeline</li>
+                        <li>Data type optimisation</li>
+                        <li>Case-sensitive anomalies</li>
+                        <li>Faceted visualisation</li>
+                        <li>Multi-plot composition</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="https://github.com/weikiat98">GitHub</a>
+            <a href="https://www.linkedin.com/in/wei-kiat-tan/">LinkedIn</a>
+            <a href="https://public.tableau.com/app/profile/wei.kiat/vizzes/">Tableau</a>
+            <a href="works.html">Back to All Works</a>
+        </div>
+        <div class="footer-copy">&copy; 2026 Wei Kiat Tan</div>
+    </footer>
+
+    <script>
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('visible');
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+        // Progress bar
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const progress = (scrollTop / scrollHeight) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            updateSidebarActive();
+        });
+
+        // Sidebar active state
+        function updateSidebarActive() {
+            const sections = document.querySelectorAll('section[id]');
+            const navItems = document.querySelectorAll('.sidebar-nav-item');
+            let currentSection = 'hero';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop - 200;
+                const sectionHeight = section.offsetHeight;
+                if (window.scrollY >= sectionTop && window.scrollY < sectionTop + sectionHeight) {
+                    currentSection = section.getAttribute('id');
+                }
+            });
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('data-section') === currentSection) item.classList.add('active');
+            });
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('.sidebar-nav-item').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.getElementById(this.getAttribute('href').substring(1));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Copy code
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const text = codeBlock.querySelector('pre').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                button.classList.add('copied');
+                button.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    button.classList.remove('copied');
+                    button.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                }, 2000);
+            });
+        }
+
+        // Collapsible
+        function toggleCollapsible(id) {
+            document.getElementById(id).classList.toggle('open');
+        }
+    </script>
+</body>
+</html>
