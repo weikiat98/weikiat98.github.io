@@ -622,6 +622,112 @@
             margin: 0 auto;
         }
 
+        /* ==================== DATA TABLE STYLES ==================== */
+        .data-table-frame {
+            background: #0d1117;
+            border: 1px solid var(--border-subtle);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 25px 0;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            transition: all 0.3s ease;
+        }
+
+        .data-table-frame:hover {
+            border-color: var(--purple-primary);
+            box-shadow: 0 12px 40px rgba(139, 92, 246, 0.15);
+        }
+
+        .data-table-header {
+            color: #8b949e;
+            font-size: 0.8rem;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .data-table th {
+            color: #8b949e;
+            text-align: left;
+            padding: 6px 16px 6px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .data-table td {
+            color: #e6edf3;
+            padding: 5px 16px 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            white-space: nowrap;
+        }
+
+        .data-table td:first-child,
+        .data-table th:first-child {
+            color: #8b949e;
+            width: 40px;
+        }
+
+        .data-table td.col-name {
+            color: #79c0ff;
+        }
+
+        .data-table td.col-dtype {
+            color: #f0883e;
+        }
+
+        .data-table td.col-count {
+            color: #3fb950;
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table-section {
+            margin-bottom: 16px;
+        }
+
+        .data-table-section-title {
+            color: #e6edf3;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px dashed rgba(255,255,255,0.15);
+        }
+
+        .data-table-row {
+            display: flex;
+            gap: 16px;
+            padding: 4px 0;
+            font-size: 0.82rem;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .data-table-row:last-child {
+            border-bottom: none;
+        }
+
+        .data-table-key {
+            color: #8b949e;
+            min-width: 200px;
+        }
+
+        .data-table-val {
+            color: #e6edf3;
+        }
+
+        .data-table-val.green { color: #3fb950; }
+        .data-table-val.yellow { color: #f0883e; }
+
         /* ==================== IMAGE STYLES ==================== */
         .image-frame {
             background: var(--bg-card);
@@ -1214,6 +1320,209 @@
             }
         }
 
+        /* ==================== RISK CALCULATOR ==================== */
+        .risk-calculator {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 35px;
+            margin: 30px 0;
+        }
+
+        .calc-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            margin-bottom: 30px;
+        }
+
+        .calc-header > i {
+            font-size: 1.6rem;
+            color: var(--cyan-primary);
+            margin-top: 4px;
+            flex-shrink: 0;
+        }
+
+        .calc-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .calc-subtitle {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .calc-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .calc-field {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .calc-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        .calc-input {
+            background: var(--bg-elevated);
+            border: 1px solid rgba(139, 92, 246, 0.25);
+            border-radius: 8px;
+            padding: 10px 14px;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+            width: 100%;
+        }
+
+        .calc-input:focus {
+            outline: none;
+            border-color: var(--purple-primary);
+            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+        }
+
+        .calc-input option {
+            background: var(--bg-elevated);
+        }
+
+        .calc-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--purple-primary), var(--cyan-primary));
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .calc-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .calc-result {
+            margin-top: 24px;
+            padding: 24px;
+            background: var(--bg-elevated);
+            border-radius: 12px;
+            border: 1px solid var(--border-subtle);
+        }
+
+        .calc-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+        }
+
+        .calc-result-label {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calc-result-prob {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .calc-result-bar-track {
+            position: relative;
+            height: 12px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 6px;
+            overflow: visible;
+            margin-bottom: 6px;
+        }
+
+        .calc-result-bar-fill {
+            height: 100%;
+            border-radius: 6px;
+            transition: width 0.6s ease, background 0.4s ease;
+            width: 0%;
+        }
+
+        .calc-result-bar-markers {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 6px;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        .calc-risk-badge {
+            display: inline-block;
+            margin-top: 16px;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calc-risk-badge.low {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--accent-green);
+            border: 1px solid rgba(16, 185, 129, 0.4);
+        }
+
+        .calc-risk-badge.medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-yellow);
+            border: 1px solid rgba(245, 158, 11, 0.4);
+        }
+
+        .calc-risk-badge.high {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--accent-red);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .calc-disclaimer {
+            margin-top: 14px;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.5;
+        }
+
+        .calc-disclaimer i {
+            color: var(--cyan-primary);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .calc-grid { grid-template-columns: 1fr; }
+        }
+
         /* ==================== ANIMATIONS ==================== */
         .fade-in {
             opacity: 0;
@@ -1426,14 +1735,68 @@
 
             <div class="image-grid">
                 <div class="image-grid-item">
-                    <div class="image-frame">
-                        <img src="" alt="Figure 1: Data Examination showing dataset structure">
+                    <div class="data-table-frame">
+                        <div class="data-table-header">&lt;class 'pandas.core.frame.DataFrame'&gt;<br>RangeIndex: 5110 entries, 0 to 5109<br>Data columns (total 12 columns):</div>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Column</th>
+                                    <th>Non-Null Count</th>
+                                    <th>Dtype</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td>0</td><td class="col-name">id</td><td class="col-count">5110 non-null</td><td class="col-dtype">int64</td></tr>
+                                <tr><td>1</td><td class="col-name">gender</td><td class="col-count">5110 non-null</td><td class="col-dtype">object</td></tr>
+                                <tr><td>2</td><td class="col-name">age</td><td class="col-count">5110 non-null</td><td class="col-dtype">float64</td></tr>
+                                <tr><td>3</td><td class="col-name">hypertension</td><td class="col-count">5110 non-null</td><td class="col-dtype">int64</td></tr>
+                                <tr><td>4</td><td class="col-name">heart_disease</td><td class="col-count">5110 non-null</td><td class="col-dtype">int64</td></tr>
+                                <tr><td>5</td><td class="col-name">ever_married</td><td class="col-count">5110 non-null</td><td class="col-dtype">object</td></tr>
+                                <tr><td>6</td><td class="col-name">work_type</td><td class="col-count">5110 non-null</td><td class="col-dtype">object</td></tr>
+                                <tr><td>7</td><td class="col-name">Residence_type</td><td class="col-count">5110 non-null</td><td class="col-dtype">object</td></tr>
+                                <tr><td>8</td><td class="col-name">avg_glucose_level</td><td class="col-count">5110 non-null</td><td class="col-dtype">float64</td></tr>
+                                <tr><td>9</td><td class="col-name">bmi</td><td class="col-count">4909 non-null</td><td class="col-dtype">float64</td></tr>
+                                <tr><td>10</td><td class="col-name">smoking_status</td><td class="col-count">5110 non-null</td><td class="col-dtype">object</td></tr>
+                                <tr><td>11</td><td class="col-name">stroke</td><td class="col-count">5110 non-null</td><td class="col-dtype">int64</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                     <p class="image-caption">Figure 1: Data Examination</p>
                 </div>
                 <div class="image-grid-item">
-                    <div class="image-frame">
-                        <img src="" alt="Figure 2: Duplicates and Null values check">
+                    <div class="data-table-frame">
+                        <div class="data-table-header">DATA QUALITY ANALYSIS</div>
+                        <div class="data-table-section">
+                            <div class="data-table-section-title">1. DUPLICATE ANALYSIS:</div>
+                            <div class="data-table-row">
+                                <span class="data-table-key">Complete Duplicate Rows:</span>
+                                <span class="data-table-val green">0</span>
+                            </div>
+                            <div class="data-table-row">
+                                <span class="data-table-key">Status:</span>
+                                <span class="data-table-val green">No complete duplicate rows found</span>
+                            </div>
+                            <div class="data-table-row">
+                                <span class="data-table-key">Duplicates in Key Columns:</span>
+                                <span class="data-table-val">—</span>
+                            </div>
+                        </div>
+                        <div class="data-table-section">
+                            <div class="data-table-section-title">2. MISSING / NULL VALUES ANALYSIS:</div>
+                            <div class="data-table-row">
+                                <span class="data-table-key">Overall Missing Data Summary</span>
+                                <span class="data-table-val"></span>
+                            </div>
+                            <div class="data-table-row">
+                                <span class="data-table-key">&nbsp;&nbsp;Total cells:</span>
+                                <span class="data-table-val">61,320</span>
+                            </div>
+                            <div class="data-table-row">
+                                <span class="data-table-key">&nbsp;&nbsp;Missing cells:</span>
+                                <span class="data-table-val yellow">201</span>
+                            </div>
+                        </div>
                     </div>
                     <p class="image-caption">Figure 2: Duplicates and Null Values Check</p>
                 </div>
@@ -1446,10 +1809,40 @@
                 replacing null values with median values to preserve data integrity while being robust to outliers.
             </p>
 
-            <div class="image-frame">
-                <img src="" alt="Figure 3: Check for duplicates in the dataset">
+            <div class="data-table-frame">
+                <div class="data-table-header">DATA QUALITY ANALYSIS — AFTER MEDIAN IMPUTATION</div>
+                <div class="data-table-section">
+                    <div class="data-table-section-title">1. DUPLICATE ANALYSIS:</div>
+                    <div class="data-table-row">
+                        <span class="data-table-key">Complete Duplicate Rows:</span>
+                        <span class="data-table-val green">0</span>
+                    </div>
+                    <div class="data-table-row">
+                        <span class="data-table-key">Status:</span>
+                        <span class="data-table-val green">No complete duplicate rows found</span>
+                    </div>
+                    <div class="data-table-row">
+                        <span class="data-table-key">Duplicates in Key Columns:</span>
+                        <span class="data-table-val">—</span>
+                    </div>
+                </div>
+                <div class="data-table-section">
+                    <div class="data-table-section-title">2. MISSING / NULL VALUES ANALYSIS:</div>
+                    <div class="data-table-row">
+                        <span class="data-table-key">Overall Missing Data Summary</span>
+                        <span class="data-table-val"></span>
+                    </div>
+                    <div class="data-table-row">
+                        <span class="data-table-key">&nbsp;&nbsp;Total cells:</span>
+                        <span class="data-table-val">61,320</span>
+                    </div>
+                    <div class="data-table-row">
+                        <span class="data-table-key">&nbsp;&nbsp;Missing cells:</span>
+                        <span class="data-table-val green">0</span>
+                    </div>
+                </div>
             </div>
-            <p class="image-caption">Figure 3: Duplicate Check Results</p>
+            <p class="image-caption">Figure 3: Duplicate Check Results — 0 Missing Values After Imputation</p>
 
             <div class="info-box warning">
                 <div class="info-box-header">
@@ -1485,7 +1878,7 @@
             <h3 class="subsection-title">Correlation Analysis</h3>
 
             <div class="image-frame">
-                <img src="" alt="Figure 4: Correlation matrix analyzing relationship of variables">
+                <img src="AIB504-ECA/output2.png" alt="Figure 4: Correlation matrix analyzing relationship of variables">
             </div>
             <p class="image-caption">Figure 4: Correlation Matrix - Analyzing Variable Relationships</p>
 
@@ -1498,7 +1891,7 @@
             <h3 class="subsection-title">Feature Distributions</h3>
 
             <div class="image-frame">
-                <img src="" alt="Figure 5: Feature distribution visualizations showing gender, hypertension, heart disease, glucose, and BMI">
+                <img src="AIB504-ECA/output1.png" alt="Figure 5: Feature distribution visualizations showing gender, hypertension, heart disease, glucose, and BMI">
             </div>
             <p class="image-caption">Figure 5: Feature Distribution Visualizations</p>
 
@@ -1512,7 +1905,7 @@
             <h3 class="subsection-title">Age vs Health Metrics</h3>
 
             <div class="image-frame">
-                <img src="" alt="Figure 6: Visualisation showcasing age against health metrics with stroke patients highlighted">
+                <img src="AIB504-ECA/output3.png" alt="Figure 6: Visualisation showcasing age against health metrics with stroke patients highlighted">
             </div>
             <p class="image-caption">Figure 6: Age vs Health Metrics with Stroke Patients Highlighted</p>
 
@@ -1528,13 +1921,13 @@
             <div class="image-grid">
                 <div class="image-grid-item">
                     <div class="image-frame">
-                        <img src="" alt="Figure 7: Stroke analysis by employment status">
+                        <img src="AIB504-ECA/output4.png" alt="Figure 7: Stroke analysis by employment status">
                     </div>
                     <p class="image-caption">Figure 7: Stroke Rate by Employment Status</p>
                 </div>
                 <div class="image-grid-item">
                     <div class="image-frame">
-                        <img src="" alt="Figure 8: Stroke rate by smoking status and age group">
+                        <img src="AIB504-ECA/output5.png" alt="Figure 8: Stroke rate by smoking status and age group">
                     </div>
                     <p class="image-caption">Figure 8: Stroke Rate by Smoking Status & Age</p>
                 </div>
@@ -1549,7 +1942,7 @@
             </p>
 
             <div class="image-frame">
-                <img src="" alt="Figure 9: Stroke rate by age group and residence type">
+                <img src="AIB504-ECA/Picture1.png" alt="Figure 9: Stroke rate by age group and residence type">
             </div>
             <p class="image-caption">Figure 9: Stroke Rate by Age Group and Residence Type</p>
 
@@ -1687,8 +2080,46 @@
                 where <span class="highlight">catching at-risk patients is paramount</span>.
             </p>
 
-            <div class="image-frame">
-                <img src="" alt="Figure 10: Model performance metric score comparison table">
+            <div class="data-table-frame">
+                <div class="data-table-header">Model Performance Comparison:</div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th style="min-width:160px">Model</th>
+                            <th>Accuracy</th>
+                            <th>Precision</th>
+                            <th>Recall</th>
+                            <th>F1-Score</th>
+                            <th>ROC-AUC</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="col-name">Logistic Regression</td>
+                            <td>0.751468</td>
+                            <td>0.140845</td>
+                            <td class="col-count">0.80</td>
+                            <td>0.239521</td>
+                            <td class="col-count">0.838704</td>
+                        </tr>
+                        <tr>
+                            <td class="col-name">Random Forest</td>
+                            <td>0.921722</td>
+                            <td>0.187500</td>
+                            <td class="col-dtype">0.18</td>
+                            <td>0.183673</td>
+                            <td>0.820412</td>
+                        </tr>
+                        <tr>
+                            <td class="col-name">Gradient Boosting</td>
+                            <td>0.951076</td>
+                            <td>0.500000</td>
+                            <td class="col-dtype">0.08</td>
+                            <td>0.137931</td>
+                            <td>0.810864</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
             <p class="image-caption">Figure 10: Model Performance Metrics Comparison</p>
 
@@ -1776,12 +2207,12 @@
             </div>
 
             <div class="image-frame">
-                <img src="" alt="Figure 11: Model performance bar chart and ROC-AUC curves">
+                <img src="AIB504-ECA/output6.png" alt="Figure 11: Model performance bar chart and ROC-AUC curves">
             </div>
             <p class="image-caption">Figure 11: Performance Visualization and ROC-AUC Curves</p>
 
             <div class="image-frame">
-                <img src="" alt="Figure 12: Confusion matrix of the 3 models">
+                <img src="AIB504-ECA/output7.png" alt="Figure 12: Confusion matrix of the 3 models">
             </div>
             <p class="image-caption">Figure 12: Confusion Matrices (Test Size: 1,022 patients)</p>
 
@@ -1866,16 +2297,102 @@
                 </div>
             </div>
 
-            <div class="info-box info">
-                <div class="info-box-header">
-                    <i class="fas fa-user-md"></i>
-                    <span class="info-box-title">Example Case</span>
+            <!-- ===== INTERACTIVE STROKE RISK CALCULATOR ===== -->
+            <div class="risk-calculator">
+                <div class="calc-header">
+                    <i class="fas fa-calculator"></i>
+                    <div>
+                        <h3 class="calc-title">Stroke Risk Calculator</h3>
+                        <p class="calc-subtitle">Enter patient parameters to estimate stroke probability using the Logistic Regression model</p>
+                    </div>
                 </div>
-                <div class="info-box-content">
-                    A <strong>58-year-old hypertensive male</strong> with BMI 25.3 and glucose 92.79 mg/dL is classified as 
-                    <strong style="color: var(--accent-yellow);">Medium Risk (64.42% probability)</strong>. This empowers 
-                    the patient to take charge of their health and visit healthcare centres accordingly, where licensed 
-                    professionals maintain full authority to override model recommendations based on clinical judgment.
+
+                <div class="calc-grid">
+                    <div class="calc-field">
+                        <label class="calc-label">Gender</label>
+                        <select class="calc-input" id="calc-gender">
+                            <option value="1">Male</option>
+                            <option value="0">Female</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label class="calc-label">Age</label>
+                        <input class="calc-input" type="number" id="calc-age" min="1" max="100" value="58" placeholder="e.g. 58">
+                    </div>
+                    <div class="calc-field">
+                        <label class="calc-label">Hypertension</label>
+                        <select class="calc-input" id="calc-hypertension">
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label class="calc-label">Heart Disease</label>
+                        <select class="calc-input" id="calc-heart">
+                            <option value="0">No</option>
+                            <option value="1">Yes</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label class="calc-label">Ever Married</label>
+                        <select class="calc-input" id="calc-married">
+                            <option value="1">Yes</option>
+                            <option value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label class="calc-label">Work Type</label>
+                        <select class="calc-input" id="calc-work">
+                            <option value="0">Government Job</option>
+                            <option value="1">Never Worked</option>
+                            <option value="2">Private</option>
+                            <option value="3">Self-employed</option>
+                            <option value="4">Children</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label class="calc-label">Residence Type</label>
+                        <select class="calc-input" id="calc-residence">
+                            <option value="0">Rural</option>
+                            <option value="1">Urban</option>
+                        </select>
+                    </div>
+                    <div class="calc-field">
+                        <label class="calc-label">Avg Glucose Level (mg/dL)</label>
+                        <input class="calc-input" type="number" id="calc-glucose" min="50" max="300" step="0.01" value="106" placeholder="e.g. 106">
+                    </div>
+                    <div class="calc-field">
+                        <label class="calc-label">BMI</label>
+                        <input class="calc-input" type="number" id="calc-bmi" min="10" max="100" step="0.1" value="28.9" placeholder="e.g. 28.9">
+                    </div>
+                    <div class="calc-field">
+                        <label class="calc-label">Smoking Status</label>
+                        <select class="calc-input" id="calc-smoking">
+                            <option value="2">Never Smoked</option>
+                            <option value="1">Formerly Smoked</option>
+                            <option value="3">Smokes</option>
+                            <option value="0">Unknown</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button class="calc-btn" onclick="calculateStrokeRisk()">
+                    <i class="fas fa-heartbeat"></i> Calculate Stroke Risk
+                </button>
+
+                <div class="calc-result" id="calc-result" style="display:none;">
+                    <div class="calc-result-header">
+                        <span class="calc-result-label">Stroke Probability</span>
+                        <span class="calc-result-prob" id="calc-prob-value">—</span>
+                    </div>
+                    <div class="calc-result-bar-track">
+                        <div class="calc-result-bar-fill" id="calc-bar-fill"></div>
+                        <div class="calc-result-bar-markers">
+                            <span>0%</span><span>30%</span><span>70%</span><span>100%</span>
+                        </div>
+                    </div>
+                    <div class="calc-risk-badge" id="calc-risk-badge"></div>
+                    <p class="calc-disclaimer"><i class="fas fa-info-circle"></i> This tool is for educational purposes only. Licensed healthcare professionals retain full authority over clinical decisions.</p>
                 </div>
             </div>
 
@@ -2120,6 +2637,75 @@
         }, { threshold: 0.1 });
 
         fadeElements.forEach(el => fadeObserver.observe(el));
+
+        // ===== STROKE RISK CALCULATOR =====
+        // Logistic Regression model weights extracted from AIB504_ECA_stroke.ipynb
+        // Features order: gender, age, hypertension, heart_disease, ever_married,
+        //                 work_type, Residence_type, avg_glucose_level, bmi, smoking_status
+        const LR_COEF      = [-0.02986, 1.76231, 0.16354, 0.07424, -0.06008,
+                               -0.03076, 0.07369, 0.20298, 0.02923, 0.02280];
+        const LR_INTERCEPT = -1.20259;
+        const SCALER_MEAN  = [0.41438, 43.35329, 0.09711, 0.05406, 0.66047,
+                               2.17564, 0.50612, 106.31717, 28.88799, 1.36840];
+        const SCALER_SCALE = [0.49311, 22.59405, 0.29611, 0.22614, 0.47355,
+                               1.09011, 0.49996, 45.25412, 7.76252, 1.07192];
+
+        function sigmoid(x) { return 1 / (1 + Math.exp(-x)); }
+
+        function calculateStrokeRisk() {
+            const features = [
+                parseFloat(document.getElementById('calc-gender').value),
+                parseFloat(document.getElementById('calc-age').value),
+                parseFloat(document.getElementById('calc-hypertension').value),
+                parseFloat(document.getElementById('calc-heart').value),
+                parseFloat(document.getElementById('calc-married').value),
+                parseFloat(document.getElementById('calc-work').value),
+                parseFloat(document.getElementById('calc-residence').value),
+                parseFloat(document.getElementById('calc-glucose').value),
+                parseFloat(document.getElementById('calc-bmi').value),
+                parseFloat(document.getElementById('calc-smoking').value)
+            ];
+
+            if (features.some(isNaN)) {
+                alert('Please fill in all fields.');
+                return;
+            }
+
+            // StandardScaler transform
+            const scaled = features.map((v, i) => (v - SCALER_MEAN[i]) / SCALER_SCALE[i]);
+
+            // Logistic regression: dot product + intercept
+            const logit = LR_INTERCEPT + scaled.reduce((sum, v, i) => sum + v * LR_COEF[i], 0);
+            const prob = sigmoid(logit);
+            const pct = (prob * 100).toFixed(2);
+
+            let level, barColor;
+            if (prob > 0.7) {
+                level = 'high';
+                barColor = 'var(--accent-red)';
+            } else if (prob > 0.3) {
+                level = 'medium';
+                barColor = 'var(--accent-yellow)';
+            } else {
+                level = 'low';
+                barColor = 'var(--accent-green)';
+            }
+
+            const labels = { low: 'Low Risk — < 30%', medium: 'Medium Risk — 30–70%', high: 'High Risk — > 70%' };
+
+            document.getElementById('calc-prob-value').textContent = pct + '%';
+            const fill = document.getElementById('calc-bar-fill');
+            fill.style.width = pct + '%';
+            fill.style.background = barColor;
+
+            const badge = document.getElementById('calc-risk-badge');
+            badge.textContent = labels[level];
+            badge.className = 'calc-risk-badge ' + level;
+
+            const result = document.getElementById('calc-result');
+            result.style.display = 'block';
+            result.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
     </script>
 </body>
 </html>
