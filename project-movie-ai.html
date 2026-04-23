@@ -1,0 +1,1618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Revenue AI | Wei Kiat Tan</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --pixel-dark: #0d0d1a;
+            --pixel-deep: #1a1a3e;
+            --pixel-purple: #4a3d6b;
+            --pixel-mid: #6b5b8c;
+            --pixel-pink: #e8a4b8;
+            --pixel-sunset: #ffd4b8;
+            --pixel-star: #ffffff;
+            --pixel-glow: rgba(232, 164, 184, 0.6);
+
+            --card-bg: rgba(13, 13, 26, 0.85);
+            --text-primary: #ffffff;
+            --text-secondary: #e8a4b8;
+
+            --accent-green: #4ade80;
+            --accent-red: #f87171;
+            --accent-blue: #60a5fa;
+            --accent-yellow: #fbbf24;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'VT323', monospace;
+            background-color: var(--pixel-dark);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            font-size: 18px;
+        }
+
+        ::-webkit-scrollbar { width: 12px; }
+        ::-webkit-scrollbar-track { background: var(--pixel-dark); border-left: 4px solid var(--pixel-purple); }
+        ::-webkit-scrollbar-thumb { background: var(--pixel-pink); border: 2px solid var(--pixel-dark); }
+
+        /* Back Button */
+        .back-button {
+            position: fixed;
+            top: 30px;
+            left: 30px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-pink);
+            color: var(--pixel-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+            clip-path: polygon(
+                0 6px, 6px 6px, 6px 0,
+                calc(100% - 6px) 0, calc(100% - 6px) 6px, 100% 6px,
+                100% calc(100% - 6px), calc(100% - 6px) calc(100% - 6px),
+                calc(100% - 6px) 100%, 6px 100%, 6px calc(100% - 6px),
+                0 calc(100% - 6px)
+            );
+        }
+        .back-button:hover { background: var(--pixel-pink); color: var(--pixel-dark); transform: translateX(-5px); }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; width: 0%; height: 4px;
+            background: linear-gradient(90deg, var(--pixel-pink), var(--pixel-sunset));
+            z-index: 9999; transition: width 0.1s ease;
+        }
+
+        /* Hero */
+        .hero {
+            min-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 100px 40px 80px;
+            background: linear-gradient(135deg, var(--pixel-dark) 0%, var(--pixel-deep) 50%, var(--pixel-purple) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(232, 164, 184, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(255, 212, 184, 0.15) 0%, transparent 40%);
+            z-index: 1;
+        }
+        .hero-content { position: relative; z-index: 10; text-align: center; max-width: 900px; }
+
+        .project-category {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--pixel-purple);
+            border: 2px solid var(--pixel-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.45rem;
+            color: var(--pixel-pink);
+            text-transform: uppercase;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+        }
+
+        .hero-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 2rem;
+            color: var(--pixel-sunset);
+            margin-bottom: 30px;
+            line-height: 1.5;
+            text-shadow: 4px 4px 0 var(--pixel-purple), 0 0 30px var(--pixel-glow);
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin-bottom: 40px;
+            max-width: 750px;
+            line-height: 1.8;
+        }
+
+        /* Stats Row */
+        .stats-row { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; margin-top: 20px; }
+        .stat-item {
+            text-align: center;
+            padding: 20px 30px;
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-mid);
+            min-width: 140px;
+        }
+        .stat-number {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.8rem;
+            color: var(--pixel-pink);
+            display: block;
+            margin-bottom: 8px;
+        }
+        .stat-label {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.4rem;
+            color: var(--pixel-mid);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Main Content */
+        .main-content { background: var(--pixel-dark); padding: 80px 60px; }
+        .content-wrapper { max-width: 1100px; margin: 0 auto; }
+
+        /* Section */
+        .section { margin-bottom: 100px; }
+        .section-header { margin-bottom: 40px; }
+        .section-number {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.6rem;
+            color: var(--pixel-mid);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        .section-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.1rem;
+            color: var(--pixel-sunset);
+            line-height: 1.8;
+            text-shadow: 2px 2px 0 var(--pixel-purple);
+        }
+
+        /* Content Card */
+        .content-card {
+            background: var(--card-bg);
+            border: 4px solid var(--pixel-pink);
+            padding: 50px;
+            margin-bottom: 40px;
+            clip-path: polygon(
+                0 12px, 12px 12px, 12px 0,
+                calc(100% - 12px) 0, calc(100% - 12px) 12px, 100% 12px,
+                100% calc(100% - 12px), calc(100% - 12px) calc(100% - 12px),
+                calc(100% - 12px) 100%, 12px 100%, 12px calc(100% - 12px),
+                0 calc(100% - 12px)
+            );
+        }
+
+        .content-text { font-size: 1.25rem; line-height: 1.9; color: var(--text-primary); margin-bottom: 25px; }
+        .content-text:last-child { margin-bottom: 0; }
+
+        .highlight { color: var(--pixel-sunset); font-weight: bold; }
+        .highlight-green { color: var(--accent-green); }
+        .highlight-red { color: var(--accent-red); }
+        .highlight-blue { color: var(--accent-blue); }
+
+        /* Pull Quote */
+        .pull-quote {
+            background: linear-gradient(135deg, var(--pixel-purple) 0%, var(--pixel-deep) 100%);
+            border-left: 6px solid var(--pixel-pink);
+            padding: 35px 40px;
+            margin: 40px 0;
+            position: relative;
+        }
+        .pull-quote::before {
+            content: '"';
+            font-family: 'Press Start 2P', cursive;
+            font-size: 4rem;
+            color: var(--pixel-pink);
+            opacity: 0.3;
+            position: absolute;
+            top: 10px; left: 20px;
+        }
+        .pull-quote-text {
+            font-size: 1.4rem;
+            color: var(--pixel-sunset);
+            font-style: italic;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Insight Box */
+        .insight-box {
+            background: rgba(74, 222, 128, 0.1);
+            border: 3px solid var(--accent-green);
+            padding: 25px 30px;
+            margin: 30px 0;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+        .insight-box.warning { background: rgba(248, 113, 113, 0.1); border-color: var(--accent-red); }
+        .insight-box.info { background: rgba(96, 165, 250, 0.1); border-color: var(--accent-blue); }
+        .insight-box.yellow { background: rgba(251, 191, 36, 0.1); border-color: var(--accent-yellow); }
+
+        .insight-icon { font-size: 1.5rem; color: var(--accent-green); flex-shrink: 0; }
+        .insight-box.warning .insight-icon { color: var(--accent-red); }
+        .insight-box.info .insight-icon { color: var(--accent-blue); }
+        .insight-box.yellow .insight-icon { color: var(--accent-yellow); }
+
+        .insight-content { flex: 1; }
+        .insight-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            color: var(--accent-green);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .insight-box.warning .insight-title { color: var(--accent-red); }
+        .insight-box.info .insight-title { color: var(--accent-blue); }
+        .insight-box.yellow .insight-title { color: var(--accent-yellow); }
+        .insight-text { font-size: 1.15rem; color: var(--text-primary); line-height: 1.7; }
+
+        /* Image */
+        .image-container { margin: 40px 0; }
+        .image-frame {
+            background: #0d0d1a;
+            border: 4px solid var(--pixel-mid);
+            padding: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .image-frame:hover {
+            border-color: var(--pixel-pink);
+            box-shadow: 0 0 30px var(--pixel-glow);
+            transform: translateY(-5px);
+        }
+        .image-frame img {
+            width: 100%; height: auto; display: block;
+            max-width: 100%; max-height: 70vh; object-fit: contain;
+        }
+        .image-placeholder {
+            width: 100%;
+            min-height: 280px;
+            background: linear-gradient(135deg, var(--pixel-deep), var(--pixel-purple));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            border: 2px dashed var(--pixel-mid);
+        }
+        .image-placeholder i { font-size: 3rem; color: var(--pixel-mid); }
+        .image-placeholder span {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.4rem;
+            color: var(--pixel-mid);
+            text-align: center;
+            padding: 0 20px;
+            line-height: 2;
+        }
+        .image-caption {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.45rem;
+            color: var(--pixel-mid);
+            text-align: center;
+            margin-top: 15px;
+            line-height: 1.8;
+        }
+
+        /* Grids */
+        .image-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 30px; margin: 40px 0; }
+        .image-grid.three-col { grid-template-columns: repeat(3, 1fr); }
+        .image-grid .image-container { margin: 0; }
+        .image-full { margin: 50px 0; }
+
+        /* Model Comparison Table */
+        .model-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 1.1rem;
+        }
+        .model-table th {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.45rem;
+            color: var(--pixel-sunset);
+            background: var(--pixel-purple);
+            padding: 15px 20px;
+            text-align: left;
+            border: 2px solid var(--pixel-mid);
+        }
+        .model-table td {
+            padding: 14px 20px;
+            border: 2px solid var(--pixel-mid);
+            color: var(--text-primary);
+        }
+        .model-table tr:nth-child(even) td { background: rgba(74, 61, 107, 0.25); }
+        .model-table tr.best-row td { background: rgba(74, 222, 128, 0.12); border-color: var(--accent-green); }
+        .model-table .badge {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.35rem;
+            padding: 4px 8px;
+            background: var(--accent-green);
+            color: var(--pixel-dark);
+            margin-left: 8px;
+        }
+
+        /* Feature Tag */
+        .feature-tags { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
+        .feature-tag {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.38rem;
+            padding: 10px 15px;
+            background: rgba(74, 61, 107, 0.8);
+            border: 2px solid var(--pixel-mid);
+            color: var(--pixel-sunset);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .feature-tag.important { border-color: var(--pixel-pink); background: rgba(232, 164, 184, 0.15); }
+        .feature-tag.secondary { border-color: var(--accent-blue); background: rgba(96, 165, 250, 0.1); }
+        .feature-tag.marginal { border-color: var(--pixel-mid); opacity: 0.7; }
+
+        /* Findings Grid */
+        .findings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; margin: 50px 0; }
+        .finding-card {
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-mid);
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .finding-card:hover { border-color: var(--pixel-pink); transform: translateY(-5px); }
+        .finding-icon { font-size: 2.5rem; color: var(--pixel-pink); margin-bottom: 20px; }
+        .finding-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            color: var(--pixel-sunset);
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        .finding-text { font-size: 1.1rem; color: var(--text-primary); line-height: 1.7; }
+
+        /* Subheading */
+        .subheading {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.7rem;
+            color: var(--pixel-pink);
+            margin: 40px 0 25px;
+        }
+
+        /* Collapsible */
+        .collapsible { margin: 40px 0; }
+        .collapsible-header {
+            background: var(--pixel-purple);
+            border: 3px solid var(--pixel-mid);
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .collapsible-header:hover { border-color: var(--pixel-pink); }
+        .collapsible-title { font-family: 'Press Start 2P', cursive; font-size: 0.6rem; color: var(--pixel-sunset); }
+        .collapsible-icon { color: var(--pixel-pink); font-size: 1rem; transition: transform 0.3s ease; }
+        .collapsible.open .collapsible-icon { transform: rotate(180deg); }
+        .collapsible-content {
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-mid);
+            border-top: none;
+            padding: 0 30px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        .collapsible.open .collapsible-content { padding: 30px; max-height: 3000px; }
+
+        /* Tech Stack */
+        .tech-stack { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
+        .tech-tag {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.4rem;
+            padding: 10px 15px;
+            background: rgba(74, 61, 107, 0.8);
+            border: 2px solid var(--pixel-mid);
+            color: var(--pixel-sunset);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Flow Steps */
+        .flow-steps { display: flex; flex-direction: column; gap: 0; margin: 30px 0; }
+        .flow-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 20px 25px;
+            background: var(--card-bg);
+            border: 2px solid var(--pixel-mid);
+            border-bottom: none;
+            position: relative;
+        }
+        .flow-step:last-child { border-bottom: 2px solid var(--pixel-mid); }
+        .flow-step-num {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1.2rem;
+            color: var(--pixel-pink);
+            flex-shrink: 0;
+            width: 40px;
+        }
+        .flow-step-content { flex: 1; }
+        .flow-step-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            color: var(--pixel-sunset);
+            margin-bottom: 8px;
+        }
+        .flow-step-text { font-size: 1.15rem; color: var(--text-primary); line-height: 1.7; }
+
+        /* Deployment Cards */
+        .deploy-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; margin: 30px 0; }
+        .deploy-card {
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-mid);
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+        .deploy-card:hover { border-color: var(--pixel-pink); transform: translateY(-5px); }
+        .deploy-icon { font-size: 2rem; color: var(--pixel-pink); margin-bottom: 15px; }
+        .deploy-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            color: var(--pixel-sunset);
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+        .deploy-text { font-size: 1.1rem; color: var(--text-primary); line-height: 1.7; }
+
+        /* Divider */
+        .divider {
+            height: 4px;
+            background: repeating-linear-gradient(
+                90deg,
+                var(--pixel-pink) 0, var(--pixel-pink) 10px,
+                transparent 10px, transparent 20px
+            );
+            margin: 80px 0;
+        }
+
+        /* Project Links */
+        .project-links { display: flex; gap: 20px; margin-top: 50px; flex-wrap: wrap; }
+        .project-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 25px;
+            background: transparent;
+            border: 3px solid var(--pixel-pink);
+            color: var(--pixel-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.5rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+        .project-link:hover {
+            background: var(--pixel-pink);
+            color: var(--pixel-dark);
+            transform: translateY(-4px);
+            box-shadow: 0 8px 0 var(--pixel-purple);
+        }
+        .project-link.primary { background: var(--pixel-pink); color: var(--pixel-dark); }
+        .project-link.primary:hover { background: var(--pixel-sunset); border-color: var(--pixel-sunset); }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(13, 13, 26, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+        .modal.active { display: flex; }
+        .modal-content { max-width: 90%; max-height: 90%; position: relative; }
+        .modal-content img {
+            max-width: 100%; max-height: 85vh;
+            border: 4px solid var(--pixel-pink);
+            background: #0d0d1a;
+        }
+        .modal-close {
+            position: absolute;
+            top: -50px; right: 0;
+            background: var(--pixel-pink);
+            border: none;
+            color: var(--pixel-dark);
+            width: 40px; height: 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        /* Sidebar Nav */
+        .sidebar-nav {
+            position: fixed;
+            left: 30px; top: 50%;
+            transform: translateY(-50%);
+            z-index: 900;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .sidebar-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 15px;
+            background: var(--card-bg);
+            border: 2px solid var(--pixel-mid);
+            color: var(--pixel-mid);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.35rem;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            backdrop-filter: blur(10px);
+        }
+        .sidebar-nav-item:hover { border-color: var(--pixel-pink); color: var(--pixel-pink); transform: translateX(5px); }
+        .sidebar-nav-item.active { border-color: var(--pixel-pink); background: var(--pixel-pink); color: var(--pixel-dark); }
+        .sidebar-nav-dot { width: 8px; height: 8px; background: var(--pixel-mid); flex-shrink: 0; }
+        .sidebar-nav-item:hover .sidebar-nav-dot,
+        .sidebar-nav-item.active .sidebar-nav-dot { background: currentColor; }
+        .sidebar-nav-label { opacity: 0; max-width: 0; overflow: hidden; transition: all 0.3s ease; }
+        .sidebar-nav:hover .sidebar-nav-label { opacity: 1; max-width: 200px; }
+        .sidebar-nav-item.active .sidebar-nav-label { opacity: 1; max-width: 200px; }
+
+        /* Footer */
+        footer { background: var(--pixel-dark); border-top: 4px solid var(--pixel-pink); padding: 40px; text-align: center; }
+        footer p { font-family: 'Press Start 2P', cursive; font-size: 0.5rem; color: var(--pixel-mid); margin-bottom: 15px; }
+        footer a { color: var(--pixel-pink); text-decoration: none; margin: 0 15px; transition: color 0.2s ease; }
+        footer a:hover { color: var(--pixel-sunset); }
+
+        /* Code Block */
+        .code-block {
+            background: #0a0a14;
+            border: 3px solid var(--pixel-mid);
+            border-left: 5px solid var(--pixel-pink);
+            padding: 0;
+            margin: 30px 0;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .code-block-header {
+            background: var(--pixel-purple);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.38rem;
+            color: var(--pixel-pink);
+            border-bottom: 2px solid var(--pixel-mid);
+        }
+        .code-block-header i { font-size: 0.7rem; }
+        .code-block pre {
+            margin: 0;
+            padding: 25px 30px;
+            overflow-x: auto;
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: #cdd6f4;
+            white-space: pre;
+        }
+        /* Syntax colours */
+        .kw  { color: #cba6f7; } /* keyword / def */
+        .fn  { color: #89b4fa; } /* function name */
+        .st  { color: #a6e3a1; } /* string */
+        .cm  { color: #585b70; font-style: italic; } /* comment */
+        .nu  { color: #fab387; } /* number */
+        .bi  { color: #f38ba8; } /* builtin / class */
+        .op  { color: #89dceb; } /* operator / punctuation */
+        .va  { color: #cdd6f4; } /* variable */
+
+        /* Terminal Output Block */
+        .terminal-block {
+            background: #0d1117;
+            border: 3px solid #30363d;
+            border-left: 5px solid var(--accent-green);
+            padding: 0;
+            margin: 30px 0;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .terminal-block-header {
+            background: #161b22;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.38rem;
+            color: var(--accent-green);
+            border-bottom: 1px solid #30363d;
+        }
+        .terminal-block pre {
+            margin: 0;
+            padding: 20px 25px;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            color: #e6edf3;
+            white-space: pre;
+            overflow-x: auto;
+        }
+        .terminal-block .t-key   { color: #79c0ff; }
+        .terminal-block .t-val   { color: #a5d6ff; }
+        .terminal-block .t-score { color: #a8ff78; }
+        .terminal-block .t-label { color: #ffa657; }
+        .terminal-block .t-check { color: var(--accent-green); }
+        .terminal-block .t-time  { color: #8b949e; }
+
+        /* Fade-in */
+        .fade-in { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+        /* Responsive */
+        @media (max-width: 1200px) { .sidebar-nav { display: none; } }
+        @media (max-width: 1024px) {
+            .main-content { padding: 60px 40px; }
+            .image-grid { grid-template-columns: 1fr; }
+            .image-grid.three-col { grid-template-columns: 1fr; }
+            .findings-grid { grid-template-columns: 1fr; }
+            .deploy-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .hero { padding: 100px 20px 60px; min-height: 60vh; }
+            .hero-title { font-size: 1.3rem; }
+            .hero-subtitle { font-size: 1.2rem; }
+            .back-button { top: 15px; left: 15px; padding: 10px 15px; font-size: 0.4rem; }
+            .main-content { padding: 40px 20px; }
+            .content-card { padding: 30px 25px; }
+            .section-title { font-size: 0.9rem; }
+            .stats-row { gap: 20px; }
+            .stat-item { min-width: 100px; padding: 15px 20px; }
+            .stat-number { font-size: 1.4rem; }
+            .project-links { flex-direction: column; }
+            .model-table { font-size: 1rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar"></div>
+
+    <!-- Back Button -->
+    <a href="works.html" class="back-button">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back to All Works</span>
+    </a>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar-nav" id="sidebarNav">
+        <a href="#hero" class="sidebar-nav-item active" data-section="hero">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Introduction</span>
+        </a>
+        <a href="#q1a" class="sidebar-nav-item" data-section="q1a">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Q1a: Regression</span>
+        </a>
+        <a href="#q1b" class="sidebar-nav-item" data-section="q1b">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Q1b: Features</span>
+        </a>
+        <a href="#q1c" class="sidebar-nav-item" data-section="q1c">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Q1c: Recommender</span>
+        </a>
+        <a href="#q1d" class="sidebar-nav-item" data-section="q1d">
+            <span class="sidebar-nav-dot"></span>
+            <span class="sidebar-nav-label">Q1d: Deployment</span>
+        </a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <span class="project-category">Python for AI &bull; AIB503 ECA</span>
+            <h1 class="hero-title">Can AI Predict<br>a Box Office Hit?</h1>
+            <p class="hero-subtitle">
+                Forecasting movie revenues with machine learning and building a
+                content-based recommendation engine — before the credits roll.
+            </p>
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-number" data-count="3">0</span>
+                    <span class="stat-label">ML Models</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-count="5">0</span>
+                    <span class="stat-label">Top Recs</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-count="57">0</span>
+                    <span class="stat-label">R² % (Best)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-wrapper">
+
+            <!-- Introduction -->
+            <section class="section fade-in">
+                <div class="section-header">
+                    <span class="section-number">Introduction</span>
+                    <h2 class="section-title">The Media Analytics Brief</h2>
+                </div>
+                <div class="content-card">
+                    <p class="content-text">
+                        As a <span class="highlight">data scientist at a media analytics firm</span>, the objective is twofold:
+                        forecast movie revenues before a film's release, and recommend similar films to guide marketing,
+                        cross-promotion, and content curation strategies.
+                    </p>
+                    <p class="content-text">
+                        Supervised learning techniques are applied to develop a revenue prediction model, while a
+                        <span class="highlight">content-based recommendation engine</span> is designed using movie metadata
+                        — genres, keywords, and overviews.
+                    </p>
+
+                    <div class="pull-quote">
+                        <p class="pull-quote-text">
+                            Lower heteroscedasticity is more important than RMSE for movie revenue prediction in business decision-making.
+                            A reliable model across all films outperforms one that only works for certain films.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="divider"></div>
+
+            <!-- Q1a: Feature Engineering & Regression -->
+            <section class="section fade-in" id="q1a">
+                <div class="section-header">
+                    <span class="section-number">Question 1a</span>
+                    <h2 class="section-title">Feature Engineering &amp; Revenue Prediction</h2>
+                </div>
+
+                <div class="content-card">
+                    <p class="content-text">
+                        Following earlier group-based data cleaning, feature engineering is performed for preprocessing.
+                        Features are designed to capture different signals that may drive a film's revenue.
+                    </p>
+
+                    <h3 class="subheading">Engineered Features</h3>
+
+                    <div class="feature-tags">
+                        <span class="feature-tag important"><i class="fas fa-calendar-alt"></i> release_year</span>
+                        <span class="feature-tag important"><i class="fas fa-calendar-alt"></i> release_month</span>
+                        <span class="feature-tag important"><i class="fas fa-calendar-alt"></i> release_day</span>
+                        <span class="feature-tag important"><i class="fas fa-calendar-alt"></i> release_dayofweek</span>
+                        <span class="feature-tag important"><i class="fas fa-calendar-alt"></i> release_quarter</span>
+                        <span class="feature-tag secondary"><i class="fas fa-chart-line"></i> log_runtime</span>
+                        <span class="feature-tag secondary"><i class="fas fa-chart-line"></i> log_revenue</span>
+                        <span class="feature-tag secondary"><i class="fas fa-chart-line"></i> log_vote_count</span>
+                        <span class="feature-tag secondary"><i class="fas fa-chart-line"></i> log_popularity</span>
+                        <span class="feature-tag secondary"><i class="fas fa-chart-line"></i> log_budget</span>
+                        <span class="feature-tag marginal"><i class="fas fa-hashtag"></i> num_genres</span>
+                        <span class="feature-tag marginal"><i class="fas fa-hashtag"></i> num_keywords</span>
+                        <span class="feature-tag marginal"><i class="fas fa-film"></i> top_genre</span>
+                        <span class="feature-tag marginal"><i class="fas fa-language"></i> has_english</span>
+                    </div>
+
+                    <div class="insight-box info">
+                        <i class="fas fa-info-circle insight-icon"></i>
+                        <div class="insight-content">
+                            <p class="insight-title">Why Log Transformations?</p>
+                            <p class="insight-text">
+                                Logarithm transformation is applied to runtime, revenue, budget, vote count, and popularity
+                                to <strong>reduce skewedness</strong> and dampen extreme outliers — particularly important
+                                for budget and revenue which can span many orders of magnitude.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Correlation Matrix -->
+                    <h3 class="subheading">Preparing the Regression Model</h3>
+                    <p class="content-text">
+                        A correlation matrix is used to determine which variables have very minimal to no relationship with
+                        the predicted variable, to <span class="highlight">prevent overfitting</span>.
+                    </p>
+
+                    <div class="image-container">
+                        <div class="image-frame" onclick="openModal(this)">
+                            <div class="image-placeholder">
+                                <i class="fas fa-th"></i>
+                                <span>Figure 1: Correlation Matrix<br>to select variables for regression analysis</span>
+                            </div>
+                            <img src="" alt="Figure 1: Correlation Matrix" style="display:none;">
+                        </div>
+                        <p class="image-caption">Figure 1: Correlation Matrix to select variables for regression analysis</p>
+                    </div>
+
+                    <p class="content-text">Figure 2 shows the code used to configure the feature set, train/test split, and define all three regression models:</p>
+
+                    <div class="code-block">
+                        <div class="code-block-header"><i class="fab fa-python"></i> Figure 2: Regression setup — feature selection, train/test split &amp; model definitions</div>
+                        <pre><span class="va">target</span> <span class="op">=</span> <span class="st">'log_revenue'</span>
+<span class="va">candidate_num</span> <span class="op">=</span> <span class="op">[</span><span class="va">c</span> <span class="kw">for</span> <span class="va">c</span> <span class="kw">in</span> <span class="va">l</span> <span class="kw">if</span> <span class="va">c</span> <span class="op">!=</span> <span class="va">target</span><span class="op">]</span>
+<span class="cm"># [  'log_budget', 'log_vote_count', 'log_popularity',</span>
+<span class="cm">#    'release_dayofweek', 'log_runtime', 'num_genres', 'num_keywords'  ]</span>
+
+<span class="va">model_tmdb_cleaned_features</span> <span class="op">=</span> <span class="va">tmdb_cleaned_features</span><span class="op">[[</span><span class="va">target</span><span class="op">] +</span> <span class="va">candidate_num</span><span class="op">].</span><span class="fn">copy</span><span class="op">()</span>
+<span class="va">model_tmdb_cleaned_features</span><span class="op">[</span><span class="va">target</span><span class="op">]</span> <span class="op">=</span> <span class="va">pd</span><span class="op">.</span><span class="fn">to_numeric</span><span class="op">(</span><span class="va">model_tmdb_cleaned_features</span><span class="op">[</span><span class="va">target</span><span class="op">],</span> <span class="va">errors</span><span class="op">=</span><span class="st">'coerce'</span><span class="op">)</span>
+
+<span class="cm"># Drop rows where budget or revenue is 0, and drop rows with any missing data</span>
+<span class="va">model_tmdb_cleaned_features</span> <span class="op">=</span> <span class="va">model_tmdb_cleaned_features</span><span class="op">[</span>
+    <span class="op">(</span><span class="va">model_tmdb_cleaned_features</span><span class="op">[</span><span class="st">'log_budget'</span><span class="op">]</span> <span class="op">&gt;</span> <span class="nu">0</span><span class="op">)</span> <span class="op">&amp;</span>
+    <span class="op">(</span><span class="va">model_tmdb_cleaned_features</span><span class="op">[</span><span class="va">target</span><span class="op">]</span> <span class="op">&gt;</span> <span class="nu">0</span><span class="op">)</span>
+<span class="op">].</span><span class="fn">dropna</span><span class="op">()</span>
+
+<span class="va">X</span> <span class="op">=</span> <span class="va">model_tmdb_cleaned_features</span><span class="op">[</span><span class="va">candidate_num</span><span class="op">]</span>
+<span class="va">y</span> <span class="op">=</span> <span class="va">model_tmdb_cleaned_features</span><span class="op">[</span><span class="va">target</span><span class="op">].</span><span class="fn">astype</span><span class="op">(</span><span class="bi">float</span><span class="op">)</span>
+<span class="va">X_train</span><span class="op">,</span> <span class="va">X_test</span><span class="op">,</span> <span class="va">y_train</span><span class="op">,</span> <span class="va">y_test</span> <span class="op">=</span> <span class="fn">train_test_split</span><span class="op">(</span>
+    <span class="va">X</span><span class="op">,</span> <span class="va">y</span><span class="op">,</span> <span class="va">test_size</span><span class="op">=</span><span class="nu">0.2</span><span class="op">,</span> <span class="va">random_state</span><span class="op">=</span><span class="nu">42</span>
+<span class="op">)</span>
+
+<span class="va">preprocessor</span> <span class="op">=</span> <span class="bi">ColumnTransformer</span><span class="op">(</span>
+    <span class="va">transformers</span><span class="op">=[(</span><span class="st">'num'</span><span class="op">,</span> <span class="bi">StandardScaler</span><span class="op">(),</span> <span class="va">candidate_num</span><span class="op">)],</span>
+    <span class="va">remainder</span><span class="op">=</span><span class="st">'drop'</span>
+<span class="op">)</span>
+
+<span class="va">models</span> <span class="op">= {</span>
+    <span class="st">'Linear (Revenue)'</span><span class="op">:</span> <span class="bi">LinearRegression</span><span class="op">(),</span>
+    <span class="st">'RandomForest(300) (Revenue)'</span><span class="op">:</span> <span class="bi">RandomForestRegressor</span><span class="op">(</span>
+        <span class="va">n_estimators</span><span class="op">=</span><span class="nu">300</span><span class="op">,</span> <span class="va">random_state</span><span class="op">=</span><span class="nu">42</span><span class="op">,</span> <span class="va">n_jobs</span><span class="op">=-</span><span class="nu">1</span>
+    <span class="op">),</span>
+    <span class="st">'KNN(k=10, dist-weights)'</span><span class="op">:</span> <span class="bi">KNeighborsRegressor</span><span class="op">(</span>
+        <span class="va">n_neighbors</span><span class="op">=</span><span class="nu">10</span><span class="op">,</span> <span class="va">weights</span><span class="op">=</span><span class="st">'distance'</span><span class="op">,</span>
+        <span class="va">p</span><span class="op">=</span><span class="nu">2</span><span class="op">,</span> <span class="va">n_jobs</span><span class="op">=-</span><span class="nu">1</span>
+    <span class="op">),</span>
+<span class="op">}</span>
+
+<span class="va">results</span> <span class="op">= []</span>
+<span class="va">fitted</span>  <span class="op">= {}</span></pre>
+                    </div>
+
+                    <!-- Model Selection -->
+                    <h3 class="subheading">Model Selection &amp; Training</h3>
+                    <p class="content-text">Three regression models are selected and evaluated:</p>
+
+                    <div class="findings-grid">
+                        <div class="finding-card">
+                            <div class="finding-icon"><i class="fas fa-ruler-combined"></i></div>
+                            <h4 class="finding-title">Linear Regression</h4>
+                            <p class="finding-text">Fast, easily interpretable baseline model. Coefficients show variable impact and help detect overfitting in more complex models.</p>
+                        </div>
+                        <div class="finding-card">
+                            <div class="finding-icon"><i class="fas fa-tree"></i></div>
+                            <h4 class="finding-title">Random Forest</h4>
+                            <p class="finding-text">Models non-linear relationships and feature interactions. Handles outliers robustly, making it suitable for noisy movie data.</p>
+                        </div>
+                        <div class="finding-card">
+                            <div class="finding-icon"><i class="fas fa-project-diagram"></i></div>
+                            <h4 class="finding-title">KNN Regression</h4>
+                            <p class="finding-text">Predicts outcomes based on local similarity — "what did similar movies earn?" Mimics analogy-based reasoning.</p>
+                        </div>
+                    </div>
+
+                    <!-- Evaluation Results Table -->
+                    <h3 class="subheading">Model Evaluation Results</h3>
+                    <p class="content-text">
+                        After training, predictions are made on the test set and evaluated using
+                        <span class="highlight">Root Mean Squared Error (RMSE)</span> and <span class="highlight">R²</span>,
+                        sorted by RMSE in ascending order:
+                    </p>
+
+                    <table class="model-table">
+                        <thead>
+                            <tr>
+                                <th>Model</th>
+                                <th>RMSE</th>
+                                <th>R²</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Linear Regression <span class="badge">BEST RMSE</span></td>
+                                <td>1.3406</td>
+                                <td>0.5708 (57%)</td>
+                            </tr>
+                            <tr>
+                                <td>Random Forest <span class="badge" style="background: var(--accent-blue); color: var(--pixel-dark);">BEST OVERALL</span></td>
+                                <td>1.3591</td>
+                                <td>0.5588 (56%)</td>
+                            </tr>
+                            <tr>
+                                <td>KNN Regression</td>
+                                <td>1.4892</td>
+                                <td>0.4704 (47%)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Parity & Residual Plots -->
+                    <h3 class="subheading">Linear Regression — Parity &amp; Residual Plots</h3>
+
+                    <div class="image-grid three-col">
+                        <div class="image-container">
+                            <div class="image-frame" onclick="openModal(this)">
+                                <div class="image-placeholder">
+                                    <i class="fas fa-chart-scatter"></i>
+                                    <span>Figure 3: Linear regression<br>predicted vs actual revenue</span>
+                                </div>
+                                <img src="" alt="Figure 3: Linear regression parity plot" style="display:none;">
+                            </div>
+                            <p class="image-caption">Figure 3: Linear regression — predicted vs actual revenue</p>
+                        </div>
+                        <div class="image-container">
+                            <div class="image-frame" onclick="openModal(this)">
+                                <div class="image-placeholder">
+                                    <i class="fas fa-chart-area"></i>
+                                    <span>Figure 4: Linear regression<br>residuals vs predicted revenue</span>
+                                </div>
+                                <img src="" alt="Figure 4: Linear residual plot" style="display:none;">
+                            </div>
+                            <p class="image-caption">Figure 4: Linear regression — residuals vs predicted revenue</p>
+                        </div>
+                        <div class="image-container">
+                            <div class="image-frame" onclick="openModal(this)">
+                                <div class="image-placeholder">
+                                    <i class="fas fa-chart-bar"></i>
+                                    <span>Figure 5: Distribution of<br>residuals — linear regression</span>
+                                </div>
+                                <img src="" alt="Figure 5: Linear residual distribution" style="display:none;">
+                            </div>
+                            <p class="image-caption">Figure 5: Distribution of residuals — linear regression</p>
+                        </div>
+                    </div>
+
+                    <h3 class="subheading">KNN Regression — Parity &amp; Residual Plots</h3>
+
+                    <div class="image-grid three-col">
+                        <div class="image-container">
+                            <div class="image-frame" onclick="openModal(this)">
+                                <div class="image-placeholder">
+                                    <i class="fas fa-chart-scatter"></i>
+                                    <span>Figure 6: KNN regression<br>predicted vs actual revenue</span>
+                                </div>
+                                <img src="" alt="Figure 6: KNN parity plot" style="display:none;">
+                            </div>
+                            <p class="image-caption">Figure 6: KNN regression — predicted vs actual revenue</p>
+                        </div>
+                        <div class="image-container">
+                            <div class="image-frame" onclick="openModal(this)">
+                                <div class="image-placeholder">
+                                    <i class="fas fa-chart-area"></i>
+                                    <span>Figure 7: KNN regression<br>residuals vs predicted revenue</span>
+                                </div>
+                                <img src="" alt="Figure 7: KNN residual plot" style="display:none;">
+                            </div>
+                            <p class="image-caption">Figure 7: KNN regression — residuals vs predicted revenue</p>
+                        </div>
+                        <div class="image-container">
+                            <div class="image-frame" onclick="openModal(this)">
+                                <div class="image-placeholder">
+                                    <i class="fas fa-chart-bar"></i>
+                                    <span>Figure 8: Distribution of<br>residuals — KNN regression</span>
+                                </div>
+                                <img src="" alt="Figure 8: KNN residual distribution" style="display:none;">
+                            </div>
+                            <p class="image-caption">Figure 8: Distribution of residuals — KNN regression</p>
+                        </div>
+                    </div>
+
+                    <h3 class="subheading">Random Forest — Parity &amp; Residual Plots</h3>
+
+                    <div class="image-grid three-col">
+                        <div class="image-container">
+                            <div class="image-frame" onclick="openModal(this)">
+                                <div class="image-placeholder">
+                                    <i class="fas fa-chart-scatter"></i>
+                                    <span>Figure 9: Random forest<br>predicted vs actual revenue</span>
+                                </div>
+                                <img src="" alt="Figure 9: Random forest parity plot" style="display:none;">
+                            </div>
+                            <p class="image-caption">Figure 9: Random forest — predicted vs actual revenue</p>
+                        </div>
+                        <div class="image-container">
+                            <div class="image-frame" onclick="openModal(this)">
+                                <div class="image-placeholder">
+                                    <i class="fas fa-chart-area"></i>
+                                    <span>Figure 10: Distribution of<br>differences — random forest</span>
+                                </div>
+                                <img src="" alt="Figure 10: Random forest residual plot" style="display:none;">
+                            </div>
+                            <p class="image-caption">Figure 10: Distribution of differences — random forest</p>
+                        </div>
+                        <div class="image-container">
+                            <div class="image-frame" onclick="openModal(this)">
+                                <div class="image-placeholder">
+                                    <i class="fas fa-chart-bar"></i>
+                                    <span>Figure 11: Residual distribution<br>— random forest</span>
+                                </div>
+                                <img src="" alt="Figure 11: Random forest residual distribution" style="display:none;">
+                            </div>
+                            <p class="image-caption">Figure 11: Distribution of residuals — random forest</p>
+                        </div>
+                    </div>
+
+                    <!-- Heteroscedasticity Analysis -->
+                    <h3 class="subheading">Heteroscedasticity Analysis</h3>
+                    <p class="content-text">
+                        All models exhibit some <span class="highlight">heteroscedasticity</span> — inconsistent residuals
+                        across predicted values — making results less trustworthy at extremes.
+                    </p>
+
+                    <div class="terminal-block">
+                        <div class="terminal-block-header"><i class="fas fa-terminal"></i> Figure 12: Breusch-Pagan test result for linear regression of movie revenue</div>
+                        <pre><span class="t-label">Breusch-Pagan test results:</span>
+<span class="t-key">Lagrange multiplier statistic:</span> <span class="t-score">178.9602</span>
+<span class="t-key">p-value:</span>                         <span class="t-score">0.0000</span>
+<span class="t-key">f-value:</span>                         <span class="t-score">27.3838</span>
+<span class="t-key">f p-value:</span>                       <span class="t-score">0.0000</span></pre>
+                    </div>
+
+                    <div class="insight-box warning">
+                        <i class="fas fa-exclamation-triangle insight-icon"></i>
+                        <div class="insight-content">
+                            <p class="insight-title">High Heteroscedasticity Confirmed</p>
+                            <p class="insight-text">
+                                Large LM statistic of <strong>178.96</strong> and F-statistic <strong>27.38</strong> with
+                                p-values &lt; 0.01 confirm obvious presence of heteroscedasticity in linear regression.
+                                Random forest shows narrower, more consistent residual spread — making it the most reliable model.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Conclusion -->
+                    <div class="insight-box">
+                        <i class="fas fa-trophy insight-icon"></i>
+                        <div class="insight-content">
+                            <p class="insight-title">Winner: Random Forest Regression</p>
+                            <p class="insight-text">
+                                Despite not having the lowest RMSE, random forest regression has more stable residuals with
+                                lower spread than other models. This produces a more reliable model for consistent and
+                                meaningful movie revenue prediction across all budget ranges.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="divider"></div>
+
+            <!-- Q1b: Feature Importance -->
+            <section class="section fade-in" id="q1b">
+                <div class="section-header">
+                    <span class="section-number">Question 1b</span>
+                    <h2 class="section-title">What Actually Drives Movie Revenue?</h2>
+                </div>
+
+                <div class="content-card">
+                    <p class="content-text">
+                        Using the selected random forest regression model, key predictors are explained through
+                        a <span class="highlight">feature importance bar chart</span> ranking features in descending order.
+                    </p>
+
+                    <div class="code-block">
+                        <div class="code-block-header"><i class="fab fa-python"></i> Figure 13: Code — feature importance visualisation from Random Forest model</div>
+                        <pre><span class="va">df_imp</span> <span class="op">=</span> <span class="va">pd</span><span class="op">.</span><span class="bi">DataFrame</span><span class="op">({</span><span class="st">'feature'</span><span class="op">:</span> <span class="va">feat_names</span><span class="op">,</span> <span class="st">'importance'</span><span class="op">:</span> <span class="va">importances</span><span class="op">})</span>
+<span class="va">df_imp</span> <span class="op">=</span> <span class="va">df_imp</span><span class="op">.</span><span class="fn">sort_values</span><span class="op">(</span><span class="st">'importance'</span><span class="op">,</span> <span class="va">ascending</span><span class="op">=</span><span class="bi">False</span><span class="op">).</span><span class="fn">head</span><span class="op">(</span><span class="nu">20</span><span class="op">)</span>
+
+<span class="va">plt</span><span class="op">.</span><span class="fn">figure</span><span class="op">(</span><span class="va">figsize</span><span class="op">=(</span><span class="nu">8</span><span class="op">,</span> <span class="nu">0.4</span><span class="op">*</span><span class="fn">len</span><span class="op">(</span><span class="va">df_imp</span><span class="op">)+</span><span class="nu">3</span><span class="op">))</span>
+<span class="va">ax</span> <span class="op">=</span> <span class="va">sns</span><span class="op">.</span><span class="fn">barplot</span><span class="op">(</span><span class="va">data</span><span class="op">=</span><span class="va">df_imp</span><span class="op">,</span> <span class="va">x</span><span class="op">=</span><span class="st">'importance'</span><span class="op">,</span> <span class="va">y</span><span class="op">=</span><span class="st">'feature'</span><span class="op">,</span> <span class="va">color</span><span class="op">=</span><span class="st">'forestgreen'</span><span class="op">)</span>
+<span class="va">plt</span><span class="op">.</span><span class="fn">title</span><span class="op">(</span><span class="st">'Descending Feature Importances using Random Forest'</span><span class="op">)</span>
+<span class="va">plt</span><span class="op">.</span><span class="fn">xlabel</span><span class="op">(</span><span class="st">'Importance'</span><span class="op">);</span> <span class="va">plt</span><span class="op">.</span><span class="fn">ylabel</span><span class="op">(</span><span class="st">''</span><span class="op">)</span>
+<span class="va">plt</span><span class="op">.</span><span class="fn">tight_layout</span><span class="op">()</span>
+
+<span class="kw">for</span> <span class="va">i</span><span class="op">, (</span><span class="va">importance</span><span class="op">,</span> <span class="va">feature</span><span class="op">)</span> <span class="kw">in</span> <span class="fn">enumerate</span><span class="op">(</span><span class="fn">zip</span><span class="op">(</span><span class="va">df_imp</span><span class="op">[</span><span class="st">'importance'</span><span class="op">],</span> <span class="va">df_imp</span><span class="op">[</span><span class="st">'feature'</span><span class="op">])):</span>
+    <span class="va">ax</span><span class="op">.</span><span class="fn">text</span><span class="op">(</span><span class="va">importance</span><span class="op">,</span> <span class="va">i</span><span class="op">,</span> <span class="va">f</span><span class="st">'{importance:.3f}'</span><span class="op">,</span> <span class="va">va</span><span class="op">=</span><span class="st">'center'</span><span class="op">,</span> <span class="va">ha</span><span class="op">=</span><span class="st">'left'</span><span class="op">,</span>
+            <span class="va">fontsize</span><span class="op">=</span><span class="nu">10</span><span class="op">,</span> <span class="va">color</span><span class="op">=</span><span class="st">'black'</span><span class="op">)</span>
+
+<span class="va">plt</span><span class="op">.</span><span class="fn">show</span><span class="op">()</span></pre>
+                    </div>
+
+                    <div class="image-container">
+                        <div class="image-frame" onclick="openModal(this)">
+                            <div class="image-placeholder">
+                                <i class="fas fa-chart-bar"></i>
+                                <span>Figure 14: Feature importance bar chart<br>for random forest regression<br>movie revenue prediction</span>
+                            </div>
+                            <img src="" alt="Figure 14: Feature importance bar chart" style="display:none;">
+                        </div>
+                        <p class="image-caption">Figure 14: Feature importance bar chart — random forest regression</p>
+                    </div>
+
+                    <h3 class="subheading">Feature Importance Tiers</h3>
+
+                    <div class="insight-box">
+                        <i class="fas fa-star insight-icon"></i>
+                        <div class="insight-content">
+                            <p class="insight-title">Key Predictors (Highest Impact)</p>
+                            <p class="insight-text">
+                                <strong>log_vote_count</strong> — Audience reviews are incredibly influential. Consumers read
+                                votes and reviews before deciding whether to watch. Platforms like Rotten Tomatoes can lead
+                                to early conclusions about quality, directly impacting revenue.<br><br>
+                                <strong>log_budget</strong> — Financial investment level matters. Higher budgets allow studios
+                                to promote films more extensively, increasing outreach to potential audiences.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="insight-box info">
+                        <i class="fas fa-star-half-alt insight-icon"></i>
+                        <div class="insight-content">
+                            <p class="insight-title">Secondary Predictors</p>
+                            <p class="insight-text">
+                                <strong>log_popularity</strong> — Strong social media buzz and studio-driven audience
+                                engagement campaigns translate directly to higher popularity scores and higher revenue.
+                                Avatar: The Way of Water's teaser garnered 148.6 million views in 24 hours.<br><br>
+                                <strong>log_runtime</strong> — Runtime has a positive influence on revenue earnings,
+                                but is less influential than budget and vote count.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="insight-box warning">
+                        <i class="fas fa-exclamation-circle insight-icon"></i>
+                        <div class="insight-content">
+                            <p class="insight-title">Marginal Predictors (Lower Impact)</p>
+                            <p class="insight-text">
+                                <strong>Keywords, genres, release_dayofweek</strong> — Content factors like keywords and
+                                genres play a less critical role than expected. A movie targeting multiple audience groups
+                                will still flop if marketing efforts are poor. Release day has some impact but is dwarfed
+                                by strong marketing outreach.
+                            </p>
+                        </div>
+                    </div>
+
+                    <h3 class="subheading">Real-World Evidence</h3>
+                    <p class="content-text">
+                        Avengers: Infinity War alone allocated an estimated <span class="highlight">$150 million</span> for
+                        promotional campaigns — its first trailer was viewed <span class="highlight-green">230 million times</span>
+                        in its first 24 hours. This exemplifies how budget directly fuels audience reach and vote count.
+                    </p>
+                    <p class="content-text">
+                        Conversely, excessive budget growth has <span class="highlight-red">diminishing returns</span>.
+                        Disney's Snow White and Mulan live-action films, as well as Transformers: The Last Knight,
+                        bombed at the box office despite significant budgets — demonstrating that budget alone
+                        is insufficient without strong audience reception.
+                    </p>
+                </div>
+            </section>
+
+            <div class="divider"></div>
+
+            <!-- Q1c: Recommendation System -->
+            <section class="section fade-in" id="q1c">
+                <div class="section-header">
+                    <span class="section-number">Question 1c</span>
+                    <h2 class="section-title">Content-Based Movie Recommendation System</h2>
+                </div>
+
+                <div class="content-card">
+                    <p class="content-text">
+                        A content-based recommendation system is designed using <span class="highlight">genres, keywords,
+                        and overview text</span>. The system compares a movie's textual metadata against every other title
+                        and returns the five most similar recommendations with similarity scores.
+                    </p>
+
+                    <h3 class="subheading">System Architecture — 5 Steps</h3>
+
+                    <div class="flow-steps">
+                        <div class="flow-step">
+                            <div class="flow-step-num">01</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Prepare Text-Based Similarity Index</div>
+                                <div class="flow-step-text">
+                                    Copy the cleaned dataset and convert selected feature columns into plain text.
+                                    List values are joined into a single space-separated string; missing values become
+                                    empty strings. All columns are concatenated row-wise into one combined descriptive
+                                    text per movie.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">02</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">TF-IDF Vectorisation</div>
+                                <div class="flow-step-text">
+                                    A TF-IDF vectoriser is fitted on the combined text, turning each movie into a
+                                    sparse numerical vector reflecting the importance of its words. English stop words
+                                    are removed; unigrams and bigrams are both captured (ngram_range).
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">03</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Case-Insensitive Title Lookup</div>
+                                <div class="flow-step-text">
+                                    A case-insensitive lookup dictionary is built from movie titles to their row indices,
+                                    dropping duplicate lower-cased titles to avoid ambiguity.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">04</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Package Precomputed Assets</div>
+                                <div class="flow-step-text">
+                                    All precomputed assets (DataFrame, vectoriser, TF-IDF matrix, title index, original titles)
+                                    are bundled into a single object. This avoids recomputing TF-IDF for every query, allowing
+                                    fast cosine similarity lookups.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flow-step">
+                            <div class="flow-step-num">05</div>
+                            <div class="flow-step-content">
+                                <div class="flow-step-title">Cosine Similarity &amp; Top-5 Recommendations</div>
+                                <div class="flow-step-text">
+                                    Cosine similarity scores are computed between the selected movie's TF-IDF vector
+                                    and every other movie using <code>linear_kernel</code>. Scores are sorted in descending order,
+                                    the movie itself is removed, and the top 5 are returned as (title, score) pairs.
+                                    Fallback matching handles partial or inconsistent title input.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-block-header"><i class="fab fa-python"></i> Figure 15: TF-IDF index builder — build_tfidf_index_tmdb()</div>
+                        <pre><span class="kw">def</span> <span class="fn">build_tfidf_index_tmdb</span><span class="op">(</span><span class="va">feature_cols</span><span class="op">,</span> <span class="va">max_features</span><span class="op">=</span><span class="nu">5000</span><span class="op">,</span> <span class="va">ngram_range</span><span class="op">=(</span><span class="nu">1</span><span class="op">,</span><span class="nu">2</span><span class="op">)):</span>
+    <span class="cm"># """Precompute TF-IDF and indices — reuse for recommend_tmdb() many times."""</span>
+    <span class="va">df</span> <span class="op">=</span> <span class="va">tmdb_cleaned</span><span class="op">.</span><span class="fn">copy</span><span class="op">()</span>
+
+    <span class="cm"># Per-column coercion: lists → "a b c", strings kept, else ""</span>
+    <span class="kw">for</span> <span class="va">col</span> <span class="kw">in</span> <span class="va">feature_cols</span><span class="op">:</span>
+        <span class="va">df</span><span class="op">[</span><span class="va">col</span><span class="op">]</span> <span class="op">=</span> <span class="va">df</span><span class="op">[</span><span class="va">col</span><span class="op">].</span><span class="fn">apply</span><span class="op">(</span>
+            <span class="kw">lambda</span> <span class="va">x</span><span class="op">:</span> <span class="st">" "</span><span class="op">.</span><span class="fn">join</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="kw">if</span> <span class="fn">isinstance</span><span class="op">(</span><span class="va">x</span><span class="op">,</span> <span class="bi">list</span><span class="op">)</span>
+            <span class="kw">else</span> <span class="op">(</span><span class="va">x</span> <span class="kw">if</span> <span class="fn">isinstance</span><span class="op">(</span><span class="va">x</span><span class="op">,</span> <span class="bi">str</span><span class="op">)</span> <span class="kw">else</span> <span class="st">""</span><span class="op">)</span>
+        <span class="op">)</span>
+
+    <span class="va">combined</span> <span class="op">=</span> <span class="va">df</span><span class="op">[</span><span class="va">feature_cols</span><span class="op">].</span><span class="fn">fillna</span><span class="op">(</span><span class="st">""</span><span class="op">).</span><span class="fn">agg</span><span class="op">(</span><span class="st">" "</span><span class="op">.</span><span class="fn">join</span><span class="op">,</span> <span class="va">axis</span><span class="op">=</span><span class="nu">1</span><span class="op">)</span>
+
+    <span class="va">tfidf</span> <span class="op">=</span> <span class="bi">TfidfVectorizer</span><span class="op">(</span>
+        <span class="va">stop_words</span><span class="op">=</span><span class="st">'english'</span><span class="op">,</span>
+        <span class="va">max_features</span><span class="op">=</span><span class="va">max_features</span><span class="op">,</span>
+        <span class="va">ngram_range</span><span class="op">=</span><span class="va">ngram_range</span>
+    <span class="op">)</span>
+    <span class="va">tfidf_matrix</span> <span class="op">=</span> <span class="va">tfidf</span><span class="op">.</span><span class="fn">fit_transform</span><span class="op">(</span><span class="va">combined</span><span class="op">)</span>
+
+    <span class="cm"># Case-insensitive title index with duplicate-safe mapping</span>
+    <span class="va">titles</span>      <span class="op">=</span> <span class="va">df</span><span class="op">[</span><span class="st">'title'</span><span class="op">].</span><span class="fn">astype</span><span class="op">(</span><span class="bi">str</span><span class="op">).</span><span class="fn">fillna</span><span class="op">(</span><span class="st">"Untitled"</span><span class="op">)</span>
+    <span class="va">title_index</span> <span class="op">=</span> <span class="va">pd</span><span class="op">.</span><span class="bi">Series</span><span class="op">(</span><span class="va">df</span><span class="op">.</span><span class="va">index</span><span class="op">,</span>
+                    <span class="va">index</span><span class="op">=</span><span class="va">titles</span><span class="op">.</span><span class="fn">str</span><span class="op">.</span><span class="fn">lower</span><span class="op">()).</span><span class="fn">drop_duplicates</span><span class="op">()</span>
+
+    <span class="kw">return</span> <span class="op">{</span>
+        <span class="st">"df"</span><span class="op">:</span> <span class="va">df</span><span class="op">,</span> <span class="st">"tfidf"</span><span class="op">:</span> <span class="va">tfidf</span><span class="op">,</span>
+        <span class="st">"tfidf_matrix"</span><span class="op">:</span> <span class="va">tfidf_matrix</span><span class="op">,</span>
+        <span class="st">"title_index"</span><span class="op">:</span> <span class="va">title_index</span><span class="op">,</span> <span class="st">"titles"</span><span class="op">:</span> <span class="va">titles</span>
+    <span class="op">}</span></pre>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-block-header"><i class="fab fa-python"></i> Figure 16: Content-based recommendation function — recommend_tmdb()</div>
+                        <pre><span class="kw">def</span> <span class="fn">recommend_tmdb</span><span class="op">(</span><span class="va">title</span><span class="op">,</span> <span class="va">tfidf_bundle</span><span class="op">,</span> <span class="va">topn</span><span class="op">=</span><span class="nu">5</span><span class="op">):</span>
+    <span class="va">df</span>          <span class="op">=</span> <span class="va">tfidf_bundle</span><span class="op">[</span><span class="st">"df"</span><span class="op">]</span>
+    <span class="va">M</span>           <span class="op">=</span> <span class="va">tfidf_bundle</span><span class="op">[</span><span class="st">"tfidf_matrix"</span><span class="op">]</span>
+    <span class="va">idx_map</span>     <span class="op">=</span> <span class="va">tfidf_bundle</span><span class="op">[</span><span class="st">"title_index"</span><span class="op">]</span>
+    <span class="va">titles</span>      <span class="op">=</span> <span class="va">tfidf_bundle</span><span class="op">[</span><span class="st">"titles"</span><span class="op">]</span>
+
+    <span class="kw">if not</span> <span class="fn">isinstance</span><span class="op">(</span><span class="va">title</span><span class="op">,</span> <span class="bi">str</span><span class="op">):</span>
+        <span class="kw">return</span> <span class="op">[]</span>
+
+    <span class="va">idx</span> <span class="op">=</span> <span class="va">idx_map</span><span class="op">.</span><span class="fn">get</span><span class="op">(</span><span class="va">title</span><span class="op">.</span><span class="fn">lower</span><span class="op">())</span>
+    <span class="kw">if</span> <span class="va">idx</span> <span class="kw">is</span> <span class="bi">None</span><span class="op">:</span>
+        <span class="cm"># Fallback: closest case-insensitive match</span>
+        <span class="va">candidates</span> <span class="op">=</span> <span class="op">[</span><span class="va">t</span> <span class="kw">for</span> <span class="va">t</span> <span class="kw">in</span> <span class="va">titles</span><span class="op">.</span><span class="fn">unique</span><span class="op">()</span>
+                       <span class="kw">if</span> <span class="va">t</span><span class="op">.</span><span class="fn">lower</span><span class="op">().</span><span class="fn">startswith</span><span class="op">(</span><span class="va">title</span><span class="op">.</span><span class="fn">lower</span><span class="op">())]</span>
+        <span class="kw">if not</span> <span class="va">candidates</span><span class="op">:</span>
+            <span class="va">idx</span> <span class="op">=</span> <span class="nu">0</span>   <span class="cm"># default to first movie</span>
+        <span class="kw">else</span><span class="op">:</span>
+            <span class="va">idx</span> <span class="op">=</span> <span class="va">idx_map</span><span class="op">.</span><span class="fn">get</span><span class="op">(</span><span class="va">candidates</span><span class="op">[</span><span class="nu">0</span><span class="op">].</span><span class="fn">lower</span><span class="op">(),</span> <span class="nu">0</span><span class="op">)</span>
+
+    <span class="cm"># Similarity of the query row vs all</span>
+    <span class="va">order</span> <span class="op">=</span> <span class="va">np</span><span class="op">.</span><span class="fn">argsort</span><span class="op">(-</span><span class="va">sims</span><span class="op">)</span>
+    <span class="va">order</span> <span class="op">=</span> <span class="va">order</span><span class="op">[</span><span class="va">order</span> <span class="op">!=</span> <span class="va">idx</span><span class="op">][:</span><span class="va">topn</span><span class="op">]</span>
+    <span class="kw">return</span> <span class="fn">list</span><span class="op">(</span><span class="fn">zip</span><span class="op">(</span><span class="va">titles</span><span class="op">.</span><span class="fn">iloc</span><span class="op">[</span><span class="va">order</span><span class="op">].</span><span class="fn">tolist</span><span class="op">(),</span> <span class="va">sims</span><span class="op">[</span><span class="va">order</span><span class="op">].</span><span class="fn">tolist</span><span class="op">()))</span>
+
+<span class="va">feature_cols</span> <span class="op">=</span> <span class="op">[</span><span class="st">"genres"</span><span class="op">,</span> <span class="st">"keywords"</span><span class="op">,</span> <span class="st">"overview"</span><span class="op">]</span>
+<span class="va">bundle</span>       <span class="op">=</span> <span class="fn">build_tfidf_index_tmdb</span><span class="op">(</span><span class="va">feature_cols</span><span class="op">)</span></pre>
+                    </div>
+
+                    <div class="terminal-block">
+                        <div class="terminal-block-header"><i class="fas fa-terminal"></i> Figure 17: Recommendation output — "Batman Begins" → top 5 similar titles</div>
+                        <pre><span class="cm"># Get top-5 similar movies</span>
+<span class="t-key">recommend_tmdb(</span><span class="t-val">"Batman Begins"</span><span class="t-key">, bundle, topn=</span><span class="t-score">5</span><span class="t-key">)</span>
+<span class="t-check">✓</span>  <span class="t-time">0.0s</span>
+
+<span class="t-op">[</span><span class="t-op">(</span><span class="t-val">'Batman'</span><span class="t-op">,</span>                              <span class="t-score">0.4732148192382</span><span class="t-op">),</span>
+ <span class="t-op">(</span><span class="t-val">'The Dark Knight Rises'</span><span class="t-op">,</span>               <span class="t-score">0.4503022465751</span><span class="t-op">),</span>
+ <span class="t-op">(</span><span class="t-val">'The Dark Knight'</span><span class="t-op">,</span>                     <span class="t-score">0.4382654768284</span><span class="t-op">),</span>
+ <span class="t-op">(</span><span class="t-val">'Batman &amp; Robin'</span><span class="t-op">,</span>                      <span class="t-score">0.4336002996369</span><span class="t-op">),</span>
+ <span class="t-op">(</span><span class="t-val">'Batman v Superman: Dawn of Justice'</span><span class="t-op">,</span>  <span class="t-score">0.4152250979825</span><span class="t-op">)]</span></pre>
+                    </div>
+
+                    <div class="insight-box info">
+                        <i class="fas fa-search insight-icon"></i>
+                        <div class="insight-content">
+                            <p class="insight-title">How It Works in Practice</p>
+                            <p class="insight-text">
+                                When a user searches for <strong>"Batman Begins"</strong>, the system compares its genres,
+                                keywords, and overview text against all other movies and returns the five most similar titles
+                                with similarity scores. For example, a user who watched Iron Man might be recommended
+                                Iron Man 2 or Captain America: The First Avenger — sharing similar thematic elements.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="divider"></div>
+
+            <!-- Q1d: Insights & Deployment -->
+            <section class="section fade-in" id="q1d">
+                <div class="section-header">
+                    <span class="section-number">Question 1d</span>
+                    <h2 class="section-title">Insights, Deployment &amp; Recommendations</h2>
+                </div>
+
+                <div class="content-card">
+                    <h3 class="subheading">Key Insights</h3>
+
+                    <div class="findings-grid">
+                        <div class="finding-card">
+                            <div class="finding-icon"><i class="fas fa-star"></i></div>
+                            <h4 class="finding-title">Reviews &amp; Budget Rule</h4>
+                            <p class="finding-text">Film vote counts and budget are the most critical predictors of revenue. Strong marketing drives higher audience engagement and votes.</p>
+                        </div>
+                        <div class="finding-card">
+                            <div class="finding-icon"><i class="fas fa-bullhorn"></i></div>
+                            <h4 class="finding-title">Marketing Outreach</h4>
+                            <p class="finding-text">Social media buzz and audience reviews are critical in driving popularity, which translates to higher revenue earnings.</p>
+                        </div>
+                        <div class="finding-card">
+                            <div class="finding-icon"><i class="fas fa-calendar-day"></i></div>
+                            <h4 class="finding-title">Release Day = Minimal</h4>
+                            <p class="finding-text">Release day of week has minimal impact. Even Friday or weekend releases remain subject to marketing campaign strength.</p>
+                        </div>
+                    </div>
+
+                    <div class="insight-box warning">
+                        <i class="fas fa-chart-line insight-icon"></i>
+                        <div class="insight-content">
+                            <p class="insight-title">Diminishing Returns on Budget</p>
+                            <p class="insight-text">
+                                Popularity and runtime positively influence revenue, but are less important than budget and vote count
+                                after logarithm transformation — <strong>highlighting the complexity of predicting revenue precisely</strong>.
+                                This contrasts with naive correlation analysis where each factor is plotted individually.
+                            </p>
+                        </div>
+                    </div>
+
+                    <h3 class="subheading">Deployment in Practice</h3>
+
+                    <div class="deploy-grid">
+                        <div class="deploy-card">
+                            <div class="deploy-icon"><i class="fas fa-cloud"></i></div>
+                            <div class="deploy-title">Scenario 1: Cloud Batch Scoring</div>
+                            <div class="deploy-text">
+                                Random Forest regression deployed on <strong>Google Cloud Platform Vertex AI Batch Inference</strong>,
+                                targeting business analysts, studio executives, and marketing teams making high-stakes decisions.
+                                Relevant movie data is collected in a cloud storage bucket; a time-based batch job preprocesses data
+                                and generates predictions stored for "what-if" scenario analysis and resource optimisation
+                                (e.g., advertising spend allocation).
+                            </div>
+                        </div>
+                        <div class="deploy-card">
+                            <div class="deploy-icon"><i class="fas fa-tv"></i></div>
+                            <div class="deploy-title">Scenario 2: Streaming Platform Recommender</div>
+                            <div class="deploy-text">
+                                Content-based recommendation system embedded directly into <strong>streaming or e-commerce
+                                platforms</strong> as a "More Like This" feature. A user who watched Iron Man gets recommended
+                                Iron Man 2 or Captain America: The First Avenger — improving viewer engagement, retention,
+                                and cross-promotion of other titles based on metadata like genres and keywords.
+                            </div>
+                        </div>
+                    </div>
+
+                    <h3 class="subheading">Improvement Recommendation</h3>
+
+                    <div class="insight-box yellow">
+                        <i class="fas fa-lightbulb insight-icon"></i>
+                        <div class="insight-content">
+                            <p class="insight-title">Add a Controversy Binary Feature</p>
+                            <p class="insight-text">
+                                Include a binary feature indicating whether a film has been embroiled in controversies.
+                                With social media, controversies spread rapidly, damaging films and studio reputations.
+                                Disney's Snow White live-adaptation is a recent example — the lead actress's controversial
+                                behaviour divided the public, contributing to poor audience turnout.<br><br>
+                                Such a feature would allow the predictive model to learn the <strong>negative correlation</strong>
+                                between controversy and revenue, helping studio executives better assess risk, tailor marketing
+                                campaigns to mitigate negative press, and make more informed budgeting decisions.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="divider"></div>
+
+            <!-- Methodology Collapsible -->
+            <section class="section fade-in">
+                <div class="collapsible" id="methodologyCollapsible">
+                    <div class="collapsible-header" onclick="toggleCollapsible('methodologyCollapsible')">
+                        <span class="collapsible-title"><i class="fas fa-cog"></i> &nbsp; Methodology &amp; Technical Details</span>
+                        <i class="fas fa-chevron-down collapsible-icon"></i>
+                    </div>
+                    <div class="collapsible-content">
+                        <h4 style="font-family:'Press Start 2P',cursive;font-size:0.55rem;color:var(--pixel-pink);margin-bottom:20px;">Dataset</h4>
+                        <p class="content-text" style="font-size:1.1rem;">
+                            TMDB movie metadata dataset — pre-cleaned from group-based analysis. Features include movie budget,
+                            runtime, genres, keywords, overview text, vote count, popularity, revenue, and release dates.
+                        </p>
+
+                        <h4 style="font-family:'Press Start 2P',cursive;font-size:0.55rem;color:var(--pixel-pink);margin:30px 0 20px;">Key Data Processing Steps</h4>
+                        <p class="content-text" style="font-size:1.1rem;">
+                            • Log transformation applied to skewed numeric features (budget, revenue, runtime, vote count, popularity)<br>
+                            • Temporal features extracted from release date (year, month, day, day-of-week, quarter)<br>
+                            • top_genre extracted as first genre per movie; 'Unknown' assigned when no genre found<br>
+                            • has_english binary flag added to capture language influence<br>
+                            • Correlation matrix used to drop low-signal features before model training<br>
+                            • Train/test split applied for unbiased model evaluation
+                        </p>
+
+                        <h4 style="font-family:'Press Start 2P',cursive;font-size:0.55rem;color:var(--pixel-pink);margin:30px 0 20px;">Python Libraries Used</h4>
+                        <div class="tech-stack">
+                            <span class="tech-tag"><i class="fab fa-python"></i> scikit-learn</span>
+                            <span class="tech-tag"><i class="fab fa-python"></i> pandas</span>
+                            <span class="tech-tag"><i class="fab fa-python"></i> numpy</span>
+                            <span class="tech-tag"><i class="fab fa-python"></i> seaborn</span>
+                            <span class="tech-tag"><i class="fab fa-python"></i> matplotlib</span>
+                            <span class="tech-tag"><i class="fab fa-python"></i> TfidfVectorizer</span>
+                            <span class="tech-tag"><i class="fab fa-python"></i> linear_kernel</span>
+                            <span class="tech-tag"><i class="fab fa-python"></i> statsmodels</span>
+                        </div>
+
+                        <h4 style="font-family:'Press Start 2P',cursive;font-size:0.55rem;color:var(--pixel-pink);margin:30px 0 20px;">Evaluation Metrics</h4>
+                        <p class="content-text" style="font-size:1.1rem;">
+                            • <strong>RMSE (Root Mean Squared Error)</strong> — measures average prediction distance from actual values<br>
+                            • <strong>R² (R-squared)</strong> — measures proportion of variance in revenue explained by the model<br>
+                            • <strong>Breusch-Pagan Test</strong> — used to formally confirm presence of heteroscedasticity<br>
+                            • <strong>Parity plots &amp; residual plots</strong> — visual inspection of model prediction quality
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Project Links -->
+            <div class="project-links">
+                <a href="works.html" class="project-link">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to All Works</span>
+                </a>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2025 Wei Kiat Tan</p>
+        <p>
+            <a href="https://github.com/weikiat98" target="_blank">GitHub</a>
+            <a href="https://www.linkedin.com/in/wei-kiat-tan/" target="_blank">LinkedIn</a>
+            <a href="https://public.tableau.com/app/profile/wei.kiat/vizzes/" target="_blank">Tableau</a>
+        </p>
+    </footer>
+
+    <!-- Image Modal -->
+    <div class="modal" id="imageModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <img id="modalImage" src="" alt="Enlarged figure">
+        </div>
+    </div>
+
+    <script>
+        // Progress Bar
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            document.getElementById('progressBar').style.width = (scrollTop / scrollHeight * 100) + '%';
+            updateSidebarActive();
+        });
+
+        // Sidebar Active State
+        function updateSidebarActive() {
+            const sections = document.querySelectorAll('section[id]');
+            const navItems = document.querySelectorAll('.sidebar-nav-item');
+            let current = 'hero';
+            sections.forEach(section => {
+                if (window.scrollY >= section.offsetTop - 200) current = section.getAttribute('id');
+            });
+            navItems.forEach(item => {
+                item.classList.toggle('active', item.getAttribute('data-section') === current);
+            });
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('.sidebar-nav-item').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.getElementById(this.getAttribute('href').substring(1));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+
+        // Animated Counters
+        function animateCounters() {
+            document.querySelectorAll('.stat-number').forEach(counter => {
+                const target = parseInt(counter.getAttribute('data-count'));
+                const step = target / (2000 / 16);
+                let current = 0;
+                const tick = () => {
+                    current += step;
+                    if (current < target) { counter.textContent = Math.floor(current); requestAnimationFrame(tick); }
+                    else counter.textContent = target;
+                };
+                tick();
+            });
+        }
+        setTimeout(animateCounters, 500);
+
+        // Fade-in on scroll
+        const fadeObserver = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+        // Collapsible
+        function toggleCollapsible(id) {
+            document.getElementById(id).classList.toggle('open');
+        }
+
+        // Image Modal — only open if there is a real src
+        function openModal(frameEl) {
+            const img = frameEl.querySelector('img');
+            if (!img || !img.src || img.src === window.location.href) return;
+            document.getElementById('modalImage').src = img.src;
+            document.getElementById('imageModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+    </script>
+</body>
+</html>
