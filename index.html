@@ -1044,9 +1044,64 @@
         .delay-2 { animation-delay: 0.4s; }
         .delay-3 { animation-delay: 0.6s; }
         .delay-4 { animation-delay: 0.8s; }
+
+        /* Pixel Astronaut */
+        .pixel-astronaut {
+            position: fixed;
+            width: 48px;
+            height: 48px;
+            z-index: 5;
+            pointer-events: none;
+            image-rendering: pixelated;
+            animation: astronautDrift 28s ease-in-out infinite;
+        }
+
+        @keyframes astronautDrift {
+            0%   { transform: translate(0px, 0px) rotate(0deg); }
+            10%  { transform: translate(60px, -40px) rotate(20deg); }
+            20%  { transform: translate(20px, -90px) rotate(45deg); }
+            30%  { transform: translate(-50px, -60px) rotate(30deg); }
+            40%  { transform: translate(-80px, 10px) rotate(-10deg); }
+            50%  { transform: translate(-30px, 70px) rotate(-40deg); }
+            60%  { transform: translate(40px, 90px) rotate(-20deg); }
+            70%  { transform: translate(100px, 40px) rotate(10deg); }
+            80%  { transform: translate(70px, -20px) rotate(35deg); }
+            90%  { transform: translate(20px, -50px) rotate(15deg); }
+            100% { transform: translate(0px, 0px) rotate(0deg); }
+        }
     </style>
 </head>
 <body>
+    <!-- Pixel Astronaut -->
+    <div class="pixel-astronaut" id="pixelAstronaut">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="48" height="48" shape-rendering="crispEdges">
+            <!-- Helmet visor outer -->
+            <rect x="4" y="0" width="8" height="1" fill="#e8a4b8"/>
+            <rect x="3" y="1" width="10" height="1" fill="#e8a4b8"/>
+            <rect x="2" y="2" width="12" height="5" fill="#e8a4b8"/>
+            <rect x="3" y="7" width="10" height="1" fill="#e8a4b8"/>
+            <rect x="4" y="8" width="8" height="1" fill="#e8a4b8"/>
+            <!-- Helmet visor inner -->
+            <rect x="4" y="2" width="8" height="4" fill="#3a5a8c"/>
+            <rect x="5" y="3" width="3" height="2" fill="#6b9fd4"/>
+            <!-- Suit body -->
+            <rect x="3" y="9" width="10" height="5" fill="#ffd4b8"/>
+            <rect x="2" y="10" width="2" height="3" fill="#ffd4b8"/>
+            <rect x="12" y="10" width="2" height="3" fill="#ffd4b8"/>
+            <!-- Suit chest stripe -->
+            <rect x="5" y="10" width="6" height="1" fill="#e8a4b8"/>
+            <rect x="6" y="11" width="4" height="1" fill="#e8a4b8"/>
+            <!-- Legs -->
+            <rect x="4" y="14" width="3" height="2" fill="#ffd4b8"/>
+            <rect x="9" y="14" width="3" height="2" fill="#ffd4b8"/>
+            <!-- Boots -->
+            <rect x="3" y="15" width="4" height="1" fill="#4a3d6b"/>
+            <rect x="9" y="15" width="4" height="1" fill="#4a3d6b"/>
+            <!-- Oxygen pack highlight -->
+            <rect x="13" y="10" width="1" height="2" fill="#e8a4b8"/>
+        </svg>
+    </div>
+
     <!-- Navigation -->
     <nav class="nav-sidebar">
         <div class="nav-item active" data-section="hero" data-tooltip="Home" onclick="scrollToSection('hero')">
@@ -1079,8 +1134,8 @@
                     <p class="description">
                         I'm Wei Kiat, a passionate detail-oriented enthusiast in data analytics and GenAI. 
                         I currently promote the adoption of IMDA's GenAI MAGIC Platform through conducting training sessions to users,
-                        build solutions using MAGIC Platform for user's use cases, manage AI tools, and perform AI Safety Testing in IMDA.
-                        Currently pursuing my Master's in Analytics & Visualisation at Singapore University of Social Sciences (SUSS).
+                        build solutions using MAGIC Platform for user's use cases, manage AI tools, and performed AI Safety Testing in IMDA
+                        Digital Transformation Office. Currently pursuing Master's in Analytics & Visualisation at Singapore University of Social Sciences (SUSS).
                     </p>
                     
                     <div class="social-links">
@@ -1530,15 +1585,63 @@
 
         function scrollSkills(direction) {
             currentSkillPage += direction;
-            
+
             if (currentSkillPage < 0) currentSkillPage = totalSkillPages - 1;
             if (currentSkillPage >= totalSkillPages) currentSkillPage = 0;
 
             const track = document.getElementById('skillsTrack');
             track.style.transform = `translateX(-${currentSkillPage * 100}%)`;
-            
+
             document.getElementById('currentSkillPage').textContent = currentSkillPage + 1;
         }
+
+        // Pixel Astronaut drift animation
+        (function() {
+            const astronaut = document.getElementById('pixelAstronaut');
+            const SIZE = 48;
+            let x = Math.random() * (window.innerWidth - SIZE);
+            let y = Math.random() * (window.innerHeight - SIZE);
+            let vx = (Math.random() * 0.4 + 0.15) * (Math.random() < 0.5 ? 1 : -1);
+            let vy = (Math.random() * 0.3 + 0.1) * (Math.random() < 0.5 ? 1 : -1);
+            let angle = 0;
+            let targetAngle = Math.random() * 60 - 30;
+            let angleSpeed = (Math.random() * 0.05 + 0.01) * (Math.random() < 0.5 ? 1 : -1);
+
+            astronaut.style.left = x + 'px';
+            astronaut.style.top = y + 'px';
+            astronaut.style.animation = 'none';
+
+            function drift() {
+                x += vx;
+                y += vy;
+
+                const maxX = window.innerWidth - SIZE;
+                const maxY = window.innerHeight - SIZE;
+
+                if (x <= 0) { x = 0; vx = Math.abs(vx); nudgeAngle(); }
+                if (x >= maxX) { x = maxX; vx = -Math.abs(vx); nudgeAngle(); }
+                if (y <= 0) { y = 0; vy = Math.abs(vy); nudgeAngle(); }
+                if (y >= maxY) { y = maxY; vy = -Math.abs(vy); nudgeAngle(); }
+
+                angle += angleSpeed;
+                if (Math.abs(angle - targetAngle) < 1) {
+                    targetAngle = Math.random() * 80 - 40;
+                    angleSpeed = (Math.random() * 0.04 + 0.01) * (Math.random() < 0.5 ? 1 : -1);
+                }
+
+                astronaut.style.left = x + 'px';
+                astronaut.style.top = y + 'px';
+                astronaut.style.transform = `rotate(${angle}deg)`;
+
+                requestAnimationFrame(drift);
+            }
+
+            function nudgeAngle() {
+                targetAngle = Math.random() * 60 - 30;
+            }
+
+            drift();
+        })();
     </script>
 </body>
 </html>
