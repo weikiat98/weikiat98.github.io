@@ -575,6 +575,98 @@
             margin-top: 8px;
         }
 
+        /* R Code & Output Blocks */
+        .r-code-block,
+        .r-output-block {
+            background: #0d0d1a;
+            border: 3px solid var(--pixel-mid);
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.82rem;
+            line-height: 1.6;
+            overflow: hidden;
+        }
+
+        .r-code-header {
+            background: var(--pixel-purple);
+            color: var(--pixel-sunset);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.45rem;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            letter-spacing: 1px;
+        }
+
+        .r-code-block pre,
+        .r-output-block pre {
+            margin: 0;
+            padding: 16px;
+            overflow-x: auto;
+            color: #e0e0e0;
+            white-space: pre;
+        }
+
+        .r-code-block code,
+        .r-output-block code {
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .r-comment { color: #7a8a9a; }
+        .r-string  { color: var(--pixel-sunset); }
+
+        .result-badge {
+            background: var(--pixel-purple);
+            color: var(--pixel-pink);
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.45rem;
+            padding: 6px 14px;
+            text-align: right;
+        }
+
+        /* Result Tables */
+        .result-table-wrap {
+            padding: 0 16px 16px;
+        }
+
+        .result-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.82rem;
+            color: #e0e0e0;
+        }
+
+        .result-table th {
+            background: var(--pixel-purple);
+            color: var(--pixel-sunset);
+            padding: 6px 10px;
+            text-align: left;
+            font-weight: normal;
+            letter-spacing: 0.5px;
+        }
+
+        .result-table td {
+            padding: 5px 10px;
+            border-bottom: 1px solid rgba(107, 91, 140, 0.3);
+        }
+
+        .result-table .total-row td {
+            border-top: 2px solid var(--pixel-mid);
+            color: var(--pixel-sunset);
+            font-weight: bold;
+        }
+
+        .result-table .highlight-warn td {
+            color: #ffb347;
+        }
+
+        .data-loss-note {
+            font-size: 0.85rem;
+            color: var(--pixel-sunset);
+            padding: 0 16px 14px;
+        }
+
         .image-caption {
             font-family: 'Press Start 2P', cursive;
             font-size: 0.4rem;
@@ -597,7 +689,10 @@
             box-shadow: 0 0 30px var(--pixel-glow);
         }
 
-        .image-frame img {
+        .image-frame img,
+        .scrolly-sticky img,
+        .scrolly-sticky-right img,
+        .image-full img {
             width: 100%;
             height: auto;
             display: block;
@@ -1391,11 +1486,7 @@
 
             <div class="image-full">
                 <div class="image-frame">
-                    <div class="image-placeholder" style="aspect-ratio: 16/9;">
-                        <i class="fas fa-chart-bar"></i>
-                        <span class="image-placeholder-label">[IMAGE_01]</span>
-                        <span class="image-placeholder-desc">Data Size Across Marketing Teams</span>
-                    </div>
+                    <img src="ANL553-ECA/image1.png" alt="Data Size Across Marketing Teams">
                 </div>
                 <p class="image-caption">Figure 1: Distribution of users across the 3 marketing teams</p>
             </div>
@@ -1412,21 +1503,13 @@
             <div class="image-grid">
                 <div class="image-grid-item">
                     <div class="image-frame">
-                        <div class="image-placeholder">
-                            <i class="fas fa-users"></i>
-                            <span class="image-placeholder-label">[IMAGE_02]</span>
-                            <span class="image-placeholder-desc">Age Categories by Team</span>
-                        </div>
+                        <img src="ANL553-ECA/image2.png" alt="Age Categories by Team">
                     </div>
                     <p class="image-caption">Figure 2: Breakdown of age categories across marketing teams</p>
                 </div>
                 <div class="image-grid-item">
                     <div class="image-frame">
-                        <div class="image-placeholder">
-                            <i class="fas fa-chart-area"></i>
-                            <span class="image-placeholder-label">[IMAGE_03]</span>
-                            <span class="image-placeholder-desc">Age Distribution</span>
-                        </div>
+                        <img src="ANL553-ECA/image3.png" alt="Age Distribution">
                     </div>
                     <p class="image-caption">Figure 3: Distribution of user ages (18-40 years)</p>
                 </div>
@@ -1445,11 +1528,7 @@
 
         <div class="scrolly-container">
             <div class="scrolly-sticky">
-                <div class="image-placeholder" style="aspect-ratio: 1/1;">
-                    <i class="fas fa-chart-scatter"></i>
-                    <span class="image-placeholder-label">[IMAGE_04]</span>
-                    <span class="image-placeholder-desc">Age vs Spending Scatter Plot</span>
-                </div>
+                <img src="ANL553-ECA/image6.png" alt="Age vs Spending Scatter Plot">
                 <p class="image-caption">Figure 4: Relationship between user age and spending</p>
             </div>
             <div class="scrolly-content">
@@ -1517,21 +1596,13 @@
             <div class="image-grid">
                 <div class="image-grid-item">
                     <div class="image-frame">
-                        <div class="image-placeholder">
-                            <i class="fas fa-chart-bar"></i>
-                            <span class="image-placeholder-label">[IMAGE_05]</span>
-                            <span class="image-placeholder-desc">Average Sales by Age & Team</span>
-                        </div>
+                        <img src="ANL553-ECA/avg sales.png" alt="Average Sales by Age Group and Marketing Team">
                     </div>
                     <p class="image-caption">Figure 5: Average sales by age category and marketing team</p>
                 </div>
                 <div class="image-grid-item">
                     <div class="image-frame">
-                        <div class="image-placeholder">
-                            <i class="fas fa-chart-bar"></i>
-                            <span class="image-placeholder-label">[IMAGE_06]</span>
-                            <span class="image-placeholder-desc">Median Sales by Age & Team</span>
-                        </div>
+                        <img src="ANL553-ECA/mediansales.png" alt="Median Sales by Age Group and Marketing Team">
                     </div>
                     <p class="image-caption">Figure 6: Median sales by age category and marketing team</p>
                 </div>
@@ -1540,21 +1611,13 @@
             <div class="image-grid">
                 <div class="image-grid-item">
                     <div class="image-frame">
-                        <div class="image-placeholder">
-                            <i class="fas fa-chart-line"></i>
-                            <span class="image-placeholder-label">[IMAGE_07]</span>
-                            <span class="image-placeholder-desc">Median Sales by Age</span>
-                        </div>
+                        <img src="ANL553-ECA/image7.png" alt="Median Sales by Age">
                     </div>
                     <p class="image-caption">Figure 7: Median sales trend by user age</p>
                 </div>
                 <div class="image-grid-item">
                     <div class="image-frame">
-                        <div class="image-placeholder">
-                            <i class="fas fa-chart-bar"></i>
-                            <span class="image-placeholder-label">[IMAGE_08]</span>
-                            <span class="image-placeholder-desc">Spending Categories</span>
-                        </div>
+                        <img src="ANL553-ECA/image8.png" alt="Spending Categories">
                     </div>
                     <p class="image-caption">Figure 8: Spending categories across marketing teams</p>
                 </div>
@@ -1562,11 +1625,7 @@
 
             <div class="image-full">
                 <div class="image-frame">
-                    <div class="image-placeholder" style="aspect-ratio: 16/9;">
-                        <i class="fas fa-gamepad"></i>
-                        <span class="image-placeholder-label">[IMAGE_09]</span>
-                        <span class="image-placeholder-desc">Game Participation by Team</span>
-                    </div>
+                    <img src="ANL553-ECA/image9.png" alt="Game Participation by Team">
                 </div>
                 <p class="image-caption">Figure 9: Game participation rates showing impact of notification quality</p>
             </div>
@@ -1634,22 +1693,30 @@
             <!-- Model Equations -->
             <div class="image-grid">
                 <div class="image-grid-item">
-                    <div class="image-frame">
-                        <div class="image-placeholder">
-                            <i class="fas fa-code"></i>
-                            <span class="image-placeholder-label">[IMAGE_10]</span>
-                            <span class="image-placeholder-desc">First Stage R Code</span>
-                        </div>
+                    <div class="r-code-block">
+                        <div class="r-code-header"><i class="fas fa-code"></i> R — First Stage</div>
+                        <pre><code><span class="r-comment"># Set Team C as reference level</span>
+eca.working$marketing_team &lt;- relevel(
+  factor(eca.working$marketing_team), ref = <span class="r-string">"Team C"</span>
+)
+
+<span class="r-comment"># First Stage: team assignment predicts play</span>
+first_stage &lt;- lm(play ~ marketing_team + age,
+                   data = eca.working)
+summary(first_stage)</code></pre>
                     </div>
                     <p class="image-caption">Figure 10: R code for first stage of 2SLS</p>
                 </div>
                 <div class="image-grid-item">
-                    <div class="image-frame">
-                        <div class="image-placeholder">
-                            <i class="fas fa-code"></i>
-                            <span class="image-placeholder-label">[IMAGE_11]</span>
-                            <span class="image-placeholder-desc">Second Stage R Code</span>
-                        </div>
+                    <div class="r-code-block">
+                        <div class="r-code-header"><i class="fas fa-code"></i> R — Second Stage</div>
+                        <pre><code><span class="r-comment"># Second Stage: ivreg with marketing_team as instrument</span>
+model_2SLS &lt;- ivreg(
+  value_purchased_lastweek ~ play + age
+    | factor(marketing_team) + age,
+  data = eca.working
+)
+summary(model_2SLS)</code></pre>
                     </div>
                     <p class="image-caption">Figure 11: R code for second stage of 2SLS</p>
                 </div>
@@ -1736,45 +1803,77 @@
                 </div>
             </div>
             <div class="scrolly-sticky-right">
-                <div class="image-placeholder" style="aspect-ratio: 3/4;">
-                    <i class="fas fa-table"></i>
-                    <span class="image-placeholder-label">[IMAGE_12]</span>
-                    <span class="image-placeholder-desc">2SLS Regression Results</span>
+                <div class="r-output-block">
+                    <div class="r-code-header"><i class="fas fa-table"></i> ivreg() Output — 2nd Stage</div>
+                    <pre><code>Coefficients:
+             Estimate  Std. Error  t value  Pr(&gt;|t|)
+(Intercept)  45.32144    2.51663   18.009  &lt; 2e-16 ***
+play         19.40385    2.18471    8.882  1.83e-13 ***
+age           5.05694    0.09127   55.409  &lt; 2e-16 ***
+---
+Signif. codes:
+0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 5.114
+  on 78 degrees of freedom
+Multiple R-Squared:  0.9815
+Adjusted R-squared:  0.9811
+Wald test: 2038 on 2 &amp; 78 DF
+  p-value: &lt; 2.2e-16</code></pre>
+                    <div class="result-badge">n = 81 observations</div>
                 </div>
                 <p class="image-caption">Figure 12: Results from 2nd stage of 2SLS regression</p>
             </div>
         </div>
 
-        <!-- Additional Results Images -->
+        <!-- Additional Results -->
         <div class="container" style="margin-top: 60px;">
             <div class="image-grid image-grid-3">
                 <div class="image-grid-item">
-                    <div class="image-frame">
-                        <div class="image-placeholder" style="aspect-ratio: 1/1;">
-                            <i class="fas fa-chart-line"></i>
-                            <span class="image-placeholder-label">[IMAGE_13]</span>
-                            <span class="image-placeholder-desc">Play Hypothesis Test</span>
-                        </div>
+                    <div class="r-output-block">
+                        <div class="r-code-header"><i class="fas fa-flask"></i> H-Test: Play</div>
+                        <pre><code>linearHypothesis: play = 0
+
+  Res.Df  Df   Chisq
+1     79
+2     78   1   78.884
+
+Pr(&gt;Chisq): &lt; 2.2e-16 ***
+
+Estimate: 19.40385
+Decision: Reject H₀ ✓</code></pre>
                     </div>
                     <p class="image-caption">Figure 13: Hypothesis test for Play</p>
                 </div>
                 <div class="image-grid-item">
-                    <div class="image-frame">
-                        <div class="image-placeholder" style="aspect-ratio: 1/1;">
-                            <i class="fas fa-chart-line"></i>
-                            <span class="image-placeholder-label">[IMAGE_14]</span>
-                            <span class="image-placeholder-desc">Age Hypothesis Test</span>
-                        </div>
+                    <div class="r-output-block">
+                        <div class="r-code-header"><i class="fas fa-flask"></i> H-Test: Age</div>
+                        <pre><code>linearHypothesis: age = 0
+
+  Res.Df  Df   Chisq
+1     79
+2     78   1   3070.2
+
+Pr(&gt;Chisq): &lt; 2.2e-16 ***
+
+Estimate: 5.05694
+Decision: Reject H₀ ✓</code></pre>
                     </div>
                     <p class="image-caption">Figure 14: Hypothesis test for Age</p>
                 </div>
                 <div class="image-grid-item">
-                    <div class="image-frame">
-                        <div class="image-placeholder" style="aspect-ratio: 1/1;">
-                            <i class="fas fa-chart-line"></i>
-                            <span class="image-placeholder-label">[IMAGE_15]</span>
-                            <span class="image-placeholder-desc">Intercept Hypothesis Test</span>
-                        </div>
+                    <div class="r-output-block">
+                        <div class="r-code-header"><i class="fas fa-flask"></i> H-Test: Intercept</div>
+                        <pre><code>linearHypothesis: (Intercept) = 0
+
+  Res.Df  Df   Chisq
+1     79
+2     78   1   324.32
+
+Pr(&gt;Chisq): &lt; 2.2e-16 ***
+
+Estimate: 45.32144
+Decision: Reject H₀ ✓</code></pre>
                     </div>
                     <p class="image-caption">Figure 15: Hypothesis test for Intercept</p>
                 </div>
@@ -1782,22 +1881,36 @@
 
             <div class="image-grid">
                 <div class="image-grid-item">
-                    <div class="image-frame">
-                        <div class="image-placeholder">
-                            <i class="fas fa-code"></i>
-                            <span class="image-placeholder-label">[IMAGE_16]</span>
-                            <span class="image-placeholder-desc">Robustness Checks</span>
-                        </div>
+                    <div class="r-output-block">
+                        <div class="r-code-header"><i class="fas fa-shield-alt"></i> Robustness Checks</div>
+                        <pre><code><span class="r-comment">## Multicollinearity — VIF</span>
+Variable        GVIF   Df  GVIF^(1/(2*Df))
+marketing_team  1.003   2       1.001
+age             1.003   1       1.002
+→ No multicollinearity (all ≈ 1)
+
+<span class="r-comment">## Autocorrelation — Durbin-Watson</span>
+DW = 2.0094, p-value = 0.5599
+→ No autocorrelation (fail to reject H₀)
+
+<span class="r-comment">## Heteroscedasticity — Breusch-Pagan</span>
+BP = 57.884, df = 3
+p-value = 1.664e-12 ***
+→ Heteroscedasticity present ⚠</code></pre>
                     </div>
                     <p class="image-caption">Figure 16: Multicollinearity, autocorrelation, heteroscedasticity tests</p>
                 </div>
                 <div class="image-grid-item">
-                    <div class="image-frame">
-                        <div class="image-placeholder">
-                            <i class="fas fa-code"></i>
-                            <span class="image-placeholder-label">[IMAGE_17]</span>
-                            <span class="image-placeholder-desc">Robust Standard Errors</span>
-                        </div>
+                    <div class="r-code-block">
+                        <div class="r-code-header"><i class="fas fa-code"></i> R — Robust Standard Errors</div>
+                        <pre><code><span class="r-comment"># Robust SE using HC1 (heteroscedasticity-consistent)</span>
+robust_se &lt;- vcovHC(first_stage,
+                     type = <span class="r-string">"HC1"</span>)
+
+<span class="r-comment"># Display coefficients with robust SE</span>
+robust_results &lt;- coeftest(first_stage,
+                            vcov = robust_se)
+robust_results</code></pre>
                     </div>
                     <p class="image-caption">Figure 17: Addressing heteroscedasticity with robust SE</p>
                 </div>
@@ -1855,22 +1968,47 @@
 
             <div class="image-grid">
                 <div class="image-grid-item">
-                    <div class="image-frame">
-                        <div class="image-placeholder">
-                            <i class="fas fa-database"></i>
-                            <span class="image-placeholder-label">[IMAGE_18]</span>
-                            <span class="image-placeholder-desc">Sample Size Breakdown</span>
+                    <div class="r-output-block">
+                        <div class="r-code-header"><i class="fas fa-database"></i> Sample Size — 2SLS</div>
+                        <pre><code><span class="r-comment"># Total observations used</span>
+&gt; print(paste(model_2SLS$nobs))
+[1] "81"
+
+<span class="r-comment"># Breakdown by age category</span>
+&gt; print(age_category_counts2SLS)
+  Adults above 35   Adults Age 35 and Below
+               14                        67</code></pre>
+                        <div class="result-table-wrap">
+                            <table class="result-table">
+                                <thead><tr><th>Age Group</th><th>n</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Adults above 35</td><td>14</td></tr>
+                                    <tr><td>Adults 35 and below</td><td>67</td></tr>
+                                    <tr class="total-row"><td>Total</td><td>81</td></tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <p class="image-caption">Figure 18: Observation breakdown by age category (n=81)</p>
                 </div>
                 <div class="image-grid-item">
-                    <div class="image-frame">
-                        <div class="image-placeholder">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <span class="image-placeholder-label">[IMAGE_19]</span>
-                            <span class="image-placeholder-desc">Data Loss Pattern</span>
+                    <div class="r-output-block">
+                        <div class="r-code-header"><i class="fas fa-exclamation-triangle"></i> Data Loss Pattern</div>
+                        <pre><code><span class="r-comment"># System failure caused alternating loss</span></code></pre>
+                        <div class="result-table-wrap">
+                            <table class="result-table">
+                                <thead><tr><th>Item</th><th>Count</th></tr></thead>
+                                <tbody>
+                                    <tr><td>Total dataset rows</td><td>2,000</td></tr>
+                                    <tr><td>Play records lost (blank)</td><td>940</td></tr>
+                                    <tr><td>Value records lost (blank)</td><td>979</td></tr>
+                                    <tr class="total-row highlight-warn"><td>Complete rows (both fields)</td><td>81</td></tr>
+                                </tbody>
+                            </table>
                         </div>
+                        <p class="data-loss-note">
+                            ⚠ When play is present → value is missing, and vice versa. Only 81 rows have both fields intact simultaneously.
+                        </p>
                     </div>
                     <p class="image-caption">Figure 19: Alternating pattern of data loss from system failure</p>
                 </div>
