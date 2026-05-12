@@ -453,33 +453,65 @@ df.<span class="function">to_sql</span>(<span class="string">"shopper_profile"</
                 </div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 1</div>
+                    <div class="code-block" style="margin:0; border:none;">
+                        <div class="code-header">
+                            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                            <span class="lang">Python — VS Code</span>
+                        </div>
+                        <div class="code-body">
+<pre><span class="comment"># Import necessary libraries</span>
+<span class="keyword">import</span> pandas <span class="keyword">as</span> pd
+<span class="keyword">from</span> sqlalchemy <span class="keyword">import</span> create_engine</pre>
+                        </div>
+                        <div style="padding: 6px 20px; background: var(--pixel-deep); border-top: 1px solid var(--pixel-mid); font-size: 1rem; color: var(--pixel-mid);">Execution time: 2.9s ✓</div>
                     </div>
                     <div class="figure-caption"><strong>Figure 1:</strong> Importing relevant libraries</div>
                 </div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 2</div>
+                    <div class="code-block" style="margin:0; border:none;">
+                        <div class="code-header">
+                            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                            <span class="lang">Python — VS Code</span>
+                        </div>
+                        <div class="code-body">
+<pre><span class="comment"># Load data from the Excel file</span>
+file_path = <span class="string">"C:/Users/weiki/ECA_data.xlsx/ECA_data.xlsx"</span>  <span class="comment"># File Path Directory</span>
+df = pd.<span class="function">read_excel</span>(file_path)</pre>
+                        </div>
+                        <div style="padding: 6px 20px; background: var(--pixel-deep); border-top: 1px solid var(--pixel-mid); font-size: 1rem; color: var(--pixel-mid);">Execution time: 0.8s ✓</div>
                     </div>
                     <div class="figure-caption"><strong>Figure 2:</strong> Creating the file path to load data from Excel file</div>
                 </div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 3</div>
+                    <div class="code-block" style="margin:0; border:none;">
+                        <div class="code-header">
+                            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                            <span class="lang">Python — VS Code</span>
+                        </div>
+                        <div class="code-body">
+<pre><span class="comment"># Create the engine and connection to MySQL database using SQLAlchemy</span>
+engine = <span class="function">create_engine</span>(<span class="string">"mysql+pymysql://root:Anl503datawrangling!@localhost:3306/anl503"</span>)</pre>
+                        </div>
+                        <div style="padding: 6px 20px; background: var(--pixel-deep); border-top: 1px solid var(--pixel-mid); font-size: 1rem; color: var(--pixel-mid);">Execution time: 0.4s ✓</div>
                     </div>
                     <div class="figure-caption"><strong>Figure 3:</strong> Create connection to MySQL database</div>
                 </div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 4</div>
+                    <div class="code-block" style="margin:0; border:none;">
+                        <div class="code-header">
+                            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                            <span class="lang">Python — VS Code</span>
+                        </div>
+                        <div class="code-body">
+<pre><span class="comment"># Store the data in MySQL as "shopper_profile" table</span>
+df.<span class="function">to_sql</span>(<span class="string">"shopper_profile"</span>, con=engine, if_exists=<span class="string">"replace"</span>, index=<span class="keyword">False</span>)
+
+<span class="function">print</span>(<span class="string">"Data successfully stored in MySQL as table 'shopper_profile'"</span>)</pre>
+                        </div>
+                        <div style="padding: 6px 20px; background: var(--pixel-deep); border-top: 1px solid var(--pixel-mid); font-size: 1rem; color: var(--accent-green);">Data successfully stored in MySQL as table 'shopper_profile'</div>
                     </div>
                     <div class="figure-caption"><strong>Figure 4:</strong> Store data into MySQL under the name shopper_profile</div>
                 </div>
@@ -522,11 +554,35 @@ df.<span class="function">to_sql</span>(<span class="string">"shopper_profile"</
                 </div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 5</div>
+                    <div style="overflow-x:auto; padding: 20px;">
+                        <table style="width:100%; border-collapse:collapse; font-family:'VT323',monospace; font-size:1.1rem;">
+                            <thead>
+                                <tr style="background:var(--pixel-deep); border-bottom:2px solid var(--pixel-pink);">
+                                    <th style="padding:8px 16px; text-align:right; color:var(--pixel-mid); font-family:'Press Start 2P',cursive; font-size:0.4rem;">#</th>
+                                    <th style="padding:8px 16px; text-align:left; color:var(--pixel-pink); font-family:'Press Start 2P',cursive; font-size:0.4rem;">store</th>
+                                    <th style="padding:8px 16px; text-align:right; color:var(--pixel-pink); font-family:'Press Start 2P',cursive; font-size:0.4rem;">n</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">1</td><td style="padding:6px 16px; color:var(--text-primary);">Charles &amp; Keith</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">426</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">2</td><td style="padding:6px 16px; color:var(--text-primary);">Bysi</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">410</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">3</td><td style="padding:6px 16px; color:var(--text-primary);">Capitol Optical</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">310</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">4</td><td style="padding:6px 16px; color:var(--text-primary);">Eu Yan Sang</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">615</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">5</td><td style="padding:6px 16px; color:var(--text-primary);">G2000</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">416</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">6</td><td style="padding:6px 16px; color:var(--text-primary);">GNC</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">618</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">7</td><td style="padding:6px 16px; color:var(--text-primary);">Harvey Norman</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">411</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">8</td><td style="padding:6px 16px; color:var(--text-primary);">Bossini</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">283</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">9</td><td style="padding:6px 16px; color:var(--text-primary);">Mothercare</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">208</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple); background:rgba(248,113,113,0.08);"><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">10</td><td style="padding:6px 16px; color:var(--accent-red);">Osim</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">504</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple); background:rgba(248,113,113,0.08);"><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">11</td><td style="padding:6px 16px; color:var(--accent-red);">OSIM</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">5</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">12</td><td style="padding:6px 16px; color:var(--text-primary);">SK Jewellery</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">828</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">13</td><td style="padding:6px 16px; color:var(--text-primary);">TianPo Jewellery</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">308</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">14</td><td style="padding:6px 16px; color:var(--text-primary);">Topshop</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">192</td></tr>
+                                <tr><td style="padding:6px 16px; text-align:right; color:var(--pixel-mid);">15</td><td style="padding:6px 16px; color:var(--text-primary);">Triumph</td><td style="padding:6px 16px; text-align:right; color:var(--accent-yellow);">304</td></tr>
+                            </tbody>
+                        </table>
                     </div>
-                    <div class="figure-caption"><strong>Figure 5:</strong> Results from executing MySQL statement</div>
+                    <div class="figure-caption"><strong>Figure 5:</strong> Results from executing MySQL statement — rows 10 &amp; 11 highlight the "Osim"/"OSIM" anomaly</div>
                 </div>
 
                 <p class="step-text">
@@ -553,9 +609,22 @@ df.<span class="function">to_sql</span>(<span class="string">"shopper_profile"</
                 </div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 6</div>
+                    <div class="code-block" style="margin:0; border:none;">
+                        <div class="code-header">
+                            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                            <span class="lang">MySQL — SQL Editor</span>
+                        </div>
+                        <div class="code-body">
+<pre><span class="comment">-- First, update the `store` column to change 'Osim' to 'OSIM' (question 1b)</span>
+<span class="keyword">UPDATE</span> shopper_profile
+<span class="keyword">SET</span> store = <span class="string">'OSIM'</span>
+<span class="keyword">WHERE</span> store = <span class="string">'Osim'</span>;
+
+<span class="comment">--run this code to double check--</span>
+<span class="keyword">SELECT</span> store <span class="function">COLLATE</span> utf8mb4_bin <span class="keyword">AS</span> store,
+<span class="function">COUNT</span>(*) <span class="keyword">AS</span> n
+<span class="keyword">FROM</span> shopper_profile <span class="keyword">GROUP BY</span> <span class="number">1</span>;</pre>
+                        </div>
                     </div>
                     <div class="figure-caption"><strong>Figure 6:</strong> SQL query to rename Osim to OSIM</div>
                 </div>
@@ -597,9 +666,27 @@ df.<span class="function">to_sql</span>(<span class="string">"shopper_profile"</
                 <div class="step-number">Step 01 — Inspect Current Structure</div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 9</div>
+                    <div style="overflow-x:auto; padding: 20px;">
+                        <table style="width:100%; border-collapse:collapse; font-family:'VT323',monospace; font-size:1.05rem;">
+                            <thead>
+                                <tr style="background:var(--pixel-deep); border-bottom:2px solid var(--pixel-pink);">
+                                    <th style="padding:7px 12px; color:var(--pixel-mid); font-family:'Press Start 2P',cursive; font-size:0.38rem;">#</th>
+                                    <th style="padding:7px 12px; text-align:left; color:var(--pixel-pink); font-family:'Press Start 2P',cursive; font-size:0.38rem;">column_name</th>
+                                    <th style="padding:7px 12px; text-align:left; color:var(--pixel-pink); font-family:'Press Start 2P',cursive; font-size:0.38rem;">data_type</th>
+                                    <th style="padding:7px 12px; text-align:left; color:var(--pixel-pink); font-family:'Press Start 2P',cursive; font-size:0.38rem;">character_set</th>
+                                    <th style="padding:7px 12px; text-align:left; color:var(--pixel-pink); font-family:'Press Start 2P',cursive; font-size:0.38rem;">collation</th>
+                                    <th style="padding:7px 12px; text-align:left; color:var(--pixel-pink); font-family:'Press Start 2P',cursive; font-size:0.38rem;">is_nullable</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 12px; color:var(--pixel-mid); text-align:center;">1</td><td style="padding:6px 12px; color:var(--text-primary);">mall</td><td style="padding:6px 12px; color:var(--accent-yellow);">text</td><td style="padding:6px 12px; color:var(--pixel-mid);">utf8mb4</td><td style="padding:6px 12px; color:var(--pixel-mid);">utf8mb4_0900_ai_ci</td><td style="padding:6px 12px; color:var(--accent-green);">YES</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 12px; color:var(--pixel-mid); text-align:center;">2</td><td style="padding:6px 12px; color:var(--text-primary);">store</td><td style="padding:6px 12px; color:var(--accent-yellow);">text</td><td style="padding:6px 12px; color:var(--pixel-mid);">utf8mb4</td><td style="padding:6px 12px; color:var(--pixel-mid);">utf8mb4_0900_ai_ci</td><td style="padding:6px 12px; color:var(--accent-green);">YES</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 12px; color:var(--pixel-mid); text-align:center;">3</td><td style="padding:6px 12px; color:var(--text-primary);">citizenship</td><td style="padding:6px 12px; color:var(--accent-yellow);">text</td><td style="padding:6px 12px; color:var(--pixel-mid);">utf8mb4</td><td style="padding:6px 12px; color:var(--pixel-mid);">utf8mb4_0900_ai_ci</td><td style="padding:6px 12px; color:var(--accent-green);">YES</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 12px; color:var(--pixel-mid); text-align:center;">4</td><td style="padding:6px 12px; color:var(--text-primary);">age</td><td style="padding:6px 12px; color:var(--accent-yellow);">bigint</td><td style="padding:6px 12px; color:var(--pixel-mid);">NULL</td><td style="padding:6px 12px; color:var(--pixel-mid);">NULL</td><td style="padding:6px 12px; color:var(--accent-green);">YES</td></tr>
+                                <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:6px 12px; color:var(--pixel-mid); text-align:center;">5</td><td style="padding:6px 12px; color:var(--text-primary);">gender</td><td style="padding:6px 12px; color:var(--accent-yellow);">text</td><td style="padding:6px 12px; color:var(--pixel-mid);">utf8mb4</td><td style="padding:6px 12px; color:var(--pixel-mid);">utf8mb4_0900_ai_ci</td><td style="padding:6px 12px; color:var(--accent-green);">YES</td></tr>
+                                <tr><td style="padding:6px 12px; color:var(--pixel-mid); text-align:center;">6</td><td style="padding:6px 12px; color:var(--text-primary);">race</td><td style="padding:6px 12px; color:var(--accent-yellow);">text</td><td style="padding:6px 12px; color:var(--pixel-mid);">utf8mb4</td><td style="padding:6px 12px; color:var(--pixel-mid);">utf8mb4_0900_ai_ci</td><td style="padding:6px 12px; color:var(--accent-green);">YES</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                     <div class="figure-caption"><strong>Figure 9:</strong> shopper_profile table initial data structure</div>
                 </div>
@@ -666,17 +753,76 @@ df.<span class="function">to_sql</span>(<span class="string">"shopper_profile"</
                 </div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 12</div>
+                    <div class="code-block" style="margin:0; border:none;">
+                        <div class="code-header">
+                            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                            <span class="lang">MySQL — SQL Editor</span>
+                        </div>
+                        <div class="code-body">
+<pre><span class="comment">/* Since number for Age column is 2 digits max, change data type from BigInt to TINYINT */</span>
+<span class="comment">/* For mall, store with data type Text, to change them to Var(50). Text length is short,
+   changing it will save space since characters are less than 255 but allow flexibility for longer names */</span>
+<span class="comment">/* For race and citizenship, change to var(25). Text length unlikely to be as long as mall or store
+   but provide flexibility for longer character texts */</span>
+<span class="comment">/* For gender, change them to ENUM
+   since these categories text lengths are very short and they are only a limited set of categories */</span>
+
+<span class="keyword">ALTER TABLE</span> shopper_profile
+    <span class="function">MODIFY COLUMN</span> mall <span class="keyword">VARCHAR</span>(<span class="number">50</span>),
+    <span class="function">MODIFY COLUMN</span> store <span class="keyword">VARCHAR</span>(<span class="number">50</span>),
+    <span class="function">MODIFY COLUMN</span> citizenship <span class="keyword">VARCHAR</span>(<span class="number">25</span>),
+    <span class="function">MODIFY COLUMN</span> gender <span class="keyword">ENUM</span>(<span class="string">'Male'</span>, <span class="string">'Female'</span>) <span class="keyword">NOT NULL</span>,
+    <span class="function">MODIFY COLUMN</span> race <span class="keyword">VARCHAR</span>(<span class="number">25</span>),
+    <span class="function">MODIFY COLUMN</span> age <span class="keyword">TINYINT</span>;</pre>
+                        </div>
                     </div>
                     <div class="figure-caption"><strong>Figure 12:</strong> Altering table by changing the data type for columns</div>
                 </div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 13</div>
+                    <div style="padding: 20px;">
+                        <p style="font-family:'Press Start 2P',cursive; font-size:0.38rem; color:var(--pixel-mid); margin-bottom:10px;">BEFORE — Initial Structure</p>
+                        <div style="overflow-x:auto; margin-bottom:20px;">
+                            <table style="width:100%; border-collapse:collapse; font-family:'VT323',monospace; font-size:1.05rem;">
+                                <thead>
+                                    <tr style="background:var(--pixel-deep); border-bottom:2px solid var(--pixel-mid);">
+                                        <th style="padding:6px 12px; color:var(--pixel-mid); font-family:'Press Start 2P',cursive; font-size:0.35rem;">#</th>
+                                        <th style="padding:6px 12px; text-align:left; color:var(--pixel-pink); font-family:'Press Start 2P',cursive; font-size:0.35rem;">column_name</th>
+                                        <th style="padding:6px 12px; text-align:left; color:var(--pixel-pink); font-family:'Press Start 2P',cursive; font-size:0.35rem;">data_type</th>
+                                        <th style="padding:6px 12px; text-align:left; color:var(--pixel-pink); font-family:'Press Start 2P',cursive; font-size:0.35rem;">is_nullable</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:5px 12px; color:var(--pixel-mid); text-align:center;">1</td><td style="padding:5px 12px; color:var(--text-primary);">mall</td><td style="padding:5px 12px; color:var(--accent-red);">text</td><td style="padding:5px 12px; color:var(--accent-green);">YES</td></tr>
+                                    <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:5px 12px; color:var(--pixel-mid); text-align:center;">2</td><td style="padding:5px 12px; color:var(--text-primary);">store</td><td style="padding:5px 12px; color:var(--accent-red);">text</td><td style="padding:5px 12px; color:var(--accent-green);">YES</td></tr>
+                                    <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:5px 12px; color:var(--pixel-mid); text-align:center;">3</td><td style="padding:5px 12px; color:var(--text-primary);">citizenship</td><td style="padding:5px 12px; color:var(--accent-red);">text</td><td style="padding:5px 12px; color:var(--accent-green);">YES</td></tr>
+                                    <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:5px 12px; color:var(--pixel-mid); text-align:center;">4</td><td style="padding:5px 12px; color:var(--text-primary);">age</td><td style="padding:5px 12px; color:var(--accent-red);">bigint</td><td style="padding:5px 12px; color:var(--accent-green);">YES</td></tr>
+                                    <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:5px 12px; color:var(--pixel-mid); text-align:center;">5</td><td style="padding:5px 12px; color:var(--text-primary);">gender</td><td style="padding:5px 12px; color:var(--accent-red);">text</td><td style="padding:5px 12px; color:var(--accent-green);">YES</td></tr>
+                                    <tr><td style="padding:5px 12px; color:var(--pixel-mid); text-align:center;">6</td><td style="padding:5px 12px; color:var(--text-primary);">race</td><td style="padding:5px 12px; color:var(--accent-red);">text</td><td style="padding:5px 12px; color:var(--accent-green);">YES</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <p style="font-family:'Press Start 2P',cursive; font-size:0.38rem; color:var(--accent-green); margin-bottom:10px;">AFTER — Optimised Structure</p>
+                        <div style="overflow-x:auto;">
+                            <table style="width:100%; border-collapse:collapse; font-family:'VT323',monospace; font-size:1.05rem;">
+                                <thead>
+                                    <tr style="background:var(--pixel-deep); border-bottom:2px solid var(--accent-green);">
+                                        <th style="padding:6px 12px; color:var(--pixel-mid); font-family:'Press Start 2P',cursive; font-size:0.35rem;">#</th>
+                                        <th style="padding:6px 12px; text-align:left; color:var(--pixel-pink); font-family:'Press Start 2P',cursive; font-size:0.35rem;">column_name</th>
+                                        <th style="padding:6px 12px; text-align:left; color:var(--pixel-pink); font-family:'Press Start 2P',cursive; font-size:0.35rem;">data_type</th>
+                                        <th style="padding:6px 12px; text-align:left; color:var(--pixel-pink); font-family:'Press Start 2P',cursive; font-size:0.35rem;">is_nullable</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:5px 12px; color:var(--pixel-mid); text-align:center;">1</td><td style="padding:5px 12px; color:var(--text-primary);">mall</td><td style="padding:5px 12px; color:var(--accent-green);">varchar(50)</td><td style="padding:5px 12px; color:var(--accent-green);">YES</td></tr>
+                                    <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:5px 12px; color:var(--pixel-mid); text-align:center;">2</td><td style="padding:5px 12px; color:var(--text-primary);">store</td><td style="padding:5px 12px; color:var(--accent-green);">varchar(50)</td><td style="padding:5px 12px; color:var(--accent-green);">YES</td></tr>
+                                    <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:5px 12px; color:var(--pixel-mid); text-align:center;">3</td><td style="padding:5px 12px; color:var(--text-primary);">citizenship</td><td style="padding:5px 12px; color:var(--accent-green);">varchar(25)</td><td style="padding:5px 12px; color:var(--accent-green);">YES</td></tr>
+                                    <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:5px 12px; color:var(--pixel-mid); text-align:center;">4</td><td style="padding:5px 12px; color:var(--text-primary);">age</td><td style="padding:5px 12px; color:var(--accent-green);">tinyint</td><td style="padding:5px 12px; color:var(--accent-green);">YES</td></tr>
+                                    <tr style="border-bottom:1px solid var(--pixel-purple);"><td style="padding:5px 12px; color:var(--pixel-mid); text-align:center;">5</td><td style="padding:5px 12px; color:var(--text-primary);">gender</td><td style="padding:5px 12px; color:var(--accent-green);">enum('Male','Female')</td><td style="padding:5px 12px; color:var(--accent-red);">NO</td></tr>
+                                    <tr><td style="padding:5px 12px; color:var(--pixel-mid); text-align:center;">6</td><td style="padding:5px 12px; color:var(--text-primary);">race</td><td style="padding:5px 12px; color:var(--accent-green);">varchar(25)</td><td style="padding:5px 12px; color:var(--accent-green);">YES</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                     <div class="figure-caption"><strong>Figure 13:</strong> Comparison of initial table data structure (top) and after changing data types (bottom)</div>
                 </div>
@@ -746,17 +892,55 @@ shopper_profile <- <span class="function">dbReadTable</span>(con, <span class="s
                 </div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 14</div>
+                    <div class="code-block" style="margin:0; border:none;">
+                        <div class="code-header">
+                            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                            <span class="lang">R — RStudio</span>
+                        </div>
+                        <div class="code-body">
+<pre><span class="comment"># Load necessary packages</span>
+<span class="keyword">library</span>(DBI)
+<span class="keyword">library</span>(RMySQL)
+<span class="keyword">library</span>(dplyr)
+<span class="keyword">library</span>(ggplot2)
+<span class="keyword">library</span>(patchwork)
+
+<span class="comment"># Define database connection details</span>
+host     <- <span class="string">"localhost"</span>
+dbname   <- <span class="string">"anl503"</span>
+user     <- <span class="string">"root"</span>
+password <- <span class="string">"Anl503datawrangling!"</span>
+
+<span class="comment"># Connect to the MySQL database</span>
+con <- <span class="function">dbConnect</span>(RMySQL::MySQL(),
+                 dbname   = dbname,
+                 host     = host,
+                 user     = user,
+                 password = password)
+
+<span class="comment"># Check if the connection is successful</span>
+<span class="keyword">if</span> (!<span class="function">is.null</span>(con)) {
+  <span class="function">message</span>(<span class="string">"Connection to the database was successful."</span>)
+} <span class="keyword">else</span> {
+  <span class="function">message</span>(<span class="string">"Failed to connect to the database."</span>)
+}
+
+<span class="comment"># Read the shopper_profile table into an R data.frame</span>
+shopper_profile <- <span class="function">dbReadTable</span>(con, <span class="string">"shopper_profile"</span>)</pre>
+                        </div>
                     </div>
                     <div class="figure-caption"><strong>Figure 14:</strong> Code to write the R program to read shopper_profile from MySQL table</div>
                 </div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 15</div>
+                    <div class="code-block" style="margin:0; border:none;">
+                        <div class="code-header">
+                            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                            <span class="lang">R — Console Output</span>
+                        </div>
+                        <div class="code-body">
+<pre style="color:var(--accent-green);">Connection to the database was successful.</pre>
+                        </div>
                     </div>
                     <div class="figure-caption"><strong>Figure 15:</strong> Proof that connection to the database using R program is successful</div>
                 </div>
@@ -770,33 +954,122 @@ shopper_profile <- <span class="function">dbReadTable</span>(con, <span class="s
                 </p>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 16</div>
+                    <div class="code-block" style="margin:0; border:none;">
+                        <div class="code-header">
+                            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                            <span class="lang">R — RStudio</span>
+                        </div>
+                        <div class="code-body">
+<pre><span class="comment"># Age Distribution by Mall (Remove legend, add labels)</span>
+age_dist_plot <- <span class="function">ggplot</span>(shopper_profile, <span class="function">aes</span>(x = age)) +
+  <span class="function">geom_histogram</span>(bins = <span class="number">15</span>, fill = <span class="string">"salmon"</span>, color = <span class="string">"white"</span>) +
+  <span class="function">labs</span>(title = <span class="string">"Age Distribution per Mall by Count"</span>, x = <span class="string">"Age"</span>, y = <span class="string">""</span>) +
+  <span class="function">facet_wrap</span>(~ mall, ncol = <span class="number">3</span>) +
+  <span class="function">theme_economist</span>() +
+  <span class="function">guides</span>(fill = <span class="string">"none"</span>, color = <span class="string">"none"</span>) +
+  <span class="function">stat_bin</span>(bins = <span class="number">15</span>, geom = <span class="string">"text"</span>,
+           <span class="function">aes</span>(label = ..count..), vjust = <span class="number">-0.5</span>,
+           color = <span class="string">"black"</span>, size = <span class="number">3</span>) +
+  <span class="function">theme</span>(
+    axis.text.x = <span class="function">element_text</span>(size = <span class="number">10</span>),
+    axis.text.y = <span class="function">element_text</span>(size = <span class="number">10</span>)
+  ) +
+  <span class="function">scale_y_continuous</span>(limits = <span class="function">c</span>(<span class="number">0</span>, <span class="number">250</span>))</pre>
+                        </div>
                     </div>
                     <div class="figure-caption"><strong>Figure 16:</strong> R code to create histogram showing distribution of ages across malls</div>
                 </div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 17</div>
+                    <div class="code-block" style="margin:0; border:none;">
+                        <div class="code-header">
+                            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                            <span class="lang">R — RStudio</span>
+                        </div>
+                        <div class="code-body">
+<pre><span class="comment"># Calculate the percentage of each gender within each mall</span>
+gender_distribution_pct <- shopper_profile %>%
+  <span class="function">group_by</span>(mall, gender) %>%
+  <span class="function">summarise</span>(count = <span class="function">n</span>()) %>%
+  <span class="function">mutate</span>(percentage = count / <span class="function">sum</span>(count))
+
+<span class="comment"># Gender Distribution by Mall (Side-by-Side Bar Chart with Percentage Axis)</span>
+gender_dist_plot <- <span class="function">ggplot</span>(gender_distribution_pct,
+                           <span class="function">aes</span>(x = mall, y = percentage, fill = gender)) +
+  <span class="function">geom_bar</span>(stat = <span class="string">"identity"</span>, position = <span class="function">position_dodge</span>(width = <span class="number">0.8</span>)) +
+  <span class="function">geom_text</span>(<span class="function">aes</span>(label = scales::<span class="function">percent</span>(percentage)),
+            position = <span class="function">position_dodge</span>(width = <span class="number">0.8</span>),
+            vjust = <span class="number">-0.5</span>, size = <span class="number">3</span>) +
+  <span class="function">scale_y_continuous</span>(labels = scales::<span class="function">percent_format</span>()) +
+  <span class="function">labs</span>(title = <span class="string">"Percentage of Gender Distribution by Mall"</span>,
+       x = <span class="string">"Mall"</span>, y = <span class="string">""</span>, fill = <span class="string">"Gender"</span>) +
+  <span class="function">theme_economist</span>() +
+  <span class="function">scale_fill_manual</span>(values = <span class="function">c</span>(<span class="string">"Female"</span> = <span class="string">"#CD6090"</span>, <span class="string">"Male"</span> = <span class="string">"steelblue"</span>)) +
+  <span class="function">theme</span>(legend.position = <span class="string">"bottom"</span>,
+        axis.text.x = <span class="function">element_text</span>(size = <span class="number">10</span>),
+        axis.text.y = <span class="function">element_text</span>(size = <span class="number">10</span>),
+        legend.text = <span class="function">element_text</span>(size = <span class="number">10</span>),
+        legend.title = <span class="function">element_text</span>(size = <span class="number">10</span>))</pre>
+                        </div>
                     </div>
                     <div class="figure-caption"><strong>Figure 17:</strong> R code to create side-by-side bar chart showing gender distribution</div>
                 </div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 18</div>
+                    <div class="code-block" style="margin:0; border:none;">
+                        <div class="code-header">
+                            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                            <span class="lang">R — RStudio</span>
+                        </div>
+                        <div class="code-body">
+<pre><span class="comment"># Citizenship Status Distribution by Mall (Side-by-Side Bar Chart)</span>
+citizenship_dist_plot <- <span class="function">ggplot</span>(shopper_profile,
+                                <span class="function">aes</span>(x = mall, fill = citizenship)) +
+  <span class="function">geom_bar</span>(stat = <span class="string">"count"</span>, position = <span class="function">position_dodge</span>(width = <span class="number">0.8</span>)) +
+  <span class="function">geom_text</span>(<span class="function">aes</span>(label = ..count..),
+            stat = <span class="string">"count"</span>, position = <span class="function">position_dodge</span>(width = <span class="number">0.8</span>),
+            vjust = <span class="number">-0.5</span>, size = <span class="number">3</span>) +
+  <span class="function">labs</span>(title = <span class="string">"Number of Citizenship Status Distribution by Mall"</span>,
+       x = <span class="string">"Mall"</span>, y = <span class="string">""</span>, fill = <span class="string">"Citizenship"</span>) +
+  <span class="function">theme_economist</span>() +
+  <span class="function">scale_fill_manual</span>(values = <span class="function">c</span>(<span class="string">"SG Citizen"</span>   = <span class="string">"pink3"</span>,
+                               <span class="string">"SG PR"</span>        = <span class="string">"#1f78b4"</span>,
+                               <span class="string">"Student Pass"</span> = <span class="string">"#4DAF4A"</span>)) +
+  <span class="function">theme</span>(legend.position = <span class="string">"bottom"</span>,
+        axis.text.x = <span class="function">element_text</span>(size = <span class="number">10</span>),
+        axis.text.y = <span class="function">element_text</span>(size = <span class="number">10</span>),
+        legend.text = <span class="function">element_text</span>(size = <span class="number">10</span>),
+        legend.title = <span class="function">element_text</span>(size = <span class="number">10</span>))</pre>
+                        </div>
                     </div>
                     <div class="figure-caption"><strong>Figure 18:</strong> R code to create side-by-side bar chart showing citizenship status distribution</div>
                 </div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 19</div>
+                    <div class="code-block" style="margin:0; border:none;">
+                        <div class="code-header">
+                            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                            <span class="lang">R — RStudio</span>
+                        </div>
+                        <div class="code-body">
+<pre><span class="comment"># Race Distribution by Mall (Remove legend, add labels)</span>
+race_dist_plot <- <span class="function">ggplot</span>(shopper_profile, <span class="function">aes</span>(x = race, fill = race)) +
+  <span class="function">geom_bar</span>() +
+  <span class="function">labs</span>(title = <span class="string">"Race Distribution Numbers by Mall"</span>, x = <span class="string">"Race"</span>, y = <span class="string">""</span>) +
+  <span class="function">facet_wrap</span>(~ mall, ncol = <span class="number">3</span>) +
+  <span class="function">theme_economist</span>() +
+  <span class="function">scale_fill_manual</span>(values = <span class="function">c</span>(<span class="string">"Chinese"</span>  = <span class="string">"firebrick1"</span>,
+                               <span class="string">"Eurasian"</span> = <span class="string">"#1f78b4"</span>,
+                               <span class="string">"Indian"</span>   = <span class="string">"purple"</span>,
+                               <span class="string">"Malay"</span>    = <span class="string">"darkgreen"</span>,
+                               <span class="string">"Others"</span>   = <span class="string">"yellow3"</span>)) +
+  <span class="function">guides</span>(fill = <span class="string">"none"</span>, color = <span class="string">"none"</span>) +
+  <span class="function">geom_text</span>(stat = <span class="string">"count"</span>, <span class="function">aes</span>(label = ..count..),
+            vjust = <span class="number">-0.5</span>, color = <span class="string">"black"</span>, size = <span class="number">3</span>) +
+  <span class="function">theme</span>(axis.text.x = <span class="function">element_text</span>(size = <span class="number">10</span>),
+        axis.text.y = <span class="function">element_text</span>(size = <span class="number">10</span>)) +
+  <span class="function">scale_y_continuous</span>(limits = <span class="function">c</span>(<span class="number">0</span>, <span class="number">1250</span>))</pre>
+                        </div>
                     </div>
                     <div class="figure-caption"><strong>Figure 19:</strong> R code to create bar chart of race distribution across malls</div>
                 </div>
@@ -824,9 +1097,24 @@ combined_plot <- (age_dist_plot | gender_dist_plot) /
                 </div>
 
                 <div class="figure-container">
-                    <div class="figure-placeholder">
-                        <div class="icon">📸</div>
-                        <div class="label">Image placeholder — Figure 20</div>
+                    <div class="code-block" style="margin:0; border:none;">
+                        <div class="code-header">
+                            <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+                            <span class="lang">R — RStudio</span>
+                        </div>
+                        <div class="code-body">
+<pre><span class="comment"># Combine all plots into a single visual and fine-tune the legend position</span>
+combined_plot <- (age_dist_plot | gender_dist_plot) /
+                 (race_dist_plot | citizenship_dist_plot) +
+                 <span class="function">plot_layout</span>(guides = <span class="string">'collect'</span>) &
+                 <span class="function">theme</span>(
+                   legend.position    = <span class="string">"bottom"</span>,
+                   legend.box.margin  = <span class="function">margin</span>(t = <span class="number">5</span>, r = <span class="number">20</span>, b = <span class="number">5</span>, l = <span class="number">5</span>)
+                 )
+
+<span class="comment"># Display the combined plot</span>
+<span class="function">print</span>(combined_plot)</pre>
+                        </div>
                     </div>
                     <div class="figure-caption"><strong>Figure 20:</strong> Combining all plots into 1 visual</div>
                 </div>
