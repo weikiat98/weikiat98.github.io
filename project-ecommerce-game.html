@@ -2179,6 +2179,17 @@ robust_results</code></pre>
         </p>
     </footer>
 
+    <!-- Image Modal -->
+    <div class="image-modal" id="imageModal">
+        <div class="image-modal-content">
+            <button class="image-modal-close" onclick="closeImageModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            <img id="modalImage" src="" alt="Enlarged image">
+            <p class="image-modal-caption" id="modalCaption"></p>
+        </div>
+    </div>
+
     <!-- ==================== JAVASCRIPT ==================== -->
     <script>
         // Progress Bar
@@ -2272,16 +2283,5 @@ robust_results</code></pre>
             });
         });
     </script>
-
-    <!-- Image Modal -->
-    <div class="image-modal" id="imageModal">
-        <div class="image-modal-content">
-            <button class="image-modal-close" onclick="closeImageModal()">
-                <i class="fas fa-times"></i>
-            </button>
-            <img id="modalImage" src="" alt="Enlarged image">
-            <p class="image-modal-caption" id="modalCaption"></p>
-        </div>
-    </div>
 </body>
 </html>
