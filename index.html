@@ -450,8 +450,8 @@
 
         .skill-tag {
             font-family: 'Press Start 2P', cursive;
-            font-size: 0.42rem;
-            padding: 9px 12px;
+            font-size: 0.55rem;
+            padding: 13px 18px;
             background: rgba(74, 61, 107, 0.8);
             border: 2px solid var(--pixel-mid);
             color: var(--pixel-sunset);
@@ -998,7 +998,7 @@
                 font-size: 1.15rem;
             }
 
-            .project-card {
+            .project-link {
                 flex: 0 0 280px;
             }
 
@@ -1026,6 +1026,15 @@
         }
 
         @media (max-width: 480px) {
+            .projects-track {
+                padding: 20px 20px 40px 20px;
+                justify-content: flex-start;
+            }
+
+            .project-link {
+                flex: 0 0 calc(100vw - 60px);
+            }
+
             .greeting {
                 font-size: 1.1rem;
             }
@@ -1041,8 +1050,8 @@
             }
 
             .skill-tag {
-                font-size: 0.38rem;
-                padding: 7px 9px;
+                font-size: 0.55rem;
+                padding: 10px 13px;
             }
 
             .profile-picture {
@@ -1277,27 +1286,15 @@
                     <div class="carousel-track" id="skillsTrack">
                         <!-- Page 1: Skills that fit in card (wrapped into rows) -->
                         <div class="carousel-page">
-                            <div class="skills-grid">
+                            <div class="skills-grid">                                
+                                <span class="skill-tag"><i class="fas fa-comment"></i> Prompt Engineering</span>
+                                <span class="skill-tag"><i class="fas fa-project-diagram"></i> Agentic System Design</span>
+                                <span class="skill-tag"><i class="fab fa-python"></i> Python</span>                                
                                 <span class="skill-tag"><i class="fab fa-r-project"></i> R Programming</span>
-                                <span class="skill-tag"><i class="fab fa-python"></i> Python</span>
-                                <span class="skill-tag"><i class="fas fa-database"></i> MySQL</span>
                                 <span class="skill-tag"><i class="fas fa-chart-pie"></i> Tableau</span>
                                 <span class="skill-tag"><i class="fas fa-chart-line"></i> Data Analytics</span>
-                                <span class="skill-tag"><i class="fas fa-brain"></i> Supervised Learning</span>
-                                <span class="skill-tag"><i class="fas fa-project-diagram"></i> Unsupervised Learning</span>
                                 <span class="skill-tag"><i class="fas fa-robot"></i> Machine Learning</span>
-                                <span class="skill-tag"><i class="fas fa-cogs"></i> Feature Engineering</span>
-                                <span class="skill-tag"><i class="fas fa-gamepad"></i> Reinforcement Learning</span>
-                                <span class="skill-tag"><i class="fas fa-compress-arrows-alt"></i> Dimensionality Reduction</span>
                                 <span class="skill-tag"><i class="fas fa-chart-area"></i> Predictive Modelling</span>
-                                <span class="skill-tag"><i class="fas fa-spider"></i> Web Scraping</span>
-                                <span class="skill-tag"><i class="fas fa-project-diagram"></i> Agentic System Design</span>
-                                <span class="skill-tag"><i class="fas fa-shield-alt"></i> AI Safety Testing</span>
-                                <span class="skill-tag"><i class="fas fa-comment"></i> Prompt Engineering</span>
-                                <span class="skill-tag"><i class="fas fa-cloud"></i> Cloud Computing</span>
-                                <span class="skill-tag"><i class="fas fa-brain"></i> Deep Learning</span>
-                                <span class="skill-tag"><i class="fas fa-network-wired"></i> Neural Networks</span>
-                                <span class="skill-tag"><i class="fas fa-file-alt"></i> Microsoft Office</span>
                             </div>
                         </div>
                         <!-- Page 2: Remaining skills -->
@@ -1306,15 +1303,7 @@
                                 <span class="skill-tag"><i class="fas fa-comment"></i> Communication</span>
                                 <span class="skill-tag"><i class="fas fa-question-circle"></i> Problem-Solving</span>
                                 <span class="skill-tag"><i class="fas fa-eye"></i> Attention-to-Detail</span>
-                                <span class="skill-tag"><i class="fas fa-lightbulb"></i> Creativity</span>
-                                <span class="skill-tag"><i class="fas fa-users"></i> Teamwork</span>
-                                <span class="skill-tag"><i class="fas fa-clock"></i> Adaptability</span>
-                                <span class="skill-tag"><i class="fas fa-bolt"></i> Critical Thinking</span>
                                 <span class="skill-tag"><i class="fas fa-graduation-cap"></i> Continuous Learning</span>
-                                <span class="skill-tag"><i class="fas fa-graduation-cap"></i> Writing</span>
-                                <span class="skill-tag"><i class="fas fa-compass"></i> Resourcefulness</span>
-                                <span class="skill-tag"><i class="fas fa-shield-alt"></i> Integrity</span>                                
-                                <span class="skill-tag"><i class="fas fa-lightbulb"></i> Open-Mindedness</span>
                             </div>
                         </div>
                     </div>
