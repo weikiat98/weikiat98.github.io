@@ -681,12 +681,10 @@
             display: flex;
             gap: 30px;
             overflow-x: auto;
-            padding: 20px 0 40px 0;
+            padding: 20px 40px 40px 40px;
             scroll-snap-type: x mandatory;
             scrollbar-width: thin;
             scrollbar-color: var(--pixel-pink) var(--pixel-dark);
-            justify-content: center;
-
         }
 
         .projects-track::-webkit-scrollbar {
@@ -934,6 +932,10 @@
 
             .cards-section {
                 grid-template-columns: 1fr;
+            }
+
+            .project-link {
+                flex: 0 0 300px;
             }
 
             .timeline-grid {
