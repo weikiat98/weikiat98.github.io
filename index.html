@@ -776,87 +776,109 @@
             position: relative;
         }
 
-        .timeline-column h2 {
+        .timeline-column > h2 {
             font-family: 'Press Start 2P', cursive;
             font-size: 0.85rem;
             color: var(--pixel-pink);
-            margin-bottom: 40px;
-            padding-left: 30px;
+            margin-bottom: 30px;
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .timeline {
-            position: relative;
-            padding-left: 30px;
+        /* Card-grid layout for experience/education items */
+        .exp-cards-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: repeating-linear-gradient(
-                180deg,
-                var(--pixel-pink) 0,
-                var(--pixel-pink) 8px,
-                transparent 8px,
-                transparent 16px
+        .exp-card {
+            background: var(--card-bg);
+            border: 3px solid var(--pixel-mid);
+            width: 500px;
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 24px;
+            transition: all 0.3s ease;
+            clip-path: polygon(
+                0 8px, 8px 8px, 8px 0,
+                calc(100% - 8px) 0, calc(100% - 8px) 8px, 100% 8px,
+                100% calc(100% - 8px), calc(100% - 8px) calc(100% - 8px),
+                calc(100% - 8px) 100%, 8px 100%, 8px calc(100% - 8px),
+                0 calc(100% - 8px)
             );
         }
 
-        .timeline-item {
-            position: relative;
-            padding: 25px;
-            margin-bottom: 30px;
-            background: var(--card-bg);
-            border: 3px solid var(--pixel-mid);
-            transition: all 0.3s ease;
-        }
-
-        .timeline-item:hover {
+        .exp-card:hover {
             border-color: var(--pixel-pink);
+            box-shadow: 0 8px 0 var(--pixel-purple);
+            transform: translateY(-4px);
         }
 
-        .timeline-item::before {
-            content: '';
-            position: absolute;
-            left: -38px;
-            top: 30px;
-            width: 16px;
-            height: 16px;
-            background: var(--pixel-pink);
-            border: 4px solid var(--pixel-dark);
+        /* header div kept in HTML but unstyled — logo sits directly in card */
+        .exp-card-header {
+            display: contents;
         }
 
-        .timeline-date {
+        .exp-badge {
+            width: 250px;
+            height: 250px;
+            background: #ffffff;
+            border: 3px solid var(--pixel-pink);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            padding: 0;
+            margin-bottom: 14px;
+        }
+
+        .exp-badge img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .exp-card-org {
             font-family: 'Press Start 2P', cursive;
-            font-size: 0.5rem;
+            font-size: 0.85rem;
             color: var(--pixel-sunset);
-            margin-bottom: 10px;
-        }
-
-        .timeline-title {
-            font-family: 'Press Start 2P', cursive;
-            font-size: 0.55rem;
-            color: var(--pixel-pink);
+            text-align: center;
+            letter-spacing: 1px;
+            line-height: 1.6;
             margin-bottom: 8px;
+        }
+
+        .exp-card-body {
+            display: contents;
+        }
+
+        .exp-card-title {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.75rem;
+            color: var(--pixel-pink);
+            margin-bottom: 6px;
             line-height: 1.6;
+            text-align: center;
         }
 
-        .timeline-subtitle {
-            font-size: 1.1rem;
-            color: var(--pixel-mid);
-            margin-bottom: 10px;
+        .exp-card-date {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.65rem;
+            color: var(--pixel-sunset);
+            text-align: center;
         }
 
-        .timeline-desc {
-            font-size: 1.1rem;
+        .exp-card-desc {
+            font-size: 1.5rem;
             color: var(--text-primary);
-            line-height: 1.6;
+            text-align: center;
+            margin-top: 6px;
+            line-height: 1.5;
         }
 
         /* Footer */
@@ -916,6 +938,14 @@
 
             .timeline-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .exp-card-org {
+                font-size: 0.42rem;
+            }
+
+            .exp-card-title {
+                font-size: 0.48rem;
             }
         }
 
@@ -1116,7 +1146,7 @@
                     <p class="subtitle">GenAI Manager</p>
                     <p class="description">
                         I'm Wei Kiat, a GenAI Manager at IMDA who builds RAG solutions, develop IMDA's GenAI MAGIC Platform and train users by bridging the gap between complex AI concepts
-                        and real-world adoption. Graduated with a Master's in Analytics & Visualisation at Singapore University of Social Science (SUSS) with CGPA 4.46.
+                        and real-world adoption. Graduated with a Master's in Analytics & Visualisation at Singapore University of Social Science (SUSS).
                     </p>
                     
                     <div class="social-links">
@@ -1348,34 +1378,26 @@
                 <h3 class="card-title"><i class="fas fa-user-astronaut"></i> Who I Am</h3>
 
     <p class="about-text">
-    A problem-solver at heart and a detail-oriented individual, I enjoy building GenAI Proof-of-Concepts (PoCs) and 
-    diving into data to extract meaningful insights. I pursued a <span class="highlight">Bachelor's of Science Degree 
-    in Economics and Politics</span> from the <span class="highlight">University of London</span>, achieving Second Upper Class (Honours). 
-    During my undergraduate days, I developed a strong curiosity in uncovering the stories hidden within numbers and this analytical
-    foundation proved essential in transitioning from theoretical Economics and Politics to the world of data analytics, and 
-    now into the rapidly evolving field of GenAI.
+    A problem-solver at heart and a detail-oriented individual, I experiment building GenAI Proof-of-Concepts (PoCs) through rapid prototyping
+    to explore concepts and solve use cases. My GenAI journey started from joining IMDA GenAI Innovation Team to support the promotion and adoption of AI tools within IMDA.
+    I train staff, promote digital transformation in IMDA through VIBE training, build solutions using IMDA's 
+    in-house GenAI MAGIC Platform, understanding user requirements and simplifying complex AI concepts to non-technical users
+    I also gather user feedback to improve the tools usage and support the innovation of IMDA GenAI Magic Platform from UI/UX to 
+    <span class="highlight">AI Safety Testing</span> with AWS.
     </p>
 
     <p class="about-text">
-    My GenAI journey started from joining IMDA GenAI Innovation Team to support the promotion and adoption of AI tools within IMDA.
-    At IMDA, I train staff, promote digital transformation in IMDA through VIBE training, and build solutions using IMDA's 
-    in-house GenAI MAGIC Platform. My role involves understanding user needs, simplifying complex AI concepts for non-technical users, and
-    translate them to use cases that can be implemented on the GenAI MAGIC Platform. I also gather user feedback to improve the 
-    tools usage and support the innovation of IMDA GenAI Magic Platform from UI/UX to <span class="highlight">AI Safety Testing</span> with AWS. 
-    I also explore and keep abreast of latest industry trends in GenAI to ensure that IMDA stays at the forefront of AI innovation.
+    I pursued a <span class="highlight">Bachelor's of Science Degree in Economics and Politics</span> from the
+    <span class="highlight">University of London</span>, achieving Second Upper Class (Honours). During my undergraduate days, 
+    I developed a strong curiosity in uncovering the stories hidden within numbers and this analytical foundation proved essential
+    in transitioning from theoretical Economics and Politics to the world of data analytics, and into the rapidly evolving field 
+    of GenAI. Subsequently, I pursued a <span class="highlight">Master's of Business in Analytics and Visualisation</span> at the
+    <span class="highlight">Singapore University of Social Science (SUSS)</span>, graduating with a CGPA of 4.46, 
+    gaining valuable exposure and skills in the fields of data science.
     </p>
 
     <p class="about-text">
-    Concurrently, I am pursuing my <span class="highlight">Master's in Analytics & Visualisation</span> 
-    at Singapore University of Social Sciences (SUSS), where I explored how machine learning, statistical methods,
-    and data visualisation. These skills and domain knowledge allow me to gain a deeper understanding 
-    of data science and its relevant fields. I believe data, when presented thoughtfully, 
-    has the power to influence decisions and drive meaningful change, amplified with GenAI.
-    </p>
-
-    <p class="about-text">
-    Beyond work, I enjoy gaming, gyming, photography and enjoy travelling 
-    away from the bustle of city life.
+    Beyond work, I enjoy gaming, gyming, photography and enjoy travelling away from the bustle of city life.
     </p>
             </div>
         </div>
@@ -1454,75 +1476,61 @@
     <!-- Timeline Section -->
     <section id="timeline" class="timeline-section">
         <h2 class="section-title">EXPERIENCE & EDUCATION</h2>
-        
+
         <div class="timeline-grid">
+            <!-- Education Column -->
             <div class="timeline-column">
                 <h2><i class="fas fa-graduation-cap"></i> Education</h2>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-date">2024 - Present</div>
-                        <div class="timeline-title">MSc Analytics & Visualisation</div>
-                        <div class="timeline-subtitle">Singapore University of Social Science</div>
-                        <div class="timeline-desc">
-                            Attained Second Class Upper with CGPA of 4.46. Specialising in advanced data analytics, machine learning, 
-                            data visualisation techniques and statistical modelling. Programming languages used include R, 
-                            Python, SQL and Tableau. Finished the Master's degree with a capstone applied project
-                            on whether does democratic backsliding deepen political polarisation using panel regression analysis and 
-                            ordinary least squares (OLS) regression with Varieties of Democracies (V-Dem) dataset and SWIID dataset.
-                        </div>
+                <div class="exp-cards-grid">
+
+                    <!-- SUSS -->
+                    <div class="exp-card">
+                        <div class="exp-badge"><img src="logos/suss.png" alt="SUSS"></div>
+                        <div class="exp-card-org">Singapore University of Social Science</div>
+                        <div class="exp-card-title">MSc Analytics & Visualisation</div>
+                        <div class="exp-card-date">2024 – 2026</div>
+                        <div class="exp-card-desc">Achieved a CGPA of 4.46</div>
                     </div>
-                    <div class="timeline-item">
-                        <div class="timeline-date">2019 - 2023</div>
-                        <div class="timeline-title">BSc Economics & Politics (honours)</div>
-                        <div class="timeline-subtitle">University of London</div>
-                        <div class="timeline-desc">
-                            Attained Second Upper Class Honours. Developed strong analytical, critical thinking and writing skills 
-                            through rigorous study of economic theory and political systems.
-                        </div>
+
+                    <!-- University of London -->
+                    <div class="exp-card">
+                        <div class="exp-badge"><img src="logos/uol.jpg" alt="University of London"></div>
+                        <div class="exp-card-org">University of London</div>
+                        <div class="exp-card-title">BSc Economics & Politics (Hons)</div>
+                        <div class="exp-card-date">2019 – 2023</div>
+                        <div class="exp-card-desc">Achieved Second Upper Class (Hons)</div>
                     </div>
-                    <div class="timeline-item">
-                        <div class="timeline-date">2015 - 2016</div>
-                        <div class="timeline-title">Pre-University A-Levels</div>
-                        <div class="timeline-subtitle">Innova Junior College</div>
-                        <div class="timeline-desc">
-                            Pre-University Studies.
-                        </div>
-                    </div>
+
                 </div>
             </div>
 
+            <!-- Experience Column -->
             <div class="timeline-column">
                 <h2><i class="fas fa-briefcase"></i> Work Experience</h2>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-date">2025 - Present</div>
-                        <div class="timeline-title">AI Manager</div>
-                        <div class="timeline-subtitle">Infocomm Media Development Authority (IMDA)</div>
-                        <div class="timeline-desc">
-                                <ul style="margin-left: 20px; line-height: 1.6;">
-                            <li>Build 8 custom RAG solutions for internal use cases using IMDA Internal Platform.</li>
-                            <li>Support GenAI Innovation Team efforts in innovating and promoting IMDA internal GenAI Magic Platform.</li>
-                            <li>Managed 350 to 400 internal users licenses in IMDA and conduct 17 training tupperware sessions to internal users 
-                            on how to use AI tools effectively.</li>
-                            <li>Led 4 AI Safety Testing efforts to ensure responsible and ethical use of GenAI technologies together
-                            with AI Governance and Safety (AIGS) team.</li>
-                            <li>Level 1 User Support for internal AI tools and troubleshoot issues.</li>
-                            <li>Data analysis of AI tools usage and adoption trends within the organisation.</li>
-                        </div>
-                    </div>
-                    <div class="timeline-item">
-                        <div class="timeline-date">2023 - 2024</div>
-                        <div class="timeline-title">Wealth Planning Manager</div>
-                        <div class="timeline-subtitle">DBS Bank</div>
-                        <div class="timeline-desc">
-                            <ul style="margin-left: 20px; line-height: 1.6;">
+                <div class="exp-cards-grid">
 
-                            <li>Engaged more than 50 clients in their financial planning journey by providing comprehensive
-                            financial reviews to understand client goals and objectives in their financial journey. 
-                            Sharpened consultative and communication skills when communicating to stakeholders</li>
-                            <li>Achieved Balanced Score Card (BSC) grade A for Q1 2024.</li>
+                    <!-- IMDA -->
+                    <div class="exp-card">
+                        <div class="exp-badge"><img src="logos/IMDA_Logo.png" alt="IMDA"></div>
+                        <div class="exp-card-org">Infocomm Media Development Authority</div>
+                        <div class="exp-card-title">AI Manager</div>
+                        <div class="exp-card-date">2025 – Present</div>
+                        <div class="exp-card-desc">Promote Digital Transformation in IMDA using GenAI Magic Platform 
+                            using RAG and upcoming Agentic workflows
                         </div>
-                </div>
+
+                    </div>
+
+                    <!-- DBS Bank -->
+                    <div class="exp-card">
+                        <div class="exp-badge"><img src="logos/DBS_black.jpg" alt="DBS Bank"></div>
+                        <div class="exp-card-org">DBS Bank</div>
+                        <div class="exp-card-title">Wealth Planning Manager</div>
+                        <div class="exp-card-date">2023 – 2024</div>
+                        <div class="exp-card-desc">Wealth Management of clients and providing financial planning solutions through stakeholder engagement</div>
+
+                    </div>
+
                 </div>
             </div>
         </div>
